@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+from datetime import datetime, timezone
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
@@ -13,12 +14,19 @@ from database import get_database, order_book_snapshots, serialize_levels, trade
 from engines.alpha_engine import alpha_engine
 from engines.circuit_breaker import circuit_breaker
 from engines.kill_switch import kill_switch
+from engines.liquidity_score import LiquidityScorer
 from engines.otr_monitor import otr_monitor
+from engines.spread_tracker import SpreadTracker
+from engines.vwap import VWAPEngine
 from ha.journal import journal
 from metrics import ACTIVE_SIGNALS, ORDER_BOOK_UPDATES
 from models.schemas import OrderBookSnapshot
 
 logger = logging.getLogger(__name__)
+
+vwap_engine = VWAPEngine()
+spread_tracker = SpreadTracker()
+liquidity_scorer = LiquidityScorer()
 
 
 class DataScheduler:
@@ -89,6 +97,7 @@ class DataScheduler:
                 await self.state.update(symbol, snapshot)
                 ORDER_BOOK_UPDATES.labels(symbol=symbol.upper()).inc()
                 await self._store_snapshot(snapshot)
+                await self._update_microstructure(symbol, snapshot)
                 await self._generate_and_store_signal(symbol)
                 updated += 1
 
@@ -96,6 +105,30 @@ class DataScheduler:
             logger.info("NSE fetch cycle complete: updated=%s failed=%s", updated, failed)
         except Exception as exc:
             logger.error("Scheduled NSE fetch job failed: %s", exc)
+
+    async def _update_microstructure(self, symbol: str, snapshot: OrderBookSnapshot) -> None:
+        best_bid = float(snapshot.bids[0].price) if snapshot.bids else 0.0
+        best_ask = float(snapshot.asks[0].price) if snapshot.asks else 0.0
+        last_price = self._mid_price(snapshot)
+        total_depth = float(snapshot.total_bid_volume or 0.0) + float(snapshot.total_ask_volume or 0.0)
+        spread_tracker.update(symbol, best_bid, best_ask)
+        await vwap_engine.update(
+            symbol=symbol,
+            price=last_price if last_price > 0 else best_bid or best_ask or 0.0,
+            volume=1.0,
+            ts=snapshot.timestamp if snapshot.timestamp else datetime.now(timezone.utc),
+        )
+        spread_bps = spread_tracker.get_spread(symbol).get("relative", 0.0)
+        otr = otr_monitor.get_otr(symbol) if symbol else 0.0
+        one_min_window = vwap_engine._windows.get(symbol.upper(), {}).get("1min", [])
+        price_history = [float(p) for _ts, p, _v in one_min_window]
+        liquidity_scorer.update(
+            symbol=symbol,
+            spread_bps=float(spread_bps or 0.0),
+            depth=total_depth,
+            otr=float(otr or 0.0),
+            price_history=price_history,
+        )
 
     @staticmethod
     def _mid_price(snapshot: OrderBookSnapshot | None) -> float:

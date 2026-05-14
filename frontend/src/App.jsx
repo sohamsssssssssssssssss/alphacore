@@ -9,6 +9,7 @@ import NarrativeBanner from './components/NarrativeBanner'
 import SignalPanel from './components/SignalPanel'
 import RegulatoryPanel from './components/RegulatoryPanel'
 import ProtocolPanel from './components/ProtocolPanel'
+import MicrostructurePanel from './components/MicrostructurePanel'
 import { useWebSocket } from './hooks/useWebSocket'
 import { usePolling } from './hooks/usePolling'
 
@@ -64,11 +65,12 @@ export default function App() {
           marginBottom: 44,
           display: 'grid',
           gridTemplateColumns: '320px 1fr 280px',
-          gridTemplateRows: '1fr 1fr minmax(200px, 28vh) minmax(220px, 28vh) minmax(240px, 34vh)',
+          gridTemplateRows: '1fr 1fr minmax(180px, 24vh) minmax(220px, 28vh) minmax(220px, 28vh) minmax(240px, 34vh)',
           gridTemplateAreas: `
             "orderbook heatmap flow"
             "icebergs heatmap spoof"
             "signals signals signals"
+            "micro micro micro"
             "regulatory regulatory regulatory"
             "protocol protocol protocol"
           `,
@@ -93,6 +95,9 @@ export default function App() {
         </div>
         <div style={{ gridArea: 'signals', background: 'var(--bg-panel)', minHeight: 0 }}>
           <SignalPanel />
+        </div>
+        <div style={{ gridArea: 'micro', background: 'var(--bg-panel)', minHeight: 0 }}>
+          <MicrostructurePanel />
         </div>
         <div style={{ gridArea: 'regulatory', background: 'var(--bg-panel)', minHeight: 0 }}>
           <RegulatoryPanel />
