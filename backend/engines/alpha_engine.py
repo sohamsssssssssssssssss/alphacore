@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 import sqlalchemy as sa
 
 from database import get_database, iceberg_detections, order_book_snapshots, spoof_detections
+from metrics import SIGNALS_TOTAL
 
 
 class AlphaEngine:
@@ -101,6 +102,7 @@ class AlphaEngine:
             target_price = entry_price * 0.985
 
         confidence = min(100, abs(int(score)))
+        SIGNALS_TOTAL.labels(symbol=normalized_symbol, direction=direction).inc()
 
         return {
             "symbol": normalized_symbol,

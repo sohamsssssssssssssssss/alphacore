@@ -11,6 +11,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from statistics import mean
 
+from metrics import DETECTIONS_TOTAL
 from models.schemas import OrderBookSnapshot, SpoofDetection
 
 logger = logging.getLogger(__name__)
@@ -58,6 +59,11 @@ class SpoofDetector:
                 detection = self._score_cancellation(normalized_symbol, event, snapshot)
                 if detection.spoof_score >= self.MIN_REPORT_SCORE:
                     detections.append(detection)
+                    DETECTIONS_TOTAL.labels(
+                        type="spoof",
+                        symbol=normalized_symbol,
+                        severity=detection.severity.lower(),
+                    ).inc()
                     self._active_spoof_alerts[normalized_symbol].append(detection)
                     self._active_spoof_alerts[normalized_symbol] = self._active_spoof_alerts[
                         normalized_symbol

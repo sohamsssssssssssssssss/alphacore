@@ -8,6 +8,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from api.detections import router as detections_router
 from api.flow import router as flow_router
@@ -70,6 +71,7 @@ app = FastAPI(
     ),
     lifespan=lifespan,
 )
+Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
     CORSMiddleware,

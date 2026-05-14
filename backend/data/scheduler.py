@@ -11,6 +11,7 @@ from data.nse_fetcher import NSEFetcher
 from data.orderbook_state import OrderBookStateManager
 from database import get_database, order_book_snapshots, serialize_levels, trade_signals
 from engines.alpha_engine import alpha_engine
+from metrics import ACTIVE_SIGNALS, ORDER_BOOK_UPDATES
 from models.schemas import OrderBookSnapshot
 
 logger = logging.getLogger(__name__)
@@ -54,6 +55,7 @@ class DataScheduler:
             updated = 0
             for symbol, snapshot in snapshots.items():
                 await self.state.update(symbol, snapshot)
+                ORDER_BOOK_UPDATES.labels(symbol=symbol.upper()).inc()
                 await self._store_snapshot(snapshot)
                 await self._generate_and_store_signal(symbol)
                 updated += 1
@@ -88,6 +90,7 @@ class DataScheduler:
         try:
             signal = await alpha_engine.generate_signal(symbol)
             if signal is None:
+                ACTIVE_SIGNALS.labels(symbol=symbol.upper()).set(0)
                 return
 
             await get_database().execute(
@@ -110,5 +113,6 @@ class DataScheduler:
                 signal["confidence"],
                 signal["entry_price"],
             )
+            ACTIVE_SIGNALS.labels(symbol=signal["symbol"]).set(1)
         except Exception as exc:
             logger.error("Failed to generate/store signal for %s: %s", symbol, exc)

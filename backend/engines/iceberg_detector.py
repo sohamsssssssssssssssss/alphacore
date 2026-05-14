@@ -10,6 +10,7 @@ import logging
 from collections import defaultdict
 from datetime import datetime, timedelta, timezone
 
+from metrics import DETECTIONS_TOTAL
 from models.schemas import IcebergDetection, OrderBookSnapshot
 
 logger = logging.getLogger(__name__)
@@ -71,6 +72,11 @@ class IcebergDetector:
                     direction,
                 )
                 detections.append(detection)
+                DETECTIONS_TOTAL.labels(
+                    type="iceberg",
+                    symbol=normalized_symbol,
+                    severity="medium",
+                ).inc()
                 logger.info(
                     "Iceberg detected: symbol=%s side=%s price=%.4f refills=%s confidence=%s",
                     normalized_symbol,

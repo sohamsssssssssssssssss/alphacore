@@ -17,3 +17,4 @@ requests
 beautifulsoup4
 lxml
 psycopg2-binary
+prometheus-fastapi-instrumentator
