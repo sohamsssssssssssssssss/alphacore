@@ -3,11 +3,15 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import logging
 
 import sqlalchemy as sa
 
 from database import get_database, iceberg_detections, order_book_snapshots, spoof_detections
 from metrics import SIGNALS_TOTAL
+from engines.risk_limits import risk_limits
+
+logger = logging.getLogger(__name__)
 
 
 class AlphaEngine:
@@ -102,6 +106,11 @@ class AlphaEngine:
             target_price = entry_price * 0.985
 
         confidence = min(100, abs(int(score)))
+        allowed, reason = risk_limits.check_signal(normalized_symbol, entry_price)
+        if not allowed:
+            logger.warning("Risk limits blocked signal for %s: %s", normalized_symbol, reason)
+            return None
+
         SIGNALS_TOTAL.labels(symbol=normalized_symbol, direction=direction).inc()
 
         return {

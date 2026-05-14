@@ -9,6 +9,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 from api.detections import router as detections_router
 from api.flow import router as flow_router
@@ -16,6 +18,8 @@ from api.health import router as health_router
 from api.heatmap import router as heatmap_router
 from api.narrative import router as narrative_router
 from api.orderbook import router as orderbook_router
+from api.rate_limit import limiter
+from api.regulatory import router as regulatory_router
 from api.signals import router as signals_router
 from api.websocket import router as websocket_router
 from config import get_settings
@@ -71,6 +75,8 @@ app = FastAPI(
     ),
     lifespan=lifespan,
 )
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 Instrumentator().instrument(app).expose(app)
 
 app.add_middleware(
@@ -89,3 +95,4 @@ app.include_router(flow_router)
 app.include_router(heatmap_router)
 app.include_router(narrative_router)
 app.include_router(signals_router)
+app.include_router(regulatory_router)

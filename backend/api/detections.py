@@ -7,6 +7,7 @@ from datetime import datetime, time, timezone
 import sqlalchemy as sa
 from fastapi import APIRouter, HTTPException, Query, Request
 
+from api.rate_limit import limiter
 from database import get_database, iceberg_detections, spoof_detections
 from engines.flow_engine import flow_engine
 from engines.iceberg_detector import iceberg_detector
@@ -57,7 +58,9 @@ def _row_to_spoof_detection(row: sa.Row | sa.RowMapping) -> SpoofDetection:
 
 
 @router.get("/icebergs", response_model=list[IcebergDetection])
+@limiter.limit("100/minute")
 async def get_icebergs(
+    request: Request,
     symbol: str | None = None,
     active_only: bool = Query(default=True),
 ) -> list[IcebergDetection]:
@@ -96,7 +99,9 @@ async def get_icebergs_for_symbol(symbol: str) -> list[IcebergDetection]:
 
 
 @router.get("/spoof", response_model=list[SpoofDetection])
+@limiter.limit("100/minute")
 async def get_spoof_alerts(
+    request: Request,
     symbol: str | None = None,
     min_severity: str = Query(default="LOW"),
 ) -> list[SpoofDetection]:

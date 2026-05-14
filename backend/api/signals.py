@@ -5,8 +5,9 @@ from __future__ import annotations
 import json
 
 import sqlalchemy as sa
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
+from api.rate_limit import limiter
 from database import get_database, trade_signals
 from models.schemas import TradeSignal
 
@@ -27,7 +28,8 @@ def _normalize_reasons(value: object) -> list[str]:
 
 
 @router.get("/latest", response_model=dict[str, TradeSignal])
-async def get_latest_signals() -> dict[str, dict]:
+@limiter.limit("100/minute")
+async def get_latest_signals(request: Request) -> dict[str, dict]:
     """Return latest signal per symbol."""
 
     rows = await get_database().fetch_all(
@@ -60,7 +62,8 @@ async def get_latest_signals() -> dict[str, dict]:
 
 
 @router.get("/{symbol}", response_model=list[TradeSignal])
-async def get_signals_for_symbol(symbol: str) -> list[dict]:
+@limiter.limit("100/minute")
+async def get_signals_for_symbol(request: Request, symbol: str) -> list[dict]:
     """Return most recent 20 signals for one symbol."""
 
     rows = await get_database().fetch_all(

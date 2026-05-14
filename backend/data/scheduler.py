@@ -11,6 +11,9 @@ from data.nse_fetcher import NSEFetcher
 from data.orderbook_state import OrderBookStateManager
 from database import get_database, order_book_snapshots, serialize_levels, trade_signals
 from engines.alpha_engine import alpha_engine
+from engines.circuit_breaker import circuit_breaker
+from engines.kill_switch import kill_switch
+from engines.otr_monitor import otr_monitor
 from metrics import ACTIVE_SIGNALS, ORDER_BOOK_UPDATES
 from models.schemas import OrderBookSnapshot
 
@@ -51,9 +54,28 @@ class DataScheduler:
         """Fetch all tracked symbols and update the shared state manager."""
 
         try:
+            if kill_switch.is_active:
+                logger.warning("Kill switch active — cycle skipped")
+                return
+
             snapshots = await self.fetcher.fetch_all_symbols()
             updated = 0
             for symbol, snapshot in snapshots.items():
+                levels_count = len(snapshot.bids) + len(snapshot.asks)
+                for _ in range(levels_count):
+                    otr_monitor.record_order(symbol)
+
+                current_price = self._mid_price(snapshot)
+                previous_snapshot = self.state.get_latest(symbol)
+                previous_price = self._mid_price(previous_snapshot) if previous_snapshot is not None else 0.0
+                if circuit_breaker.check(symbol, current_price, previous_price):
+                    logger.warning("Skipping signal generation for %s due to circuit breaker halt", symbol.upper())
+                    await self.state.update(symbol, snapshot)
+                    ORDER_BOOK_UPDATES.labels(symbol=symbol.upper()).inc()
+                    await self._store_snapshot(snapshot)
+                    updated += 1
+                    continue
+
                 await self.state.update(symbol, snapshot)
                 ORDER_BOOK_UPDATES.labels(symbol=symbol.upper()).inc()
                 await self._store_snapshot(snapshot)
@@ -64,6 +86,20 @@ class DataScheduler:
             logger.info("NSE fetch cycle complete: updated=%s failed=%s", updated, failed)
         except Exception as exc:
             logger.error("Scheduled NSE fetch job failed: %s", exc)
+
+    @staticmethod
+    def _mid_price(snapshot: OrderBookSnapshot | None) -> float:
+        if snapshot is None:
+            return 0.0
+        best_bid = float(snapshot.bids[0].price) if snapshot.bids else None
+        best_ask = float(snapshot.asks[0].price) if snapshot.asks else None
+        if best_bid is not None and best_ask is not None:
+            return (best_bid + best_ask) / 2.0
+        if best_bid is not None:
+            return best_bid
+        if best_ask is not None:
+            return best_ask
+        return 0.0
 
     async def _store_snapshot(self, snapshot: OrderBookSnapshot) -> None:
         """Persist a snapshot to PostgreSQL."""
@@ -92,6 +128,10 @@ class DataScheduler:
             if signal is None:
                 ACTIVE_SIGNALS.labels(symbol=symbol.upper()).set(0)
                 return
+            if otr_monitor.is_breached(symbol):
+                logger.warning("High OTR breach for %s: %.2f", symbol.upper(), otr_monitor.get_otr(symbol))
+                if "High OTR" not in signal["reasons"]:
+                    signal["reasons"].append("High OTR")
 
             await get_database().execute(
                 trade_signals.insert().values(
