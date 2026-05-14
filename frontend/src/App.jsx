@@ -8,6 +8,7 @@ import LiquidityHeatmap from './components/LiquidityHeatmap'
 import NarrativeBanner from './components/NarrativeBanner'
 import SignalPanel from './components/SignalPanel'
 import RegulatoryPanel from './components/RegulatoryPanel'
+import ProtocolPanel from './components/ProtocolPanel'
 import { useWebSocket } from './hooks/useWebSocket'
 import { usePolling } from './hooks/usePolling'
 
@@ -63,12 +64,13 @@ export default function App() {
           marginBottom: 44,
           display: 'grid',
           gridTemplateColumns: '320px 1fr 280px',
-          gridTemplateRows: '1fr 1fr minmax(200px, 30vh) minmax(240px, 34vh)',
+          gridTemplateRows: '1fr 1fr minmax(200px, 28vh) minmax(220px, 28vh) minmax(240px, 34vh)',
           gridTemplateAreas: `
             "orderbook heatmap flow"
             "icebergs heatmap spoof"
             "signals signals signals"
             "regulatory regulatory regulatory"
+            "protocol protocol protocol"
           `,
           gap: 1,
           background: 'var(--border)',
@@ -94,6 +96,9 @@ export default function App() {
         </div>
         <div style={{ gridArea: 'regulatory', background: 'var(--bg-panel)', minHeight: 0 }}>
           <RegulatoryPanel />
+        </div>
+        <div style={{ gridArea: 'protocol', background: 'var(--bg-panel)', minHeight: 0 }}>
+          <ProtocolPanel />
         </div>
       </main>
 

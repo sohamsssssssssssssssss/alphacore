@@ -15,6 +15,7 @@ from slowapi.errors import RateLimitExceeded
 
 from api.detections import router as detections_router
 from api.flow import router as flow_router
+from api.fix_api import router as fix_router
 from api.health import router as health_router
 from api.heatmap import router as heatmap_router
 from api.ha import router as ha_router
@@ -108,3 +109,4 @@ app.include_router(narrative_router)
 app.include_router(signals_router)
 app.include_router(regulatory_router)
 app.include_router(ha_router)
+app.include_router(fix_router)
