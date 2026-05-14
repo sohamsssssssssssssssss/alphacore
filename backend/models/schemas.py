@@ -154,11 +154,13 @@ class HealthResponse(BaseModel):
     """Health and liveness response for the backend."""
 
     status: str
-    timestamp: datetime
-    nse_connected: bool
-    active_symbols: list[str]
-    last_data_fetch: datetime | None
-    db_connected: bool
+    database: str
+    scheduler: str
+    kill_switch: bool
+    circuit_breakers_active: int
+    journal_events: int
+    last_journal_event: str | None
+    uptime_seconds: int
 
 
 class SymbolStatus(BaseModel):

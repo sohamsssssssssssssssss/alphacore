@@ -7,6 +7,9 @@ from datetime import datetime, timezone
 from fastapi import APIRouter, Request
 
 from database import ping_database
+from engines.circuit_breaker import circuit_breaker
+from engines.kill_switch import kill_switch
+from ha.journal import journal
 from models.schemas import HealthResponse
 
 router = APIRouter(prefix="/api", tags=["health"])
@@ -16,17 +19,19 @@ router = APIRouter(prefix="/api", tags=["health"])
 async def get_health(request: Request) -> HealthResponse:
     """Return application health information."""
 
-    state = request.app.state.orderbook_state
-    fetcher = request.app.state.nse_fetcher
     db_connected = await ping_database()
-    last_data_fetch = state.get_last_fetch_time() or fetcher.last_success_at
-    nse_connected = last_data_fetch is not None
-    status = "ok" if db_connected else "degraded"
+    scheduler = request.app.state.scheduler
+    started_at = getattr(request.app.state, "started_at", datetime.now(timezone.utc))
+    uptime_seconds = max(0, int((datetime.now(timezone.utc) - started_at).total_seconds()))
+    entries = journal.read_since()
+
     return HealthResponse(
-        status=status,
-        timestamp=datetime.now(timezone.utc),
-        nse_connected=nse_connected,
-        active_symbols=state.get_active_symbols() or fetcher.symbols,
-        last_data_fetch=last_data_fetch,
-        db_connected=db_connected,
+        status="healthy" if db_connected else "degraded",
+        database="connected" if db_connected else "disconnected",
+        scheduler="running" if scheduler.scheduler.running else "stopped",
+        kill_switch=kill_switch.is_active,
+        circuit_breakers_active=len(circuit_breaker.status()),
+        journal_events=len(entries),
+        last_journal_event=entries[-1]["ts"] if entries else None,
+        uptime_seconds=uptime_seconds,
     )

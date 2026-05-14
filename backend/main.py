@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,6 +17,7 @@ from api.detections import router as detections_router
 from api.flow import router as flow_router
 from api.health import router as health_router
 from api.heatmap import router as heatmap_router
+from api.ha import router as ha_router
 from api.narrative import router as narrative_router
 from api.orderbook import router as orderbook_router
 from api.rate_limit import limiter
@@ -27,6 +29,9 @@ from data.nse_fetcher import DEFAULT_SYMBOLS, NSEFetcher
 from data.orderbook_state import OrderBookStateManager, state_manager
 from data.scheduler import DataScheduler
 from database import connect, create_tables, disconnect, ensure_trade_signals_table
+from database import ensure_sequence_columns
+from ha.journal import journal
+from ha.recovery import Recovery
 
 settings = get_settings()
 logging.basicConfig(
@@ -43,6 +48,10 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     await connect()
     await create_tables()
     await ensure_trade_signals_table()
+    await ensure_sequence_columns()
+    recovery = Recovery(journal)
+    recovery_summary = await recovery.replay()
+    logger.info("HA Recovery: %s events replayed from journal", recovery_summary["total_events"])
 
     fetcher = NSEFetcher(DEFAULT_SYMBOLS)
     state: OrderBookStateManager = state_manager
@@ -56,6 +65,8 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     app.state.nse_fetcher = fetcher
     app.state.orderbook_state = state
     app.state.scheduler = scheduler
+    app.state.started_at = datetime.now(timezone.utc)
+    app.state.recovery_summary = recovery_summary
 
     scheduler.start()
     logger.info("AlphaCore backend started")
@@ -96,3 +107,4 @@ app.include_router(heatmap_router)
 app.include_router(narrative_router)
 app.include_router(signals_router)
 app.include_router(regulatory_router)
+app.include_router(ha_router)

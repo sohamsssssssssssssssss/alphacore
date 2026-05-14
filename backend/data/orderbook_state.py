@@ -19,6 +19,7 @@ from engines.heatmap_engine import heatmap_engine
 from engines.iceberg_detector import iceberg_detector
 from engines.spoof_detector import spoof_detector
 from fastapi import WebSocket
+from ha.journal import journal
 
 from models.schemas import FlowImbalance, IcebergDetection, OrderBookSnapshot, SpoofDetection
 
@@ -198,6 +199,19 @@ class OrderBookStateManager:
                         last_seen_at=detection.last_seen_at,
                     )
                 )
+                await journal.write(
+                    "iceberg",
+                    detection.symbol,
+                    {
+                        "detected_at": detection.detected_at.isoformat(),
+                        "price_level": detection.price_level,
+                        "visible_size": detection.visible_size,
+                        "estimated_hidden_volume": detection.estimated_hidden_volume,
+                        "refill_count": detection.refill_count,
+                        "direction": detection.direction,
+                        "confidence_score": detection.confidence_score,
+                    },
+                )
 
             for detection in spoof_results:
                 await database.execute(
@@ -217,6 +231,18 @@ class OrderBookStateManager:
                         check_price_impact_score=detection.check_price_impact_score,
                         check_counter_trade_score=detection.check_counter_trade_score,
                     )
+                )
+                await journal.write(
+                    "spoof",
+                    detection.symbol,
+                    {
+                        "detected_at": detection.detected_at.isoformat(),
+                        "order_price": detection.order_price,
+                        "order_size": detection.order_size,
+                        "spoof_score": detection.spoof_score,
+                        "severity": detection.severity,
+                        "time_active_seconds": detection.time_active_seconds,
+                    },
                 )
 
             bid_map = {level.price: level.volume for level in snapshot.bids}

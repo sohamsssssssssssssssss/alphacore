@@ -14,6 +14,7 @@ from engines.alpha_engine import alpha_engine
 from engines.circuit_breaker import circuit_breaker
 from engines.kill_switch import kill_switch
 from engines.otr_monitor import otr_monitor
+from ha.journal import journal
 from metrics import ACTIVE_SIGNALS, ORDER_BOOK_UPDATES
 from models.schemas import OrderBookSnapshot
 
@@ -70,6 +71,15 @@ class DataScheduler:
                 previous_price = self._mid_price(previous_snapshot) if previous_snapshot is not None else 0.0
                 if circuit_breaker.check(symbol, current_price, previous_price):
                     logger.warning("Skipping signal generation for %s due to circuit breaker halt", symbol.upper())
+                    await journal.write(
+                        "circuit_break",
+                        symbol.upper(),
+                        {
+                            "current_price": current_price,
+                            "previous_price": previous_price,
+                            "status": circuit_breaker.status().get(symbol.upper(), {}),
+                        },
+                    )
                     await self.state.update(symbol, snapshot)
                     ORDER_BOOK_UPDATES.labels(symbol=symbol.upper()).inc()
                     await self._store_snapshot(snapshot)
@@ -132,6 +142,7 @@ class DataScheduler:
                 logger.warning("High OTR breach for %s: %.2f", symbol.upper(), otr_monitor.get_otr(symbol))
                 if "High OTR" not in signal["reasons"]:
                     signal["reasons"].append("High OTR")
+            await journal.write("signal", signal["symbol"], signal)
 
             await get_database().execute(
                 trade_signals.insert().values(

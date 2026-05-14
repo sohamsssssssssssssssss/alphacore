@@ -42,6 +42,7 @@ iceberg_detections = sa.Table(
     sa.Column("confidence_score", sa.Integer, nullable=False),
     sa.Column("is_active", sa.Boolean, nullable=False, server_default=sa.true()),
     sa.Column("last_seen_at", sa.DateTime(timezone=True), nullable=False),
+    sa.Column("seq_num", sa.BigInteger),
 )
 sa.Index(
     "ix_iceberg_detections_symbol_detected_at_desc",
@@ -67,6 +68,7 @@ spoof_detections = sa.Table(
     sa.Column("check_fill_ratio_score", sa.Integer),
     sa.Column("check_price_impact_score", sa.Integer),
     sa.Column("check_counter_trade_score", sa.Integer),
+    sa.Column("seq_num", sa.BigInteger),
 )
 sa.Index(
     "ix_spoof_detections_symbol_detected_at_desc",
@@ -128,6 +130,7 @@ trade_signals = sa.Table(
     sa.Column("score", sa.Integer, nullable=False),
     sa.Column("reasons", JSONB, nullable=False),
     sa.Column("generated_at", sa.DateTime(timezone=True), nullable=False, server_default=sa.func.now()),
+    sa.Column("seq_num", sa.BigInteger),
 )
 sa.Index(
     "ix_trade_signals_symbol_generated_at_desc",
@@ -184,6 +187,35 @@ async def ensure_trade_signals_table() -> None:
                 reasons JSONB,
                 generated_at TIMESTAMPTZ DEFAULT NOW()
             )
+            """
+        )
+    )
+
+
+async def ensure_sequence_columns() -> None:
+    """Ensure HA sequence-number columns exist on key event tables."""
+
+    await database.execute(
+        sa.text(
+            """
+            ALTER TABLE iceberg_detections
+            ADD COLUMN IF NOT EXISTS seq_num BIGSERIAL
+            """
+        )
+    )
+    await database.execute(
+        sa.text(
+            """
+            ALTER TABLE spoof_detections
+            ADD COLUMN IF NOT EXISTS seq_num BIGSERIAL
+            """
+        )
+    )
+    await database.execute(
+        sa.text(
+            """
+            ALTER TABLE trade_signals
+            ADD COLUMN IF NOT EXISTS seq_num BIGSERIAL
             """
         )
     )

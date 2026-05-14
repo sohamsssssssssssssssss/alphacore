@@ -9,6 +9,7 @@ from engines.circuit_breaker import circuit_breaker
 from engines.kill_switch import kill_switch
 from engines.otr_monitor import otr_monitor
 from engines.risk_limits import risk_limits
+from ha.journal import journal
 
 router = APIRouter(prefix="/api/regulatory", tags=["regulatory"])
 
@@ -36,12 +37,14 @@ async def get_kill_switch_status() -> dict:
 @router.post("/kill-switch/activate")
 async def activate_kill_switch(body: KillSwitchActivateBody) -> dict:
     kill_switch.activate(reason=body.reason)
+    await journal.write("kill_switch", "GLOBAL", {"action": "activate", "reason": body.reason})
     return {"status": "activated", **kill_switch.status()}
 
 
 @router.post("/kill-switch/deactivate")
 async def deactivate_kill_switch() -> dict:
     kill_switch.deactivate()
+    await journal.write("kill_switch", "GLOBAL", {"action": "deactivate"})
     return {"status": "deactivated", **kill_switch.status()}
 
 
