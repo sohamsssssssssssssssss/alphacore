@@ -1,4 +1,4 @@
-"""Alpha signal engine combining detections into trade ideas."""
+"""Alpha signal orchestrator and legacy trade-signal generator."""
 
 from __future__ import annotations
 
@@ -8,16 +8,69 @@ import logging
 import sqlalchemy as sa
 
 from database import get_database, iceberg_detections, order_book_snapshots, spoof_detections
-from metrics import SIGNALS_TOTAL
 from engines.risk_limits import risk_limits
+from engines.signals.combiner import SignalCombiner
+from engines.signals.mean_reversion import MeanReversionSignal
+from engines.signals.momentum import MomentumSignal
+from engines.signals.order_flow import OrderFlowSignal
+from metrics import SIGNALS_TOTAL
 
 logger = logging.getLogger(__name__)
 
 
 class AlphaEngine:
-    """Generate directional trade signals from recent microstructure detections."""
+    """Hybrid engine: new multi-factor alpha + existing persisted signal generation."""
+
+    TRACKED_SYMBOLS = ["RELIANCE", "TCS", "INFY", "HDFCBANK", "ICICIBANK"]
+
+    def __init__(self):
+        self.momentum = MomentumSignal()
+        self.mean_reversion = MeanReversionSignal()
+        self.order_flow = OrderFlowSignal()
+        self.combiner = SignalCombiner()
+        self._last_prices: dict[str, float] = {}
+
+    def update(self, symbol: str, price: float, ts: datetime, bids: list[tuple], asks: list[tuple]):
+        sym = symbol.upper()
+        self.momentum.update(sym, price, ts)
+        self.mean_reversion.update(sym, price, ts)
+        self.order_flow.update(sym, bids, asks)
+        self._last_prices[sym] = float(price)
+
+    def compute(self, symbol: str) -> dict:
+        sym = symbol.upper()
+        mom = self.momentum.compute(sym)
+        mr = self.mean_reversion.compute(sym)
+        of = self.order_flow.compute(sym)
+        combined = self.combiner.combine(sym, mom, mr, of)
+
+        liquidity_grade = "F"
+        vwap_dev = 0.0
+        try:
+            from data.scheduler import liquidity_scorer, vwap_engine
+
+            liquidity_grade = liquidity_scorer.get_score(sym).get("grade", "F")
+            current = self._last_prices.get(sym, 0.0)
+            vwap_dev = vwap_engine.get_vwap_deviation(sym, current) if current else 0.0
+        except Exception:
+            pass
+
+        return {
+            "symbol": sym,
+            "ts": datetime.now(timezone.utc).isoformat(),
+            "momentum": mom,
+            "mean_reversion": mr,
+            "order_flow": of,
+            "combined": combined,
+            "liquidity_grade": liquidity_grade,
+            "vwap_deviation_bps": float(vwap_dev),
+        }
+
+    def get_all(self) -> list[dict]:
+        return [self.compute(symbol) for symbol in self.TRACKED_SYMBOLS]
 
     async def generate_signal(self, symbol: str) -> dict | None:
+        """Legacy persisted directional signal used by existing scheduler DB pipeline."""
         normalized_symbol = symbol.upper()
         database = get_database()
 
@@ -69,7 +122,6 @@ class AlphaEngine:
                 score -= 10
                 reasons.append("Iceberg sell pressure")
 
-        # Spoof table currently does not store explicit side, so infer side by price vs mid.
         for row in spoof_rows:
             order_price = float(row["order_price"])
             inferred_side = "buy" if order_price <= mid_price else "sell"

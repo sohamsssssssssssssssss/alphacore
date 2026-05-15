@@ -129,6 +129,15 @@ class DataScheduler:
             otr=float(otr or 0.0),
             price_history=price_history,
         )
+        bids = [(float(level.price), float(level.volume)) for level in snapshot.bids[:5]]
+        asks = [(float(level.price), float(level.volume)) for level in snapshot.asks[:5]]
+        alpha_engine.update(
+            symbol=symbol,
+            price=last_price if last_price > 0 else best_bid or best_ask or 0.0,
+            ts=snapshot.timestamp if snapshot.timestamp else datetime.now(timezone.utc),
+            bids=bids,
+            asks=asks,
+        )
 
     @staticmethod
     def _mid_price(snapshot: OrderBookSnapshot | None) -> float:

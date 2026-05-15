@@ -21,6 +21,7 @@ from api.heatmap import router as heatmap_router
 from api.ha import router as ha_router
 from api.narrative import router as narrative_router
 from api.microstructure import router as microstructure_router
+from api.alpha import router as alpha_router
 from api.orderbook import router as orderbook_router
 from api.rate_limit import limiter
 from api.regulatory import router as regulatory_router
@@ -112,3 +113,4 @@ app.include_router(regulatory_router)
 app.include_router(ha_router)
 app.include_router(fix_router)
 app.include_router(microstructure_router)
+app.include_router(alpha_router)
