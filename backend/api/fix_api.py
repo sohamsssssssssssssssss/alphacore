@@ -25,6 +25,7 @@ class FixOrderBody(BaseModel):
 
 @router.post("/parse")
 async def parse_fix(body: FixRawBody) -> dict:
+    """Parse FIX payload; accepts both `\\x01` and `|` field delimiters."""
     try:
         msg = parser.parse(body.raw)
         return {"msg_type": msg.msg_type, "fields": msg.fields}

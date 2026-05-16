@@ -19,3 +19,4 @@ lxml
 psycopg2-binary
 prometheus-fastapi-instrumentator
 slowapi
+scikit-learn

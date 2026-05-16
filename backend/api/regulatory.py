@@ -14,7 +14,8 @@ from ha.journal import journal
 router = APIRouter(prefix="/api/regulatory", tags=["regulatory"])
 
 
-class KillSwitchActivateBody(BaseModel):
+class KillSwitchBody(BaseModel):
+    active: bool
     reason: str = "Manual trigger"
 
 
@@ -34,8 +35,19 @@ async def get_kill_switch_status() -> dict:
     return kill_switch.status()
 
 
+@router.post("/kill-switch")
+async def toggle_kill_switch(body: KillSwitchBody) -> dict:
+    if body.active:
+        kill_switch.activate(reason=body.reason)
+        await journal.write("kill_switch", "GLOBAL", {"action": "activate", "reason": body.reason})
+    else:
+        kill_switch.deactivate()
+        await journal.write("kill_switch", "GLOBAL", {"action": "deactivate"})
+    return kill_switch.status()
+
+
 @router.post("/kill-switch/activate")
-async def activate_kill_switch(body: KillSwitchActivateBody) -> dict:
+async def activate_kill_switch(body: KillSwitchBody) -> dict:
     kill_switch.activate(reason=body.reason)
     await journal.write("kill_switch", "GLOBAL", {"action": "activate", "reason": body.reason})
     return {"status": "activated", **kill_switch.status()}

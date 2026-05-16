@@ -11,6 +11,9 @@ import RegulatoryPanel from './components/RegulatoryPanel'
 import ProtocolPanel from './components/ProtocolPanel'
 import MicrostructurePanel from './components/MicrostructurePanel'
 import AlphaPanel from './components/AlphaPanel'
+import BacktestPanel from './components/BacktestPanel'
+import HAPanel from './components/HAPanel'
+import MLPanel from './components/MLPanel'
 import { useWebSocket } from './hooks/useWebSocket'
 import { usePolling } from './hooks/usePolling'
 
@@ -66,15 +69,18 @@ export default function App() {
           marginBottom: 44,
           display: 'grid',
           gridTemplateColumns: '320px 1fr 280px',
-          gridTemplateRows: '1fr 1fr minmax(180px, 24vh) minmax(220px, 28vh) minmax(220px, 28vh) minmax(220px, 28vh) minmax(240px, 34vh)',
+          gridTemplateRows: '1fr 1fr minmax(180px, 24vh) minmax(220px, 28vh) minmax(220px, 28vh) minmax(240px, 34vh) minmax(220px, 28vh) minmax(220px, 28vh) minmax(240px, 34vh) minmax(260px, 34vh)',
           gridTemplateAreas: `
             "orderbook heatmap flow"
             "icebergs heatmap spoof"
             "signals signals signals"
             "alpha alpha alpha"
             "micro micro micro"
+            "backtest backtest backtest"
+            "ha ha ha"
             "regulatory regulatory regulatory"
             "protocol protocol protocol"
+            "ml ml ml"
           `,
           gap: 1,
           background: 'var(--border)',
@@ -104,11 +110,20 @@ export default function App() {
         <div style={{ gridArea: 'micro', background: 'var(--bg-panel)', minHeight: 0 }}>
           <MicrostructurePanel />
         </div>
+        <div style={{ gridArea: 'backtest', background: 'var(--bg-panel)', minHeight: 0 }}>
+          <BacktestPanel />
+        </div>
+        <div style={{ gridArea: 'ha', background: 'var(--bg-panel)', minHeight: 0 }}>
+          <HAPanel />
+        </div>
         <div style={{ gridArea: 'regulatory', background: 'var(--bg-panel)', minHeight: 0 }}>
           <RegulatoryPanel />
         </div>
         <div style={{ gridArea: 'protocol', background: 'var(--bg-panel)', minHeight: 0 }}>
           <ProtocolPanel />
+        </div>
+        <div style={{ gridArea: 'ml', background: 'var(--bg-panel)', minHeight: 0 }}>
+          <MLPanel />
         </div>
       </main>
 

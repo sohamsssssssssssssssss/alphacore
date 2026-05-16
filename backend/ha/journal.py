@@ -10,15 +10,24 @@ class Journal:
     def __init__(self):
         JOURNAL_PATH.parent.mkdir(exist_ok=True)
         self._lock = asyncio.Lock()
+        self._next_seq = self._determine_next_seq()
+
+    def _determine_next_seq(self) -> int:
+        entries = self.read_since()
+        if not entries:
+            return 1
+        return entries[-1].get("seq", 0) + 1
 
     async def write(self, event_type: str, symbol: str, data: dict):
-        entry = {
-            "ts": datetime.utcnow().isoformat(),
-            "type": event_type,
-            "symbol": symbol,
-            "data": data,
-        }
         async with self._lock:
+            entry = {
+                "seq": self._next_seq,
+                "ts": datetime.utcnow().isoformat(),
+                "type": event_type,
+                "symbol": symbol,
+                "data": data,
+            }
+            self._next_seq += 1
             with open(JOURNAL_PATH, "a", encoding="utf-8") as f:
                 f.write(json.dumps(entry, default=str) + "\n")
 

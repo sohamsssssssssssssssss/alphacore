@@ -24,6 +24,11 @@ from ha.journal import journal
 from models.schemas import FlowImbalance, IcebergDetection, OrderBookSnapshot, SpoofDetection
 
 logger = logging.getLogger(__name__)
+try:
+    from c_ext import FastOrderBook, c_ext_available
+except Exception:
+    FastOrderBook = None  # type: ignore[assignment]
+    c_ext_available = False
 
 
 class OrderBookStateManager:
@@ -40,6 +45,11 @@ class OrderBookStateManager:
         self._connected_websockets: set[WebSocket] = set()
         self._subscriptions: dict[WebSocket, str] = {}
         self.history_limit = history_limit
+        self._fast_orderbook = FastOrderBook() if c_ext_available and FastOrderBook else None
+        if self._fast_orderbook is not None:
+            logger.info("C extension loaded — fast path active")
+        else:
+            logger.info("C extension not found — using Python fallback")
 
     def configure_history_limit(self, history_limit: int) -> None:
         """Reconfigure the retained snapshot history length."""
@@ -55,6 +65,12 @@ class OrderBookStateManager:
         """Store a new snapshot, update history, and broadcast it."""
 
         normalized_symbol = symbol.upper()
+        if self._fast_orderbook is not None:
+            self._fast_orderbook.clear()
+            for level in snapshot.bids:
+                self._fast_orderbook.insert_bid(level.price, level.volume)
+            for level in snapshot.asks:
+                self._fast_orderbook.insert_ask(level.price, level.volume)
         self._snapshots[normalized_symbol] = snapshot
         self._history[normalized_symbol].append(snapshot)
         self._last_update[normalized_symbol] = snapshot.timestamp

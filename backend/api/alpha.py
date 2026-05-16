@@ -2,21 +2,24 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 
+from api.rate_limit import limiter
 from engines.alpha_engine import alpha_engine
 
 router = APIRouter(prefix="/api/alpha", tags=["alpha"])
 
 
 @router.get("")
-async def get_alpha_all() -> list[dict]:
+@limiter.limit("100/minute")
+async def get_alpha_all(request: Request) -> list[dict]:
     rows = alpha_engine.get_all()
     return sorted(rows, key=lambda x: abs(float(x.get("combined", {}).get("alpha_score", 50.0)) - 50.0), reverse=True)
 
 
 @router.get("/signals/{symbol}")
-async def get_alpha_signals(symbol: str) -> dict:
+@limiter.limit("100/minute")
+async def get_alpha_signals(request: Request, symbol: str) -> dict:
     res = alpha_engine.compute(symbol)
     return {
         "symbol": symbol.upper(),
@@ -27,7 +30,8 @@ async def get_alpha_signals(symbol: str) -> dict:
 
 
 @router.get("/leaderboard")
-async def get_alpha_leaderboard() -> list[dict]:
+@limiter.limit("10/minute")
+async def get_alpha_leaderboard(request: Request) -> list[dict]:
     rows = []
     for row in alpha_engine.get_all():
         combined = row.get("combined", {})
@@ -50,5 +54,6 @@ async def get_alpha_leaderboard() -> list[dict]:
 
 
 @router.get("/{symbol}")
-async def get_alpha(symbol: str) -> dict:
+@limiter.limit("100/minute")
+async def get_alpha(request: Request, symbol: str) -> dict:
     return alpha_engine.compute(symbol)

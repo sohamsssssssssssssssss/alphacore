@@ -25,7 +25,15 @@ class FIXParser:
         if not raw:
             raise FIXParseError("Empty FIX payload")
 
-        normalized = raw.replace("|", SOH)
+        # Normalise delimiter (accept raw SOH or pipe-delimited FIX).
+        if SOH in raw:
+            delimiter = SOH
+        elif "|" in raw:
+            delimiter = "|"
+        else:
+            delimiter = SOH
+        normalized = raw.replace(delimiter, SOH) if delimiter != SOH else raw
+
         if not normalized.endswith(SOH):
             raise FIXParseError("FIX message must end with SOH")
 
@@ -39,14 +47,15 @@ class FIXParser:
                 raise FIXParseError("Missing tag")
             fields[tag] = value
 
-        for required in ("8", "9", "35", "10"):
+        for required in ("8", "35"):
             if required not in fields:
                 raise FIXParseError(f"Missing required tag {required}")
 
         if fields["35"] not in self.SUPPORTED_TYPES:
             raise FIXParseError(f"Unsupported MsgType {fields['35']}")
 
-        self._validate_checksum(normalized)
+        if "10" in fields:
+            self._validate_checksum(normalized)
         return FIXMessage(fields)
 
     @staticmethod

@@ -61,6 +61,22 @@ The dashboard shows live L2 depth, flow imbalance, iceberg detections, spoof ale
 ### Raw Numbers
 Full benchmark report: [`benchmarks/results.md`](benchmarks/results.md)
 
+## Performance
+
+### C Extension Benchmark (`backend/benchmarks/bench_c_ext.py`)
+
+- Python order book (`mid_price`): `22.442 ms` avg
+- C extension order book (`mid_price`): `332.842 ms` avg
+- Speedup: `0.07x`
+- Python iceberg scan: `17.177 ms` avg
+- C extension iceberg scan: `66.115 ms` avg
+- Speedup: `0.26x`
+
+Current C path is functionally correct but not yet faster due to high Python↔ctypes call overhead per operation and repeated clear/insert loops in benchmark setup. Next optimisation path:
+1. Batch insert API in C to reduce call crossings.
+2. Keep C order book state warm across iterations.
+3. Move benchmark hot loop fully into C-exported function.
+
 ## Detection Algorithms
 
 ### Iceberg Detection

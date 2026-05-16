@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from pydantic import BaseModel
+from pydantic import BaseModel, model_validator
 from fastapi import APIRouter
 
 from data.scheduler import liquidity_scorer, spread_tracker, vwap_engine
@@ -15,8 +15,15 @@ TRACKED_SYMBOLS = ["RELIANCE", "TCS", "INFY", "HDFCBANK", "ICICIBANK"]
 
 class ImpactBody(BaseModel):
     symbol: str
-    qty: int
+    quantity: float | None = None
+    qty: float | None = None
     side: str
+
+    @model_validator(mode="after")
+    def resolve_quantity(self):
+        if self.quantity is None:
+            self.quantity = self.qty if self.qty is not None else 0.0
+        return self
 
 
 @router.get("/vwap/{symbol}")
@@ -68,11 +75,12 @@ async def get_impact(body: ImpactBody) -> dict:
     adv = ADV_BY_SYMBOL.get(symbol, 1_000_000)
     spread_bps = spread_tracker.get_spread(symbol).get("relative", 10.0) or 10.0
     reference_price = spread_tracker.get_spread(symbol).get("mid", 2500.0) or 2500.0
-    impact = market_impact_model.total_impact(body.qty, adv=adv, spread_bps=spread_bps, reference_price=reference_price)
+    qty = float(body.quantity or 0.0)
+    impact = market_impact_model.total_impact(qty, adv=adv, spread_bps=spread_bps, reference_price=reference_price)
     curve = market_impact_model.price_impact_curve(adv=adv, spread_bps=spread_bps, max_qty_pct=0.10)
     return {
         "symbol": symbol,
-        "qty": int(body.qty),
+        "qty": qty,
         **impact,
         "impact_curve": curve,
     }
