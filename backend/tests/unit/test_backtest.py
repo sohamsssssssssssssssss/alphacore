@@ -235,7 +235,7 @@ def test_get_direction_combined_long_case():
 def test_backtester_run_all_strategies_returns_shape(strategy: str):
     cfg = BacktestConfig(symbol="RELIANCE", strategy=strategy, n_snapshots=200)
     out = Backtester(cfg).run()
-    assert set(out.keys()) == {"config", "metrics", "trades"}
+    assert {"config", "metrics", "trades"}.issubset(set(out.keys()))
 
 
 @pytest.mark.parametrize("strategy", STRATEGIES)

@@ -2,10 +2,12 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from datetime import datetime, timedelta
+import logging
 import math
 import random
 
 from engines.backtest_metrics import full_metrics
+from engines.cost_model import CostModel
 
 SYMBOLS = ["RELIANCE", "TCS", "INFY", "HDFCBANK", "ICICIBANK"]
 STRATEGIES = ["momentum", "mean_reversion", "ofi", "combined"]
@@ -210,6 +212,8 @@ def _get_direction(signal_value: float, strategy: str) -> str | None:
 class Backtester:
     def __init__(self, config: BacktestConfig):
         self.config = config
+        self._cost_model = CostModel()
+        self._log = logging.getLogger(__name__)
 
     def _signal(self, snapshots: list[Snapshot], idx: int) -> float:
         if self.config.strategy == "momentum":
@@ -226,6 +230,8 @@ class Backtester:
 
         trades: list[Trade] = []
         current_capital = float(cfg.initial_capital)
+        gross_pnl_total = 0.0
+        total_costs = 0.0
 
         in_position = False
         direction: str | None = None
@@ -263,11 +269,23 @@ class Backtester:
             if exit_reason is not None:
                 exit_price = snap.bid_price if direction == "LONG" else snap.ask_price
                 if direction == "LONG":
-                    pnl = (exit_price - entry_price) * quantity
+                    gross_pnl = (exit_price - entry_price) * quantity
                     ret = ((exit_price - entry_price) / entry_price) * 100.0 if entry_price else 0.0
+                    side = "SELL"
                 else:
-                    pnl = (entry_price - exit_price) * quantity
+                    gross_pnl = (entry_price - exit_price) * quantity
                     ret = ((entry_price - exit_price) / entry_price) * 100.0 if entry_price else 0.0
+                    side = "BUY"
+
+                adv = self._cost_model.adv_lookup.get(cfg.symbol.upper())
+                trade_cost = self._cost_model.total_cost(
+                    price=exit_price,
+                    qty=quantity,
+                    adv=adv,
+                    spread_bps=snap.spread_bps,
+                    side=side,
+                )
+                pnl = gross_pnl - trade_cost
 
                 trade = Trade(
                     symbol=cfg.symbol.upper(),
@@ -284,6 +302,8 @@ class Backtester:
                     exit_reason=exit_reason,
                 )
                 trades.append(trade)
+                gross_pnl_total += float(gross_pnl)
+                total_costs += float(trade_cost)
                 current_capital = max(0.0, current_capital + pnl)
                 in_position = False
 
@@ -292,11 +312,23 @@ class Backtester:
             snap = snaps[idx]
             exit_price = snap.bid_price if direction == "LONG" else snap.ask_price
             if direction == "LONG":
-                pnl = (exit_price - entry_price) * quantity
+                gross_pnl = (exit_price - entry_price) * quantity
                 ret = ((exit_price - entry_price) / entry_price) * 100.0 if entry_price else 0.0
+                side = "SELL"
             else:
-                pnl = (entry_price - exit_price) * quantity
+                gross_pnl = (entry_price - exit_price) * quantity
                 ret = ((entry_price - exit_price) / entry_price) * 100.0 if entry_price else 0.0
+                side = "BUY"
+
+            adv = self._cost_model.adv_lookup.get(cfg.symbol.upper())
+            trade_cost = self._cost_model.total_cost(
+                price=exit_price,
+                qty=quantity,
+                adv=adv,
+                spread_bps=snap.spread_bps,
+                side=side,
+            )
+            pnl = gross_pnl - trade_cost
 
             trade = Trade(
                 symbol=cfg.symbol.upper(),
@@ -313,12 +345,24 @@ class Backtester:
                 exit_reason="END_OF_DATA",
             )
             trades.append(trade)
+            gross_pnl_total += float(gross_pnl)
+            total_costs += float(trade_cost)
             current_capital = max(0.0, current_capital + pnl)
 
         trades_dict = [asdict(t) for t in trades]
+        net_pnl = float(sum(float(t["pnl"]) for t in trades_dict))
+        denom = abs(float(gross_pnl_total))
+        cost_drag_pct = float((total_costs / denom) * 100.0) if denom > 0 else 0.0
+        if cost_drag_pct > 80.0:
+            self._log.warning("Strategy not viable after costs")
+
         return {
             "config": asdict(cfg),
             "metrics": full_metrics(trades_dict, cfg.initial_capital),
+            "gross_pnl": float(gross_pnl_total),
+            "total_costs": float(total_costs),
+            "net_pnl": float(net_pnl),
+            "cost_drag_pct": float(cost_drag_pct),
             "trades": trades_dict,
         }
 

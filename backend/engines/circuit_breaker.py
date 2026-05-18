@@ -19,7 +19,8 @@ class CircuitBreaker:
             return True
 
         pct_change = abs((current_price - prev_price) / prev_price) if prev_price else 0
-        if pct_change > 0.05:
+        # Numerical guard at the exact threshold: 5.00% move should not trip.
+        if pct_change > (0.05 + 1e-12):
             self.halted[normalized_symbol] = {
                 "reason": f"Price moved {pct_change:.2%} in one cycle",
                 "halted_at": datetime.utcnow().isoformat(),
