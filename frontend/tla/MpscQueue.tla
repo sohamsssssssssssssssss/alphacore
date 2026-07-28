@@ -1,5 +1,5 @@
 ------------------------------ MODULE MpscQueue ------------------------------
-EXTENDS Naturals, Sequences, FiniteSets, TLC
+EXTENDS Naturals, Sequences, FiniteSets, Integers
 
 (***************************************************************************
 TLC command:
@@ -11,29 +11,33 @@ Hardest invariant:
 NoDataLoss is hardest because strict "eventually popped" is liveness; TLC safety
 checking is simpler for invariants, so we use a bounded surrogate requiring that
 all values currently in queue are still present in pushed\popped accounting.
-***************************************************************************)
+**************************************************************************)
 
-CONSTANTS N, NumProducers, Values
+CONSTANTS N, NumProducers, Values, MaxOps
 
 Producers == 1..NumProducers
 
-VARIABLES buffer, head, tail, pushed, popped
+VARIABLES buffer, head, tail, pushed, popped, ops
 
 QueueLen == tail - head
 
 Idx(i) == (i % N)
 
+NullVal == 0 - 1
+
 Init ==
-    /\ buffer = [i \in 0..(N - 1) |-> NULL]
+    /\ buffer = [i \in 0..(N - 1) |-> NullVal]
     /\ head = 0
     /\ tail = 0
     /\ pushed = <<>>
     /\ popped = <<>>
+    /\ ops = 0
 
 CanPush == QueueLen < N
 CanPop == QueueLen > 0
 
 Push(p, v) ==
+    /\ ops < MaxOps
     /\ p \in Producers
     /\ v \in Values
     /\ CanPush
@@ -42,16 +46,19 @@ Push(p, v) ==
     /\ head' = head
     /\ pushed' = Append(pushed, v)
     /\ popped' = popped
+    /\ ops' = ops + 1
 
 Pop(c) ==
+    /\ ops < MaxOps
     /\ c = 0
     /\ CanPop
     /\ LET val == buffer[Idx(head)] IN
-       /\ buffer' = [buffer EXCEPT ![Idx(head)] = NULL]
+       /\ buffer' = [buffer EXCEPT ![Idx(head)] = NullVal]
        /\ head' = head + 1
        /\ tail' = tail
        /\ pushed' = pushed
        /\ popped' = Append(popped, val)
+    /\ ops' = ops + 1
 
 Next ==
     \/ \E p \in Producers, v \in Values : Push(p, v)
@@ -62,7 +69,7 @@ TypeInv ==
     /\ tail \in Nat
     /\ head <= tail
     /\ QueueLen <= N
-    /\ buffer \in [0..(N - 1) -> (Values \cup {NULL})]
+    /\ buffer \in [0..(N - 1) -> (Values \cup {NullVal})]
 
 NeverOverflow == head <= tail
 
@@ -72,4 +79,4 @@ NoDataLoss == \A i \in head..(tail - 1) : buffer[Idx(i)] \in Values
 
 Spec == Init /\ [][Next]_<<buffer, head, tail, pushed, popped>>
 
-=============================================================================
+==============================================================================

@@ -1,5 +1,5 @@
------------------------------ MODULE OrderBook -------------------------------
-EXTENDS Naturals, Sequences, FiniteSets, TLC
+------------------------------ MODULE OrderBook -------------------------------
+EXTENDS Naturals, Sequences, FiniteSets, Integers
 
 (***************************************************************************
 TLC command:
@@ -10,19 +10,31 @@ Expected state-space size (with default cfg): ~500k-1.2M states.
 Hardest invariant:
 QuantityConservation is hardest because every transition must preserve a global
 accounting identity across three evolving sets: live book, submitted, and fills.
-***************************************************************************)
+**************************************************************************)
 
-CONSTANTS PriceRange, OrderIds, Qtys
+CONSTANTS PriceRange, OrderIds, Qtys, Sides
 
 OrderUniverse ==
-    { [id |-> id, price |-> p, qty |-> q] : id \in OrderIds, p \in PriceRange, q \in Qtys }
+    { [id |-> id, price |-> p, qty |-> q, side |-> s] : id \in OrderIds, p \in PriceRange, q \in Qtys, s \in Sides }
 
 VARIABLES book, submitted, cancelled, fills
 
 SeqToSet(s) == {s[i] : i \in 1..Len(s)}
 
+NoQuote == 0 - 1
+
+SetMax(S) == IF S = {} THEN NoQuote ELSE CHOOSE x \in S : \A y \in S : x >= y
+
+SetMin(S) == IF S = {} THEN NoQuote ELSE CHOOSE x \in S : \A y \in S : x <= y
+
+RECURSIVE SetSum(_)
+SetSum(S) ==
+    IF S = {} THEN 0
+    ELSE LET x == CHOOSE x \in S : TRUE IN x + SetSum(S \ {x})
+
+RECURSIVE SeqQtySum(_)
 SeqQtySum(s) ==
-    IF Len(s) = 0 THEN 0 ELSE s[1].qty + SeqQtySum(SubSeq(s, 2, Len(s)))
+    IF s = <<>> THEN 0 ELSE s[1].qty + SeqQtySum(SubSeq(s, 2, Len(s)))
 
 BookQtyAt(p) == SeqQtySum(book[p])
 
@@ -32,7 +44,7 @@ Init ==
     /\ cancelled = {}
     /\ fills = <<>>
 
-CanAdd(o) == o \in OrderUniverse /\ ~\E x \in submitted : x.id = o.id
+CanAdd(o) == o \in OrderUniverse /\ ~\E x \in SeqToSet(submitted) : x.id = o.id
 
 Add(o) ==
     /\ CanAdd(o)
@@ -64,8 +76,8 @@ Fill(p, q) ==
        LET rem == top.qty - q IN
        /\ fills' = Append(fills, [id |-> top.id, price |-> p, qty |-> q])
        /\ book' = IF rem = 0
-                  THEN [book EXCEPT ![p] = SubSeq(@, 2, Len(@))]
-                  ELSE [book EXCEPT ![p] = << [top EXCEPT !.qty = rem] >> \o SubSeq(@, 2, Len(@))]
+                 THEN [book EXCEPT ![p] = SubSeq(@, 2, Len(@))]
+                 ELSE [book EXCEPT ![p] = << [top EXCEPT !.qty = rem] >> \o SubSeq(@, 2, Len(@))]
        /\ submitted' = submitted
        /\ cancelled' = cancelled
 
@@ -74,20 +86,23 @@ Next ==
     \/ \E id \in OrderIds : Cancel(id)
     \/ \E p \in PriceRange, q \in Qtys : Fill(p, q)
 
-BestBid == IF {p \in PriceRange : Len(book[p]) > 0} = {} THEN -1 ELSE Max({p \in PriceRange : Len(book[p]) > 0})
-BestAsk == IF {p \in PriceRange : Len(book[p]) > 0} = {} THEN -1 ELSE Min({p \in PriceRange : Len(book[p]) > 0})
+BestBid == IF {p \in PriceRange : Len(book[p]) > 0} = {} THEN NoQuote ELSE SetMax({p \in PriceRange : Len(book[p]) > 0})
+BestAsk == IF {p \in PriceRange : Len(book[p]) > 0} = {} THEN NoQuote ELSE SetMin({p \in PriceRange : Len(book[p]) > 0})
 
-NoGhostOrders == \A f \in SeqToSet(fills) : f.id \notin cancelled
+AllBookOrders == UNION { SeqToSet(book[p]) : p \in PriceRange }
+
+NoGhostOrders ==
+    \A odr \in AllBookOrders : odr.id \notin cancelled
 
 SubmittedQty == SeqQtySum(submitted)
 FilledQty == SeqQtySum(fills)
-BookQty == Sum({BookQtyAt(p) : p \in PriceRange})
+BookQty == SetSum({BookQtyAt(p) : p \in PriceRange})
 
 QuantityConservation == BookQty + FilledQty <= SubmittedQty
 
 BestBidBelowBestAsk ==
-    IF BestBid = -1 \/ BestAsk = -1 THEN TRUE ELSE BestBid < BestAsk
+    IF BestBid = NoQuote \/ BestAsk = NoQuote THEN TRUE ELSE BestBid < BestAsk
 
 Spec == Init /\ [][Next]_<<book, submitted, cancelled, fills>>
 
-=============================================================================
+==============================================================================

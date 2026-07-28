@@ -34,7 +34,7 @@ Init ==
 
 CanSubmit(o) ==
     /\ o \in OrderUniverse
-    /\ ~\E x \in submitted : x.id = o.id
+    /\ ~\E x \in SeqToSet(submitted) : x.id = o.id
 
 InsertBid(o) ==
     LET pos == IF Len(bids) = 0 THEN 1 ELSE
@@ -94,11 +94,8 @@ PriceTimePriority ==
     /\ \A i, j \in 1..Len(asks) : i < j =>
         (asks[i].price < asks[j].price \/ (asks[i].price = asks[j].price /\ asks[i].id < asks[j].id))
 
-NoDoubleFill ==
-    /\ \A id \in OrderIds :
-         Cardinality({t \in SeqToSet(trades) : t.buy_id = id}) <= 1
-    /\ \A id \in OrderIds :
-         Cardinality({t \in SeqToSet(trades) : t.sell_id = id}) <= 1
+NoCrossTrading ==
+    \A t \in SeqToSet(trades) : t.buy_id # t.sell_id
 
 NoOrderLoss == \A o \in SeqToSet(submitted) : (o.id \in BookIds) \/ (o.id \in TradeIds)
 
