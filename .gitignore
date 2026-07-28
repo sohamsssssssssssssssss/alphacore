@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Python
 __pycache__/
 *.py[cod]
@@ -32,3 +33,25 @@ backend/paper_trading.db
 backend/paper_digest_60d.csv
 backend/ha/journal.log
 frontend/build/
+=======
+.venv_audit/
+build/
+build_clean/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.o
+*.so
+*.dylib
+*.a
+*.out
+states/
+*.swp
+*.swo
+*~
+.DS_Store
+.claude/
+.antigravitycli/
+WorkingPattern.cfg
+>>>>>>> 1feb853 (Initial commit: AlphaCore audit report + build system + TLA+ spec fixes)
