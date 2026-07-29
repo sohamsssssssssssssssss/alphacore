@@ -1,0 +1,420 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AlphaCore — Matching Engine Demo</title>
+<style>
+  :root {
+    --bg-base: #0a0e14;
+    --bg-panel: #0f141c;
+    --bg-elev: #141b26;
+    --border: #1e2733;
+    --text: #c8d3e0;
+    --text-dim: #6b7888;
+    --bid: #00d395;
+    --ask: #ff5c7c;
+    --accent: #3d7cf5;
+    --warn: #f5c542;
+    --mono: "SF Mono", "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--mono);
+    background:
+      radial-gradient(circle at top left, rgba(0,211,149,0.06), transparent 24%),
+      radial-gradient(circle at top right, rgba(61,124,245,0.10), transparent 30%),
+      var(--bg-base);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 13px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 18px; }
+
+  /* ---- Top bar ---- */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; border: 1px solid var(--border);
+    background: var(--bg-panel); border-radius: 8px; margin-bottom: 14px;
+  }
+  .brand { display: flex; align-items: baseline; gap: 10px; }
+  .brand h1 { font-size: 15px; letter-spacing: 0.5px; font-weight: 600; }
+  .brand .tag { color: var(--accent); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
+  .stats { display: flex; gap: 22px; }
+  .stat { text-align: right; }
+  .stat .label { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+  .stat .val { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* ---- Order entry ---- */
+  .entry {
+    display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;
+    padding: 14px 16px; border: 1px solid var(--border);
+    background: var(--bg-panel); border-radius: 8px; margin-bottom: 14px;
+  }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field label { color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+  .field input {
+    width: 110px; padding: 8px 10px; background: var(--bg-elev);
+    border: 1px solid var(--border); border-radius: 5px; color: var(--text);
+    font-family: var(--mono); font-size: 13px; font-variant-numeric: tabular-nums;
+  }
+  .field input:focus { outline: none; border-color: var(--accent); }
+
+  .sidetoggle { display: flex; border: 1px solid var(--border); border-radius: 5px; overflow: hidden; }
+  .sidetoggle button { padding: 8px 16px; background: var(--bg-elev); border: none; color: var(--text-dim); font-family: var(--mono); font-size: 12px; cursor: pointer; font-weight: 600; }
+  .sidetoggle button.on-bid { background: rgba(0,211,149,0.16); color: var(--bid); }
+  .sidetoggle button.on-ask { background: rgba(255,92,124,0.16); color: var(--ask); }
+
+  button.action {
+    padding: 9px 18px; border-radius: 5px; border: 1px solid var(--accent);
+    background: rgba(61,124,245,0.14); color: var(--accent);
+    font-family: var(--mono); font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: 0.4px;
+  }
+  button.action:hover { background: rgba(61,124,245,0.26); }
+  button.ghost { border-color: var(--border); background: var(--bg-elev); color: var(--text-dim); }
+  button.ghost:hover { color: var(--text); border-color: var(--text-dim); }
+  .spacer { flex: 1; }
+
+  /* ---- Layout ---- */
+  .grid { display: grid; grid-template-columns: 1fr 360px; gap: 14px; }
+  .panel { border: 1px solid var(--border); background: var(--bg-panel); border-radius: 8px; overflow: hidden; }
+  .panel h2 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-dim);
+    padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;
+  }
+  .panel h2 .meta { color: var(--text); font-variant-numeric: tabular-nums; }
+
+  /* ---- Order book ---- */
+  .book { padding: 4px 0; }
+  .book-head { display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 6px 14px; color: var(--text-dim); font-size: 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+  .book-head .r { text-align: right; }
+  .row {
+    position: relative; display: grid; grid-template-columns: 1fr 1fr 1fr;
+    padding: 4px 14px; font-variant-numeric: tabular-nums; z-index: 1;
+  }
+  .row .px { font-weight: 600; }
+  .row .r { text-align: right; }
+  .row .depth { position: absolute; top: 0; bottom: 0; right: 0; z-index: -1; opacity: 0.16; }
+  .row.bid .px { color: var(--bid); }
+  .row.bid .depth { background: var(--bid); }
+  .row.ask .px { color: var(--ask); }
+  .row.ask .depth { background: var(--ask); }
+  .spread-row {
+    display: flex; justify-content: center; gap: 18px; padding: 7px 14px; margin: 4px 0;
+    background: var(--bg-elev); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    color: var(--text-dim); font-size: 11px; font-variant-numeric: tabular-nums;
+  }
+  .spread-row b { color: var(--text); }
+  .empty { padding: 22px 14px; text-align: center; color: var(--text-dim); font-size: 12px; }
+
+  /* ---- Trade tape ---- */
+  .tape { max-height: 520px; overflow-y: auto; }
+  .tape-row {
+    display: grid; grid-template-columns: 70px 1fr 1fr 1fr; gap: 6px; padding: 5px 14px;
+    border-bottom: 1px solid rgba(30,39,51,0.5); font-variant-numeric: tabular-nums; font-size: 12px;
+    animation: flash 0.6s ease-out;
+  }
+  @keyframes flash { from { background: rgba(61,124,245,0.18); } to { background: transparent; } }
+  .tape-row .t { color: var(--text-dim); }
+  .tape-row .r { text-align: right; }
+  .tape-row.buy .px { color: var(--bid); }
+  .tape-row.sell .px { color: var(--ask); }
+
+  footer { margin-top: 14px; color: var(--text-dim); font-size: 11px; text-align: center; line-height: 1.7; }
+  footer code { color: var(--accent); }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <h1>AlphaCore</h1>
+      <span class="tag">Matching Engine</span>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="label">Last</div><div class="val" id="s-last">—</div></div>
+      <div class="stat"><div class="label">Spread</div><div class="val" id="s-spread">—</div></div>
+      <div class="stat"><div class="label">Orders</div><div class="val" id="s-orders">0</div></div>
+      <div class="stat"><div class="label">Trades</div><div class="val" id="s-trades">0</div></div>
+    </div>
+  </header>
+
+  <form class="entry" id="entry" autocomplete="off">
+    <div class="field">
+      <label>Side</label>
+      <div class="sidetoggle" id="side-toggle">
+        <button type="button" data-side="BID" class="on-bid">BID</button>
+        <button type="button" data-side="ASK">ASK</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>Price</label>
+      <input id="in-price" type="number" step="0.01" min="0.01" value="100.00" />
+    </div>
+    <div class="field">
+      <label>Quantity</label>
+      <input id="in-qty" type="number" step="1" min="1" value="50" />
+    </div>
+    <button class="action" type="submit">Submit ▸</button>
+    <div class="spacer"></div>
+    <button class="action ghost" type="button" id="btn-seed">Seed book</button>
+    <button class="action ghost" type="button" id="btn-burst">Random burst</button>
+    <button class="action ghost" type="button" id="btn-reset">Reset</button>
+  </form>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>Order Book <span class="meta" id="book-meta"></span></h2>
+      <div class="book" id="book"></div>
+    </div>
+    <div class="panel">
+      <h2>Trade Tape <span class="meta" id="tape-meta">0</span></h2>
+      <div class="tape" id="tape"></div>
+    </div>
+  </div>
+
+  <footer>
+    Price-time priority · resting-order pricing · partial fills — mirrors
+    <code>WorkerThread::match_bid/match_ask</code> in <code>frontend/src/engine.cpp</code>.<br/>
+    Pure in-browser simulation. No backend, no build.
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   Matching engine — faithful port of the C++ hot path.
+   Prices are kept in integer paise (×100) like the Python
+   bridge tests, so float rounding never corrupts price levels.
+   ============================================================ */
+
+const SCALE = 100;
+const toTicks = (rupees) => Math.round(rupees * SCALE);
+const toRupees = (ticks) => (ticks / SCALE).toFixed(2);
+
+// One price level: FIFO queue of resting orders (price-time priority).
+class Engine {
+  constructor() {
+    this.bids = new Map();   // priceTicks -> [orders]  (BID resting)
+    this.asks = new Map();   // priceTicks -> [orders]  (ASK resting)
+    this.nextId = 1;
+    this.trades = [];
+    this.orderCount = 0;
+  }
+
+  bestAskPrice() {
+    let best = null;
+    for (const px of this.asks.keys()) if (best === null || px < best) best = px;
+    return best;
+  }
+  bestBidPrice() {
+    let best = null;
+    for (const px of this.bids.keys()) if (best === null || px > best) best = px;
+    return best;
+  }
+
+  // Mirrors match_bid: lift the best (lowest) ask while marketable.
+  submit(side, priceTicks, qty) {
+    this.orderCount++;
+    const order = { id: this.nextId++, side, price: priceTicks, qty };
+    if (side === 'BID') this.matchBid(order); else this.matchAsk(order);
+    return order;
+  }
+
+  matchBid(bid) {
+    while (bid.qty > 0) {
+      const px = this.bestAskPrice();
+      if (px === null || px > bid.price) break;        // ask->price > bid->price : stop
+      const level = this.asks.get(px);
+      const ask = level[0];                             // FIFO head
+      const fill = Math.min(bid.qty, ask.qty);
+      bid.qty -= fill; ask.qty -= fill;
+      this.recordTrade(bid.id, ask.id, px, fill, 'buy');// trade prints at resting (ask) price
+      if (ask.qty === 0) {
+        level.shift();
+        if (level.length === 0) this.asks.delete(px);
+      }
+    }
+    if (bid.qty > 0) this.rest(this.bids, bid);
+  }
+
+  matchAsk(ask) {
+    while (ask.qty > 0) {
+      const px = this.bestBidPrice();
+      if (px === null || px < ask.price) break;         // bid->price < ask->price : stop
+      const level = this.bids.get(px);
+      const bid = level[0];
+      const fill = Math.min(ask.qty, bid.qty);
+      ask.qty -= fill; bid.qty -= fill;
+      this.recordTrade(bid.id, ask.id, px, fill, 'sell');// prints at resting (bid) price
+      if (bid.qty === 0) {
+        level.shift();
+        if (level.length === 0) this.bids.delete(px);
+      }
+    }
+    if (ask.qty > 0) this.rest(this.asks, ask);
+  }
+
+  rest(bookSide, order) {
+    if (!bookSide.has(order.price)) bookSide.set(order.price, []);
+    bookSide.get(order.price).push(order);              // push_back = time priority
+  }
+
+  recordTrade(buyId, sellId, priceTicks, qty, aggressor) {
+    this.trades.unshift({
+      buyId, sellId, price: priceTicks, qty, aggressor,
+      ts: new Date(),
+    });
+    if (this.trades.length > 200) this.trades.pop();
+  }
+
+  // Aggregate a side into sorted [price, totalQty] rows.
+  depth(bookSide, descending) {
+    const rows = [];
+    for (const [px, level] of bookSide) {
+      let total = 0; for (const o of level) total += o.qty;
+      rows.push([px, total]);
+    }
+    rows.sort((a, b) => descending ? b[0] - a[0] : a[0] - b[0]);
+    return rows;
+  }
+}
+
+/* ============================================================
+   UI wiring
+   ============================================================ */
+
+const eng = new Engine();
+let side = 'BID';
+
+const $ = (id) => document.getElementById(id);
+
+// side toggle
+$('side-toggle').querySelectorAll('button').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    side = btn.dataset.side;
+    $('side-toggle').querySelectorAll('button').forEach((b) => {
+      b.classList.remove('on-bid', 'on-ask');
+    });
+    btn.classList.add(side === 'BID' ? 'on-bid' : 'on-ask');
+  });
+});
+
+$('entry').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const price = parseFloat($('in-price').value);
+  const qty = parseInt($('in-qty').value, 10);
+  if (!(price > 0) || !(qty > 0)) return;               // bridge rejects px<=0 / qty<=0
+  eng.submit(side, toTicks(price), qty);
+  render();
+});
+
+$('btn-reset').addEventListener('click', () => {
+  eng.bids.clear(); eng.asks.clear(); eng.trades = [];
+  eng.orderCount = 0; eng.nextId = 1;
+  render();
+});
+
+$('btn-seed').addEventListener('click', () => {
+  // Build a two-sided book that doesn't cross.
+  for (let i = 1; i <= 6; i++) {
+    eng.submit('BID', toTicks(100.00 - i * 0.05), 40 + Math.floor(Math.random() * 120));
+    eng.submit('ASK', toTicks(100.05 + i * 0.05), 40 + Math.floor(Math.random() * 120));
+  }
+  render();
+});
+
+$('btn-burst').addEventListener('click', () => {
+  // 20 random crossing/non-crossing orders to generate fills.
+  for (let i = 0; i < 20; i++) {
+    const s = Math.random() < 0.5 ? 'BID' : 'ASK';
+    const px = 100.00 + (Math.random() - 0.5) * 0.6;
+    const qty = 10 + Math.floor(Math.random() * 90);
+    eng.submit(s, toTicks(px), qty);
+  }
+  render();
+});
+
+function render() {
+  const bidRows = eng.depth(eng.bids, true);
+  const askRows = eng.depth(eng.asks, false);
+  const maxQty = Math.max(1, ...bidRows.map((r) => r[1]), ...askRows.map((r) => r[1]));
+
+  const bestBid = eng.bestBidPrice();
+  const bestAsk = eng.bestAskPrice();
+
+  // ----- order book -----
+  const book = $('book');
+  let html = '<div class="book-head"><span>Price</span><span class="r">Qty</span><span class="r">Total</span></div>';
+
+  if (askRows.length === 0 && bidRows.length === 0) {
+    html += '<div class="empty">Book is empty — submit an order or seed the book.</div>';
+  } else {
+    // asks: show worst-to-best top-down so best ask sits just above the spread
+    const topAsks = askRows.slice(0, 8).reverse();
+    let cum = 0;
+    const askCum = {};
+    for (const [px, q] of askRows.slice(0, 8)) { cum += q; askCum[px] = cum; }
+    for (const [px, q] of topAsks) {
+      const w = (q / maxQty) * 100;
+      html += `<div class="row ask"><span class="px">${toRupees(px)}</span>` +
+              `<span class="r">${q}</span><span class="r">${askCum[px]}</span>` +
+              `<span class="depth" style="width:${w}%"></span></div>`;
+    }
+
+    // spread
+    if (bestBid !== null && bestAsk !== null) {
+      const spread = bestAsk - bestBid;
+      const mid = (bestAsk + bestBid) / 2;
+      html += `<div class="spread-row">spread <b>${toRupees(spread)}</b> · mid <b>${toRupees(mid)}</b></div>`;
+    } else {
+      html += `<div class="spread-row">one-sided book</div>`;
+    }
+
+    // bids: best (highest) at top
+    cum = 0;
+    for (const [px, q] of bidRows.slice(0, 8)) {
+      cum += q;
+      const w = (q / maxQty) * 100;
+      html += `<div class="row bid"><span class="px">${toRupees(px)}</span>` +
+              `<span class="r">${q}</span><span class="r">${cum}</span>` +
+              `<span class="depth" style="width:${w}%"></span></div>`;
+    }
+  }
+  book.innerHTML = html;
+  $('book-meta').textContent = `${bidRows.length} bid · ${askRows.length} ask levels`;
+
+  // ----- trade tape -----
+  const tape = $('tape');
+  if (eng.trades.length === 0) {
+    tape.innerHTML = '<div class="empty">No trades yet.</div>';
+  } else {
+    tape.innerHTML = eng.trades.slice(0, 60).map((t) => {
+      const cls = t.aggressor === 'buy' ? 'buy' : 'sell';
+      const time = t.ts.toLocaleTimeString('en-GB', { hour12: false });
+      return `<div class="tape-row ${cls}"><span class="t">${time}</span>` +
+             `<span class="px">${toRupees(t.price)}</span>` +
+             `<span class="r">${t.qty}</span>` +
+             `<span class="r t">#${t.buyId}/${t.sellId}</span></div>`;
+    }).join('');
+  }
+  $('tape-meta').textContent = eng.trades.length;
+
+  // ----- header stats -----
+  $('s-orders').textContent = eng.orderCount;
+  $('s-trades').textContent = eng.trades.length;
+  $('s-last').textContent = eng.trades.length ? toRupees(eng.trades[0].price) : '—';
+  $('s-spread').textContent =
+    (bestBid !== null && bestAsk !== null) ? toRupees(bestAsk - bestBid) : '—';
+}
+
+render();
+</script>
+</body>
+</html>

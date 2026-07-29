@@ -165,8 +165,8 @@ class PaperSession:
             self.risk_gate.record_price(symbol, close_price)
             self.risk_gate.check_price_dump(symbol, close_price)
             self.risk_gate.check_price_pump(symbol, close_price)
-            regime = self._get_regime(features)
             features = self.feature_engine.compute(snapshot)
+            regime = self._get_regime(features)
             signal, confidence, model_scores = self._get_signal_confidence(features, regime)
 
             strategy = self.strategies[symbol]
