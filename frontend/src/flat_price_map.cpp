@@ -232,3 +232,59 @@ std::int64_t FlatPriceMap::best_ask_price() const {
     }
     return -1;
 }
+
+BookSideSnapshot FlatPriceMap::snapshot_side(bool is_bid) const {
+    BookSideSnapshot snap;
+    if (is_bid) {
+        for (std::ptrdiff_t i = static_cast<std::ptrdiff_t>(slots_) - 1; i >= 0; --i) {
+            if (level_active_[static_cast<std::size_t>(i)] == 0) continue;
+            const PriceLevel& lvl = levels_[static_cast<std::size_t>(i)];
+            if (lvl.head == nullptr) continue;
+            LevelSnapshot ls;
+            ls.price = min_price_ + static_cast<std::int64_t>(i) * tick_size_;
+            ls.total_qty = static_cast<std::uint32_t>(lvl.total_qty);
+            for (const Order* o = lvl.head; o != nullptr; o = o->next) {
+                OrderSnapshot os;
+                os.order_id = o->order_id;
+                os.price = o->price;
+                os.qty = o->qty;
+                os.side = Side::BID;
+                os.timestamp_ns = o->timestamp_ns;
+                os.session_id = o->session_id;
+                os.account_id = o->account_id;
+                ls.orders.push_back(os);
+            }
+            snap.levels.push_back(std::move(ls));
+        }
+    } else {
+        for (std::size_t i = 0; i < slots_; ++i) {
+            if (level_active_[i] == 0) continue;
+            const PriceLevel& lvl = levels_[i];
+            if (lvl.head == nullptr) continue;
+            LevelSnapshot ls;
+            ls.price = min_price_ + static_cast<std::int64_t>(i) * tick_size_;
+            ls.total_qty = static_cast<std::uint32_t>(lvl.total_qty);
+            for (const Order* o = lvl.head; o != nullptr; o = o->next) {
+                OrderSnapshot os;
+                os.order_id = o->order_id;
+                os.price = o->price;
+                os.qty = o->qty;
+                os.side = Side::ASK;
+                os.timestamp_ns = o->timestamp_ns;
+                os.session_id = o->session_id;
+                os.account_id = o->account_id;
+                ls.orders.push_back(os);
+            }
+            snap.levels.push_back(std::move(ls));
+        }
+    }
+    return snap;
+}
+
+BookSideSnapshot FlatPriceMap::snapshot_bids() const {
+    return snapshot_side(true);
+}
+
+BookSideSnapshot FlatPriceMap::snapshot_asks() const {
+    return snapshot_side(false);
+}

@@ -1,0 +1,30 @@
+{
+  "weights": [
+    0.5425832619873837,
+    3.520675273047467e-12,
+    0.45741673800909555
+  ],
+  "weight_labels": [
+    "weight_momentum",
+    "weight_mean_reversion",
+    "weight_ofi"
+  ],
+  "selection_rule": "max Sharpe subject to Calmar > 1.0; else max Sharpe",
+  "timestamp": "2026-07-30T00:30:13.826303",
+  "train_config": {
+    "symbol": "RELIANCE",
+    "hold_periods": 10,
+    "stop_loss_pct": 0.005,
+    "position_size_pct": 0.1,
+    "initial_capital": 100000.0
+  },
+  "nsgaii_config": {
+    "population_size": 50,
+    "n_generations": 30
+  },
+  "train_period": {
+    "start": "2021-07-29T00:00:00",
+    "end": "2025-01-28T00:00:00",
+    "n_snapshots": 866
+  }
+}

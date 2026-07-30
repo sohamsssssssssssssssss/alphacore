@@ -1,0 +1,57 @@
+{
+  "diagnostic_type": "MTM bug fix + position dump",
+  "original_buggy_results": {
+    "gross_pnl": -22712.29,
+    "total_costs": 15968.66,
+    "net_pnl": -38680.95,
+    "long_leg_pnl": -12045.47,
+    "short_leg_pnl": -10369.12,
+    "sharpe": -4.3657,
+    "ci_lower": -6.6441,
+    "ci_upper": -2.1293,
+    "final_equity": 61319.05,
+    "cost_drag_pct": 70.3
+  },
+  "corrected_results": {
+    "gross_pnl": -6967.420136658648,
+    "total_costs": 16931.452608853877,
+    "net_pnl": -23898.872745512417,
+    "long_leg_pnl": -10008.992412420044,
+    "short_leg_pnl": -10046.404319099325,
+    "sharpe": -7.1922211691108835,
+    "ci_lower": -6.992296847225346,
+    "ci_upper": -3.980072587327611,
+    "final_equity": 76101.12725448758,
+    "cost_drag_pct": 243.00892262503436,
+    "n_rebalances": 142
+  },
+  "naive_hold_benchmark": {
+    "long_target": "HDFCBANK",
+    "short_target": "TCS",
+    "gross_pnl": 1502.6674699800376,
+    "total_costs": 244.07140014987192,
+    "net_pnl": 1258.5960698301496,
+    "sharpe": -2.074207878454011,
+    "return_pct": 1.2585960698301497
+  },
+  "whipsaw": {
+    "total_rebalances": 71,
+    "long_same_symbol": 36,
+    "long_changed": 34,
+    "short_same_symbol": 36,
+    "short_changed": 34,
+    "estimated_whipsaw_cost": 16692.981445348894
+  },
+  "position_alignment": {
+    "total_rebalances": 71,
+    "long_on_winner": 43,
+    "long_on_loser": 28,
+    "short_on_winner": 20,
+    "short_on_loser": 51,
+    "long_icici": 20,
+    "long_reliance": 23,
+    "short_tcs": 19,
+    "short_infy": 18,
+    "short_hdfc": 14
+  }
+}

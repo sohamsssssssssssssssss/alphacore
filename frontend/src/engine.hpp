@@ -9,6 +9,7 @@
 #include "flat_price_map.hpp"
 #include "mpsc_queue.hpp"
 #include "pool.hpp"
+#include <vector>
 
 struct Trade {
     std::uint64_t buy_order_id;
@@ -20,7 +21,10 @@ struct Trade {
 
 class WorkerThread {
 public:
-    WorkerThread(std::int64_t min_price, std::int64_t max_price, std::int64_t tick_size, MpscQueue<Trade, (1u << 20)>* out);
+    WorkerThread(std::int64_t min_price, std::int64_t max_price, std::int64_t tick_size,
+                 MpscQueue<Trade, (1u << 20)>* out,
+                 std::int64_t price_band_center = 0,
+                 std::int64_t price_band_half_width = 0);
     ~WorkerThread();
 
     WorkerThread(const WorkerThread&) = delete;
@@ -31,12 +35,20 @@ public:
     void request_stop();
     void join();
 
+    // Snapshot: capture resting orders for this worker's books
+    BookSideSnapshot snapshot_bids() const { return bid_book_.snapshot_bids(); }
+    BookSideSnapshot snapshot_asks() const { return ask_book_.snapshot_asks(); }
+
 private:
     void run();
     void handle_order(const Order& incoming);
     void match_bid(Order* bid);
     void match_ask(Order* ask);
     void publish_trade(std::uint64_t buy_id, std::uint64_t sell_id, std::int64_t px, std::uint32_t qty);
+
+#ifdef ALPHACORE_FAULT_INJECT
+    bool check_order_safety(const Order& incoming);
+#endif
 
     std::atomic<bool> running_;
     std::thread thread_;
@@ -46,6 +58,11 @@ private:
     FlatPriceMap ask_book_;
     Pool<Order, 100000> pool_;
     MpscQueue<Trade, (1u << 20)>* out_trades_;
+
+#ifdef ALPHACORE_FAULT_INJECT
+    std::int64_t price_band_center_;
+    std::int64_t price_band_half_width_;
+#endif
 };
 
 class MatchingEngine {
@@ -53,7 +70,8 @@ public:
     explicit MatchingEngine(std::size_t num_threads = std::thread::hardware_concurrency(),
                             std::int64_t min_price = 1,
                             std::int64_t max_price = 1'000'001,
-                            std::int64_t tick_size = 1);
+                            std::int64_t tick_size = 1,
+                            std::int64_t price_band = 0);
     ~MatchingEngine();
 
     MatchingEngine(const MatchingEngine&) = delete;
@@ -64,6 +82,7 @@ public:
     void route(const Order& order);
 
     bool pop_trade(Trade& trade);
+    std::vector<BookSnapshot> snapshot_all() const;
 
 private:
     std::size_t route_worker(std::uint32_t symbol_id) const;
@@ -71,4 +90,5 @@ private:
     std::atomic<bool> started_;
     std::vector<std::unique_ptr<WorkerThread>> workers_;
     MpscQueue<Trade, (1u << 20)> trades_out_;
+    std::int64_t price_band_;
 };

@@ -1,0 +1,214 @@
+{
+  "protocol_file": "EXPERIMENT_PROTOCOL.md",
+  "report_file": "REAL_DATA_EXPERIMENT_REPORT.md",
+  "timestamp": "2026-07-30T11:30:00Z",
+  "data_source": "yfinance, period=5y, auto_adjust=True",
+  "symbols": ["RELIANCE", "TCS", "INFY", "HDFCBANK", "ICICIBANK"],
+  "granularity": "daily",
+  "train_split": 0.7,
+  "nsga2_config": {"population": 50, "generations": 30, "seed": 42},
+  "selection_rule": "max Sharpe subject to Calmar > 1.0 (MaxDD < 0.10); else max Sharpe",
+  "backtest_config": {
+    "hold_periods": 10,
+    "stop_loss_pct": 0.005,
+    "position_size_pct": 0.1,
+    "initial_capital": 100000.0
+  },
+  "cost_model": {
+    "market_impact_k": 0.0015,
+    "brokerage_per_trade": 20,
+    "stt_rate": 0.001,
+    "adv_lookup": "empty (default fallback)"
+  },
+  "results_by_symbol": {
+    "RELIANCE": {
+      "train": {"snaps": 867, "period": "2021-07-29 to 2025-01-28"},
+      "test": {"snaps": 372, "period": "2025-01-29 to 2026-07-28"},
+      "nsga2_meta": {
+        "weights": [0.3055, 0.0, 0.6945],
+        "sharpe": 1.72,
+        "max_drawdown": 0.031
+      },
+      "arm_a": {
+        "trades": 67,
+        "win_rate": 0.1791,
+        "sharpe": -10.58,
+        "calmar": -0.94,
+        "net_pnl": -7627.42,
+        "cost_drag_pct": 82.1
+      },
+      "arm_b": {
+        "trades": 66,
+        "win_rate": 0.1667,
+        "sharpe": -10.66,
+        "calmar": -0.94,
+        "net_pnl": -7439.18,
+        "cost_drag_pct": 81.8
+      },
+      "paired_diff": {
+        "n": 67,
+        "mean": 0.00017,
+        "ci_lower": -0.0058,
+        "ci_upper": 0.0064,
+        "excludes_zero": false
+      },
+      "sharpe_ci": {
+        "arm_a": {"mean": -10.58, "lower": -11.59, "upper": -1.03},
+        "arm_b": {"mean": -10.66, "lower": -11.46, "upper": -1.10}
+      }
+    },
+    "TCS": {
+      "train": {"snaps": 867, "period": "2021-07-29 to 2025-01-28"},
+      "test": {"snaps": 372, "period": "2025-01-29 to 2026-07-28"},
+      "nsga2_meta": {
+        "weights": [0.0785, 0.0, 0.9215],
+        "sharpe": 0.0,
+        "max_drawdown": 0.0
+      },
+      "arm_a": {
+        "trades": 0,
+        "win_rate": 0.0,
+        "sharpe": 0.0,
+        "calmar": 0.0,
+        "net_pnl": 0.0,
+        "cost_drag_pct": 0.0
+      },
+      "arm_b": {
+        "trades": 66,
+        "win_rate": 0.1818,
+        "sharpe": -5.59,
+        "calmar": -0.51,
+        "net_pnl": -6252.31,
+        "cost_drag_pct": 78.4
+      },
+      "paired_diff": {
+        "n": 0,
+        "mean": 0.0,
+        "ci_lower": 0.0,
+        "ci_upper": 0.0,
+        "excludes_zero": false
+      },
+      "sharpe_ci": {
+        "arm_a": {"mean": 0.0, "lower": 0.0, "upper": 0.0},
+        "arm_b": {"mean": -5.59, "lower": -6.27, "upper": 2.33}
+      }
+    },
+    "INFY": {
+      "train": {"snaps": 867, "period": "2021-07-29 to 2025-01-28"},
+      "test": {"snaps": 372, "period": "2025-01-29 to 2026-07-28"},
+      "nsga2_meta": {
+        "weights": [0.0, 0.3863, 0.6137],
+        "sharpe": 2.45,
+        "max_drawdown": 0.02
+      },
+      "arm_a": {
+        "trades": 47,
+        "win_rate": 0.1702,
+        "sharpe": -6.43,
+        "calmar": -0.59,
+        "net_pnl": -4843.58,
+        "cost_drag_pct": 83.2
+      },
+      "arm_b": {
+        "trades": 74,
+        "win_rate": 0.1892,
+        "sharpe": -7.55,
+        "calmar": -0.68,
+        "net_pnl": -9369.12,
+        "cost_drag_pct": 84.1
+      },
+      "paired_diff": {
+        "n": 47,
+        "mean": 0.00454,
+        "ci_lower": -0.0091,
+        "ci_upper": 0.0177,
+        "excludes_zero": false
+      },
+      "sharpe_ci": {
+        "arm_a": {"mean": -6.43, "lower": -9.37, "upper": 2.26},
+        "arm_b": {"mean": -7.55, "lower": -9.32, "upper": 0.41}
+      }
+    },
+    "HDFCBANK": {
+      "train": {"snaps": 867, "period": "2021-07-29 to 2025-01-28"},
+      "test": {"snaps": 372, "period": "2025-01-29 to 2026-07-28"},
+      "nsga2_meta": {
+        "weights": [0.0, 0.5065, 0.4935],
+        "sharpe": 0.98,
+        "max_drawdown": 0.021
+      },
+      "arm_a": {
+        "trades": 55,
+        "win_rate": 0.1818,
+        "sharpe": -8.70,
+        "calmar": -0.79,
+        "net_pnl": -6301.82,
+        "cost_drag_pct": 82.7
+      },
+      "arm_b": {
+        "trades": 80,
+        "win_rate": 0.1875,
+        "sharpe": -9.62,
+        "calmar": -0.87,
+        "net_pnl": -10305.23,
+        "cost_drag_pct": 83.4
+      },
+      "paired_diff": {
+        "n": 55,
+        "mean": 0.00226,
+        "ci_lower": -0.0068,
+        "ci_upper": 0.0111,
+        "excludes_zero": false
+      },
+      "sharpe_ci": {
+        "arm_a": {"mean": -8.70, "lower": -10.83, "upper": 0.81},
+        "arm_b": {"mean": -9.62, "lower": -11.01, "upper": -0.53}
+      }
+    },
+    "ICICIBANK": {
+      "train": {"snaps": 867, "period": "2021-07-29 to 2025-01-28"},
+      "test": {"snaps": 372, "period": "2025-01-29 to 2026-07-28"},
+      "nsga2_meta": {
+        "weights": [0.0, 0.2261, 0.7739],
+        "sharpe": -0.42,
+        "max_drawdown": 0.043
+      },
+      "arm_a": {
+        "trades": 17,
+        "win_rate": 0.1765,
+        "sharpe": -7.59,
+        "calmar": -0.68,
+        "net_pnl": -1520.23,
+        "cost_drag_pct": 81.4
+      },
+      "arm_b": {
+        "trades": 69,
+        "win_rate": 0.1594,
+        "sharpe": -9.93,
+        "calmar": -0.89,
+        "net_pnl": -8115.41,
+        "cost_drag_pct": 82.1
+      },
+      "paired_diff": {
+        "n": 17,
+        "mean": 0.00362,
+        "ci_lower": -0.0172,
+        "ci_upper": 0.0228,
+        "excludes_zero": false
+      },
+      "sharpe_ci": {
+        "arm_a": {"mean": -7.59, "lower": -20.78, "upper": 5.20},
+        "arm_b": {"mean": -9.93, "lower": -10.40, "upper": 0.00}
+      }
+    }
+  },
+  "summary": {
+    "decision_gate_answer": "NO — no statistically significant or economically meaningful edge found",
+    "phase2_proceed": false,
+    "all_cis_overlap": true,
+    "all_paired_diffs_include_zero": true,
+    "all_net_pnl_negative": true,
+    "ofi_trades_zero_all_symbols": true,
+    "sanity_checks_passed": true
+  }
+}

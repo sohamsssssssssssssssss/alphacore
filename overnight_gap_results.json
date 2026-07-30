@@ -1,0 +1,38 @@
+{
+  "protocol": "OVERNIGHT_GAP_EXPERIMENT_PROTOCOL.md",
+  "parameters": {
+    "gap_threshold_pct": 1.5,
+    "gap_hypothesis": "reversal",
+    "pead_surprise_threshold_pct": 5.0,
+    "pead_hold_days": 10,
+    "position_size_pct": 10.0,
+    "initial_capital": 100000.0,
+    "cost_model": "CostModel() default",
+    "bootstrap": {
+      "n_resamples": 2000,
+      "mean_block_length": 5,
+      "seed": 2026
+    }
+  },
+  "overnight_gap": {
+    "sharpe": -6.795219292962517,
+    "ci_lower": -5.872562342769051,
+    "ci_upper": -3.524728707004727,
+    "ci_excludes_zero": true,
+    "n_observations": 371,
+    "n_trades": 126,
+    "win_rate": 46.82539682539682,
+    "net_pnl": -17955.913794540364,
+    "gross_pnl": -2526.9030165843087,
+    "total_costs": 15429.010777956048,
+    "cost_drag_pct": 610.5897486644307,
+    "final_equity": 82044.08620545964
+  },
+  "pead": {
+    "n_trades": 30,
+    "net_pnl": -4621.562590742382,
+    "gross_pnl": -833.154252468104,
+    "total_costs": 3788.4083382742892,
+    "cost_drag_pct": 454.7067157194067
+  }
+}

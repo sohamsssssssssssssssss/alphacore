@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
+  backend:
     runs-on: ubuntu-latest
 
     services:
@@ -50,6 +50,69 @@ jobs:
         run: |
           cd backend
           python -c "import main; print('Backend imports OK')"
+
+  cpp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential
+
+      - name: Build C++ (Release)
+        run: |
+          cd frontend
+          cmake -B build -DCMAKE_BUILD_TYPE=Release
+          cmake --build build -j$(nproc) --target engine_test
+          cmake --build build -j$(nproc) --target replication_test
+          cmake --build build -j$(nproc) --target fault_test
+          cmake --build build -j$(nproc) --target ha_chaos_test
+          cmake --build build -j$(nproc) --target deterministic_replay_test
+          cmake --build build -j$(nproc) --target add_bench
+          cmake --build build -j$(nproc) --target mpsc_tsan_test
+
+      - name: Run unit tests
+        run: |
+          cd frontend/build
+          ./engine_test
+          ./replication_test
+          OB_FAULT_POOL_EXHAUSTION=1 OB_FAULT_QUEUE_FULL=1 ./fault_test
+
+      - name: Run HA chaos tests
+        run: |
+          cd frontend/build
+          ./ha_chaos_test
+
+      - name: Run deterministic replay test
+        run: |
+          cd frontend/build
+          ./deterministic_replay_test
+
+      - name: Run TSan tests
+        run: |
+          cd frontend/build_tsan
+          ./mpsc_tsan_test
+
+  tla:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Run TLA+ model checks
+        run: |
+          # Download tla2tools
+          curl -sL https://github.com/tlaplus/tlaplus/releases/latest/download/tla2tools.jar -o /tmp/tla2tools.jar
+          cd specs/tla
+          timeout 600 java -Xmx8g -cp /tmp/tla2tools.jar tlc2.TLC MpscQueue.tla -config MpscQueue.cfg -deadlock 2>&1 | tail -10
+          timeout 600 java -Xmx8g -cp /tmp/tla2tools.jar tlc2.TLC PrimaryBackup.tla -config PrimaryBackup.cfg -deadlock 2>&1 | tail -10
 
   frontend:
     runs-on: ubuntu-latest

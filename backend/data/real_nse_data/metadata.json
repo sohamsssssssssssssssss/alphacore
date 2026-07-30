@@ -1,0 +1,25 @@
+{
+  "tickers": [
+    "RELIANCE.NS",
+    "TCS.NS",
+    "INFY.NS",
+    "HDFCBANK.NS",
+    "ICICIBANK.NS"
+  ],
+  "short_names": [
+    "RELIANCE",
+    "TCS",
+    "INFY",
+    "HDFCBANK",
+    "ICICIBANK"
+  ],
+  "date_range": [
+    "2021-07-30 00:00:00",
+    "2026-07-30 00:00:00"
+  ],
+  "total_rows": 1239,
+  "source": "yfinance v1.3.0, auto_adjust=True",
+  "pull_timestamp": "2026-07-30 14:52:37.040114",
+  "corporate_actions_handled": "auto_adjust=True (splits/dividends applied to OHLC)",
+  "note": "Bid/ask volumes NOT available from daily OHLCV. See adapter code."
+}

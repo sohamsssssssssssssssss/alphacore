@@ -1,7 +1,13 @@
 #include "engine.hpp"
 
 #include <chrono>
+#include <cstdlib>
 #include <thread>
+
+#ifdef __APPLE__
+#include <pthread.h>
+#include <pthread/qos.h>
+#endif
 
 namespace {
 std::uint64_t now_ns() {
@@ -12,11 +18,25 @@ std::uint64_t now_ns() {
 }
 }  // namespace
 
+// Set current thread to high QoS (performance cores on Apple Silicon)
+static inline void set_perf_qos() {
+#ifdef __APPLE__
+    pthread_set_qos_class_self_np(QOS_CLASS_USER_INTERACTIVE, 0);
+#endif
+}
+
 WorkerThread::WorkerThread(std::int64_t min_price,
                            std::int64_t max_price,
                            std::int64_t tick_size,
-                           MpscQueue<Trade, (1u << 20)>* out)
-    : running_(false), thread_(), in_queue_(), bid_book_(min_price, max_price, tick_size, false), ask_book_(min_price, max_price, tick_size, false), pool_(), out_trades_(out) {}
+                           MpscQueue<Trade, (1u << 20)>* out,
+                           std::int64_t price_band_center,
+                           std::int64_t price_band_half_width)
+    : running_(false), thread_(), in_queue_(), bid_book_(min_price, max_price, tick_size, false),
+      ask_book_(min_price, max_price, tick_size, false), pool_(), out_trades_(out)
+#ifdef ALPHACORE_FAULT_INJECT
+      , price_band_center_(price_band_center), price_band_half_width_(price_band_half_width)
+#endif
+{}
 
 WorkerThread::~WorkerThread() {
     request_stop();
@@ -29,7 +49,10 @@ bool WorkerThread::enqueue(const Order& order) {
 
 void WorkerThread::start() {
     running_.store(true, std::memory_order_release);
-    thread_ = std::thread(&WorkerThread::run, this);
+    thread_ = std::thread([this]() {
+        set_perf_qos();
+        run();
+    });
 }
 
 void WorkerThread::request_stop() {
@@ -41,6 +64,63 @@ void WorkerThread::join() {
         thread_.join();
     }
 }
+
+#ifdef ALPHACORE_FAULT_INJECT
+bool WorkerThread::check_order_safety(const Order& incoming) {
+    // --- CHECK 1: Self-trade prevention ---
+    // Reject an order if it would trade against a resting order from the same session.
+    if (incoming.side == Side::BID) {
+        PriceLevel* best_ask = ask_book_.best_ask();
+        if (best_ask && best_ask->head) {
+            // The best ask's head is the order at the front of the queue
+            Order* top = best_ask->head;
+            if (top->session_id == incoming.session_id && top->session_id != 0) {
+                return false; // self-trade detected
+            }
+        }
+    } else {
+        PriceLevel* best_bid = bid_book_.best_bid();
+        if (best_bid && best_bid->head) {
+            Order* top = best_bid->head;
+            if (top->session_id == incoming.session_id && top->session_id != 0) {
+                return false; // self-trade detected
+            }
+        }
+    }
+
+    // --- CHECK 2: Wash-trade heuristic ---
+    // Flag same-account cross: both sides of the potential trade belong to same account.
+    if (incoming.side == Side::BID) {
+        PriceLevel* best_ask = ask_book_.best_ask();
+        if (best_ask && best_ask->head) {
+            Order* top = best_ask->head;
+            if (top->account_id == incoming.account_id && top->account_id != 0) {
+                return false; // wash-trade detected
+            }
+        }
+    } else {
+        PriceLevel* best_bid = bid_book_.best_bid();
+        if (best_bid && best_bid->head) {
+            Order* top = best_bid->head;
+            if (top->account_id == incoming.account_id && top->account_id != 0) {
+                return false; // wash-trade detected
+            }
+        }
+    }
+
+    // --- CHECK 3: Limit-up / limit-down price band ---
+    // Reject orders with price outside [center - half_width, center + half_width].
+    if (price_band_half_width_ > 0) {
+        const std::int64_t low = price_band_center_ - price_band_half_width_;
+        const std::int64_t high = price_band_center_ + price_band_half_width_;
+        if (incoming.price < low || incoming.price > high) {
+            return false; // price outside band
+        }
+    }
+
+    return true;
+}
+#endif
 
 void WorkerThread::run() {
     Order incoming(0, 1, 0, Side::BID, 0);
@@ -62,7 +142,17 @@ void WorkerThread::run() {
 }
 
 void WorkerThread::handle_order(const Order& incoming) {
-    Order* live = pool_.acquire(incoming.order_id, incoming.price, incoming.qty, incoming.side, incoming.symbol_id);
+#ifdef ALPHACORE_FAULT_INJECT
+    // Run real safety checks. If any check fails, the order is silently dropped
+    // (in a real system this would send a rejection message to the client).
+    if (!check_order_safety(incoming)) {
+        return;
+    }
+#endif
+
+    Order* live = pool_.acquire(incoming.order_id, incoming.price, incoming.qty, incoming.side,
+                                incoming.symbol_id, incoming.timestamp_ns,
+                                incoming.session_id, incoming.account_id);
     if (live == nullptr) {
         return;
     }
@@ -157,12 +247,13 @@ void WorkerThread::publish_trade(std::uint64_t buy_id,
 MatchingEngine::MatchingEngine(std::size_t num_threads,
                                std::int64_t min_price,
                                std::int64_t max_price,
-                               std::int64_t tick_size)
-    : started_(false), workers_(), trades_out_() {
+                               std::int64_t tick_size,
+                               std::int64_t price_band)
+    : started_(false), workers_(), trades_out_(), price_band_(price_band) {
     const std::size_t threads = (num_threads == 0) ? 1 : num_threads;
     workers_.reserve(threads);
     for (std::size_t i = 0; i < threads; ++i) {
-        workers_.push_back(std::make_unique<WorkerThread>(min_price, max_price, tick_size, &trades_out_));
+        workers_.push_back(std::make_unique<WorkerThread>(min_price, max_price, tick_size, &trades_out_, 500, price_band_));
     }
 }
 
@@ -208,4 +299,17 @@ void MatchingEngine::route(const Order& order) {
 
 bool MatchingEngine::pop_trade(Trade& trade) {
     return trades_out_.pop(trade);
+}
+
+std::vector<BookSnapshot> MatchingEngine::snapshot_all() const {
+    std::vector<BookSnapshot> result;
+    result.reserve(workers_.size());
+    for (std::size_t i = 0; i < workers_.size(); ++i) {
+        BookSnapshot snap;
+        snap.symbol_id = static_cast<std::uint32_t>(i);
+        snap.bids = workers_[i]->snapshot_bids();
+        snap.asks = workers_[i]->snapshot_asks();
+        result.push_back(std::move(snap));
+    }
+    return result;
 }

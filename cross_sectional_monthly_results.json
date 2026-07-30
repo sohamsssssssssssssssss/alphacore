@@ -1,0 +1,38 @@
+{
+  "protocol": "CROSS_SECTIONAL_MONTHLY_PROTOCOL.md",
+  "parameters": {
+    "rebalance_interval": 21,
+    "lookback_n": 20,
+    "k": 1,
+    "position_size_pct": 0.1,
+    "initial_capital": 100000.0,
+    "mtm_logic": "FIXED (diagnostic pass)",
+    "bootstrap": {
+      "method": "stationary bootstrap",
+      "n_resamples": 2000,
+      "mean_block_length": 21,
+      "seed": 2026
+    }
+  },
+  "results": {
+    "sharpe": -4.58863888701789,
+    "ci_lower": -3.5125300274265023,
+    "ci_upper": -0.6951667592425609,
+    "ci_excludes_zero": true,
+    "n_observations": 352,
+    "net_pnl": -7822.943961027806,
+    "gross_pnl": -3494.8878729981525,
+    "total_costs": 4328.0560880296025,
+    "cost_drag_pct": 123.83962648611961,
+    "long_leg_pnl": -2563.6469907121273,
+    "short_leg_pnl": -2586.17077426303,
+    "final_equity": 92177.0560389722,
+    "total_return_pct": -7.822943961027806,
+    "n_rebalances": 17,
+    "n_trades": 68,
+    "long_on_winner_pct": 58.82352941176471,
+    "short_on_loser_pct": 76.47058823529412,
+    "long_turnover_pct": 100.0,
+    "short_turnover_pct": 75.0
+  }
+}

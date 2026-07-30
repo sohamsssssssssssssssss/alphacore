@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Python
 __pycache__/
 *.py[cod]
@@ -33,7 +32,8 @@ backend/paper_trading.db
 backend/paper_digest_60d.csv
 backend/ha/journal.log
 frontend/build/
-=======
+
+# C++ build artifacts
 .venv_audit/
 build/
 build_clean/
@@ -50,8 +50,6 @@ states/
 *.swp
 *.swo
 *~
-.DS_Store
 .claude/
 .antigravitycli/
 WorkingPattern.cfg
->>>>>>> 1feb853 (Initial commit: AlphaCore audit report + build system + TLA+ spec fixes)
