@@ -1,0 +1,105 @@
+{
+  "protocol": "K_EXPANSION_EXPERIMENT_PROTOCOL.md",
+  "timestamp": "2026-07-31T10:36:02.804158",
+  "parameters": {
+    "k_values": [
+      1,
+      5,
+      10
+    ],
+    "lookback_n": 20,
+    "rebalance_interval": 21,
+    "position_size_pct": 0.1,
+    "sizing_convention": "equal weight: 0.1% of equity split across K positions per leg (total deployed constant across K)",
+    "initial_capital": 100000.0,
+    "cost_model": "CostModel() default (unchanged)",
+    "bootstrap": {
+      "method": "stationary bootstrap (Politis-Romano)",
+      "n_resamples": 2000,
+      "mean_block_length": 21,
+      "seed": 2026
+    },
+    "split_index": 867,
+    "universe": "49 NIFTY 50 symbols (unchanged)"
+  },
+  "results_by_k": {
+    "1": {
+      "sharpe": -1.5695621937298496,
+      "ci_lower": -3.1371605270276364,
+      "ci_upper": 0.04812026448287231,
+      "ci_excludes_zero": false,
+      "n_observations": 351,
+      "net_pnl": -7474.367204368929,
+      "gross_pnl": -3177.037022283793,
+      "total_costs": 4297.330182085086,
+      "cost_drag_pct": 135.2622003440167,
+      "long_leg_pnl": -2552.9430966445566,
+      "short_leg_pnl": -2568.773013975318,
+      "final_equity": 92525.63279563107,
+      "n_rebalances": 17,
+      "n_trades": 68,
+      "trades_per_rebalance": 4.0,
+      "underfill_events": []
+    },
+    "5": {
+      "sharpe": -3.240688124958872,
+      "ci_lower": -4.436505597380993,
+      "ci_upper": -2.0913684021313936,
+      "ci_excludes_zero": true,
+      "n_observations": 351,
+      "net_pnl": -11947.973095763722,
+      "gross_pnl": -2238.0594399572838,
+      "total_costs": 9709.913655806322,
+      "cost_drag_pct": 433.85414535691007,
+      "long_leg_pnl": -5257.180666991943,
+      "short_leg_pnl": -5266.130953390833,
+      "final_equity": 88052.02690423628,
+      "n_rebalances": 17,
+      "n_trades": 340,
+      "trades_per_rebalance": 20.0,
+      "underfill_events": []
+    },
+    "10": {
+      "sharpe": -3.708240977582449,
+      "ci_lower": -4.364579276337645,
+      "ci_upper": -3.0552380711965745,
+      "ci_excludes_zero": true,
+      "n_observations": 351,
+      "net_pnl": -19052.80637853747,
+      "gross_pnl": -2678.4942410004883,
+      "total_costs": 16374.31213753705,
+      "cost_drag_pct": 611.3252695074234,
+      "long_leg_pnl": -8569.667906186829,
+      "short_leg_pnl": -8580.03134383787,
+      "final_equity": 80947.19362146253,
+      "n_rebalances": 17,
+      "n_trades": 680,
+      "trades_per_rebalance": 40.0,
+      "underfill_events": []
+    }
+  },
+  "prior_configurations": {
+    "5_symbol_k1": {
+      "sharpe": -2.196819040599928,
+      "ci_lower": -3.592393366184472,
+      "ci_upper": -0.7825711412036436,
+      "net_pnl": -7890.166192323508,
+      "gross_pnl": -3562.2687486336913,
+      "total_costs": 4327.897443689768,
+      "cost_drag_pct": 121.49272694121503,
+      "n_rebalances": 34,
+      "n_trades": 68
+    },
+    "49_symbol_k1": {
+      "sharpe": -1.5695621937298496,
+      "ci_lower": -3.1371605270276364,
+      "ci_upper": 0.04812026448287231,
+      "net_pnl": -7474.367204368929,
+      "gross_pnl": -3177.037022283793,
+      "total_costs": 4297.330182085086,
+      "cost_drag_pct": 135.2622003440167,
+      "n_rebalances": 34,
+      "n_trades": 68
+    }
+  }
+}
