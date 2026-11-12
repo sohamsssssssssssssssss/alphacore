@@ -1,6 +1,6 @@
 # AlphaCore
 
-[![CI](https://github.com/sohamsssssssssssssssss/alphacore/actions/workflows/ci.yml/badge.svg?branch=cleanup%2Fphase1&event=pull_request)](https://github.com/sohamsssssssssssssssss/alphacore/actions/workflows/ci.yml)
+[![CI](https://github.com/sohamsssssssssssssssss/alphacore/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/sohamsssssssssssssssss/alphacore/actions/workflows/ci.yml)
 
 ![Python 3.11](https://img.shields.io/badge/Python-3.11-blue)
 ![C++20](https://img.shields.io/badge/C%2B%2B-20-00599C)
@@ -23,7 +23,7 @@ Every number below links to the file that produced it. The full honest-status au
 | `engine/` | C++ matching engine, tests, benchmarks, pybind11 bindings (`CMakeLists.txt`) |
 | `engine/legacy/` | Older `std::map`-based order book and its benchmark |
 | `specs/tla/` | TLA+ specs checked in CI (MpscQueue, PrimaryBackup, plus KillSwitch, DetectionQueue, OrderBook) |
-| `specs/tla_from_frontend/` | A second, differently-configured set of TLA+ models (MpscQueue, MatchingEngine, OrderBook, PrimaryBackup) |
+| `specs/tla_engine_models/` | A second, differently-configured set of TLA+ models (MpscQueue, MatchingEngine, OrderBook, PrimaryBackup) |
 | `backend/` | Python: detectors, signals, backtester, experiments, paper-trading harness, tests |
 | `frontend/` | React/Vite dashboard |
 | `research/` | Experiment protocols, reports and result JSONs |
@@ -53,7 +53,7 @@ Specs in `specs/tla/`, checked in CI with tla2tools v1.7.4 (source: [`research/A
 | `MpscQueue.tla` | 2 producers, 1 consumer, Capacity=4 | 1,243,889 | 327,308 | NoTornRead, ItemsInOutAreFromEnqueue, NoDuplicates, FullQueueBackpressure |
 | `PrimaryBackup.tla` | 2 nodes, epoch fencing, network faults | 280,331 | 29,500 | AtMostOneLeader, ActiveEpochUnique, NoSplitBrain, EpochFencing, PromotionOnlyOnTimeout, CommittedDataSafe |
 
-Models in `specs/tla_from_frontend/` (source: [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md), "TLA+ Formal Verification"):
+Models in `specs/tla_engine_models/` (source: [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md), "TLA+ Formal Verification"):
 
 | Spec | Model | States generated | Distinct states | Invariants |
 |---|---|---:|---:|---|
@@ -71,7 +71,7 @@ The list follows [`INTRADAY_SIGNAL_EXPERIMENT_PROTOCOL.md`](research/INTRADAY_SI
 
 | # | Experiment | Protocol | Report |
 |---|---|---|---|
-| 1 | Single-symbol momentum / mean-reversion / OFI | selection rule in `run_real_backtest.py` | [report](research/ALPHACORE_BACKTEST_REPORT.md) |
+| 1 | Single-symbol momentum / mean-reversion / OFI | selection rule in `backend/experiments/run_real_backtest.py` | [report](research/ALPHACORE_BACKTEST_REPORT.md) |
 | 2 | NSGA-II vs equal signal weights | [synthetic](research/EXPERIMENT_PROTOCOL.md), [real data](research/REAL_DATA_EXPERIMENT_PROTOCOL.md) | [synthetic](research/SIGNAL_WEIGHT_EXPERIMENT_REPORT.md), [real data](research/REAL_DATA_EXPERIMENT_REPORT.md) |
 | 3 | Cross-sectional relative strength, 5-day rebalance | [protocol](research/CROSS_SECTIONAL_EXPERIMENT_PROTOCOL.md) | [report](research/CROSS_SECTIONAL_EXPERIMENT_REPORT.md) |
 | 4 | Cross-sectional relative strength, monthly rebalance | [protocol](research/CROSS_SECTIONAL_MONTHLY_PROTOCOL.md) | [report](research/CROSS_SECTIONAL_MONTHLY_REPORT.md) |

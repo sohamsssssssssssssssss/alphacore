@@ -44,7 +44,7 @@ jobs:
           DATABASE_URL: postgresql+asyncpg://soham:alphacore@localhost:5432/alphacore_test
         run: |
           cd backend
-          pytest tests/ -v --tb=short -m "not benchmark"
+          pytest tests/ sandbox/tests/ -v --tb=short -m "not benchmark"
 
       - name: Check imports
         env:
@@ -129,6 +129,17 @@ jobs:
           cd specs/tla
           timeout 600 java -Xmx8g -cp /tmp/tla2tools.jar tlc2.TLC MpscQueue.tla -config MpscQueue.cfg -deadlock 2>&1 | tail -10
           timeout 600 java -Xmx8g -cp /tmp/tla2tools.jar tlc2.TLC PrimaryBackup.tla -config PrimaryBackup.cfg -deadlock 2>&1 | tail -10
+
+
+      - name: Run bounded engine TLA+ models (each measured under 5 min)
+        shell: bash
+        run: |
+          cd specs/tla_engine_models
+          timeout 300 java -Xmx2g -cp /tmp/tla2tools.jar tlc2.TLC MpscQueue.tla -config ModelMpsc_tiny.cfg -deadlock
+          timeout 300 java -Xmx2g -cp /tmp/tla2tools.jar tlc2.TLC MatchingEngine.tla -config ModelMatching_small2.cfg -deadlock
+          timeout 300 java -Xmx2g -cp /tmp/tla2tools.jar tlc2.TLC OrderBook.tla -config ModelOrderBook_small3.cfg -deadlock
+          # Known SinglePrimaryPerEpoch counterexample; keep this failure visible.
+          timeout 300 java -Xmx2g -cp /tmp/tla2tools.jar tlc2.TLC PrimaryBackup.tla -config ModelPrimaryBackup.cfg -deadlock
 
   frontend:
     runs-on: ubuntu-latest

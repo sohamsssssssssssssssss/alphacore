@@ -22,9 +22,9 @@ import yfinance as yf
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # ── Ensure backend imports ──────────────────────────────────────────────
-BACKEND_DIR = os.path.join(os.path.dirname(__file__), "alphacore", "backend")
+BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BACKEND_DIR)
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "alphacore"))
+sys.path.insert(0, os.path.dirname(BACKEND_DIR))
 
 from engines.backtester import (
     Snapshot,
@@ -539,7 +539,7 @@ def run_experiment():
         "results": all_results,
     }
 
-    with open("research/EXPERIMENT_RESULTS.json", "w") as f:
+    with open(os.path.join(os.path.dirname(BACKEND_DIR), "research", "EXPERIMENT_RESULTS.json"), "w") as f:
         json.dump(output, f, indent=2, default=str)
 
     print("\n[✓] Results saved to research/EXPERIMENT_RESULTS.json")
