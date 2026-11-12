@@ -29,8 +29,8 @@ as-of ranking are executed AFTER that close — next session's open. Fills and
 costs use the next-session open after each rebalance close.
 
 Run from backend/ (python3.11, sandbox/.venv):
-    python3.11 -m sandbox.basket_backtest --frequency monthly
-    python3.11 -m sandbox.basket_backtest --frequency quarterly
+    python3.11 -m experiments.basket_backtest --frequency monthly
+    python3.11 -m experiments.basket_backtest --frequency quarterly
 
 Phase 2 (overfit sanity check) parameters:
     --k N          override basket size (default: top-quartile n_ranked//4)
@@ -53,7 +53,8 @@ from datetime import date
 import pandas as pd
 
 # Sibling sandbox modules (mirrors conftest.py / harness.py).
-_SANDBOX_DIR = os.path.dirname(os.path.abspath(__file__))
+_SANDBOX_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "sandbox")
+sys.path.insert(0, os.path.dirname(_SANDBOX_DIR))
 if _SANDBOX_DIR not in sys.path:
     sys.path.insert(0, _SANDBOX_DIR)
 

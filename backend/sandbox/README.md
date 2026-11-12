@@ -113,8 +113,8 @@ and the repo `CostModel` defaults + 10 bps assumed half-spread.
 
 ```bash
 cd backend
-sandbox/.venv/bin/python3.11 -m sandbox.basket_backtest --frequency monthly
-sandbox/.venv/bin/python3.11 -m sandbox.basket_backtest --frequency quarterly
+sandbox/.venv/bin/python3.11 -m experiments.basket_backtest --frequency monthly
+sandbox/.venv/bin/python3.11 -m experiments.basket_backtest --frequency quarterly
 ```
 
 Prints the pre-committed hypothesis (`hypothesis.md`) before any data is
@@ -138,16 +138,16 @@ accepts `--k`, `--lookback`, `--start`, and `--cache`:
 
 ```bash
 # split-sample halves (same logic, sub-windows by calendar date)
-sandbox/.venv/bin/python3.11 -m sandbox.basket_backtest --cache /tmp/p2_full.pkl \
+sandbox/.venv/bin/python3.11 -m experiments.basket_backtest --cache /tmp/p2_full.pkl \
     --as-of 2023-08-13 --start 2020-08-14   # H1: 2020-08 -> 2023-08
-sandbox/.venv/bin/python3.11 -m sandbox.basket_backtest --cache /tmp/p2_full.pkl \
+sandbox/.venv/bin/python3.11 -m experiments.basket_backtest --cache /tmp/p2_full.pkl \
     --as-of 2026-08-13 --start 2023-08-14   # H2: 2023-08 -> 2026-08
 
 # parameter sensitivity (monthly, full window)
-sandbox/.venv/bin/python3.11 -m sandbox.basket_backtest --cache /tmp/p2_full.pkl --k 10
-sandbox/.venv/bin/python3.11 -m sandbox.basket_backtest --cache /tmp/p2_full.pkl --k 15
-sandbox/.venv/bin/python3.11 -m sandbox.basket_backtest --cache /tmp/p2_full.pkl --lookback 18
-sandbox/.venv/bin/python3.11 -m sandbox.basket_backtest --cache /tmp/p2_full.pkl --lookback 25
+sandbox/.venv/bin/python3.11 -m experiments.basket_backtest --cache /tmp/p2_full.pkl --k 10
+sandbox/.venv/bin/python3.11 -m experiments.basket_backtest --cache /tmp/p2_full.pkl --k 15
+sandbox/.venv/bin/python3.11 -m experiments.basket_backtest --cache /tmp/p2_full.pkl --lookback 18
+sandbox/.venv/bin/python3.11 -m experiments.basket_backtest --cache /tmp/p2_full.pkl --lookback 25
 ```
 
 `--cache PATH` loads a saved closes/adv/opens pickle if present (clipped to

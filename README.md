@@ -79,10 +79,13 @@ The list follows [`INTRADAY_SIGNAL_EXPERIMENT_PROTOCOL.md`](research/INTRADAY_SI
 | 7 | Universe expansion, 5 → 49 symbols | [protocol](research/UNIVERSE_EXPANSION_EXPERIMENT_PROTOCOL.md) | [report](research/UNIVERSE_EXPANSION_EXPERIMENT_REPORT.md) |
 | 8 | Position-count expansion, K = 1 / 5 / 10 | [protocol](research/K_EXPANSION_EXPERIMENT_PROTOCOL.md) | [report](research/K_EXPANSION_EXPERIMENT_REPORT.md) |
 | 9 | Same signal on 60-minute bars | [protocol](research/INTRADAY_SIGNAL_EXPERIMENT_PROTOCOL.md) | [report](research/INTRADAY_SIGNAL_EXPERIMENT_REPORT.md) |
+| 10 | K=12 monthly top-quartile basket, lookback 21 | [exploratory, not pre-registered](research/K12_BASKET_HYPOTHESIS.md) | [provenance audit; raw result missing, selection bias](research/K12_BASKET_PROVENANCE.md) |
 
 Result JSONs sit next to the reports in `research/`.
 
 ## Data
+
+The imported K=12 basket is **exploratory, not pre-registered**: its quoted result has no recoverable raw return series, its history overlaps earlier failed experiments, and it needs fresh out-of-sample validation. See the [provenance audit](research/K12_BASKET_PROVENANCE.md).
 
 Historical data is daily OHLCV for NIFTY 50 symbols, pulled with `yfinance` (`backend/experiments/fetch_nifty50_data.py`); experiment 9 used 60-minute bars, also from `yfinance`. The CSVs are gitignored and must be fetched locally. The backend's paper session polls `yfinance` on a schedule. **There is no live NSE feed or WebSocket market-data stream** (`ALPHACORE_STATUS_REPORT.md`).
 
