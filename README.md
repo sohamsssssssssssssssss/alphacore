@@ -1,145 +1,145 @@
-# AlphaCore — Order Book Intelligence Engine
+# AlphaCore
 
 ![Python 3.11](https://img.shields.io/badge/Python-3.11-blue)
-![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688)
-![React](https://img.shields.io/badge/React-19-61dafb)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-336791)
-![NSE Live Data](https://img.shields.io/badge/NSE-Live%20Data-00d395)
+![C++20](https://img.shields.io/badge/C%2B%2B-20-00599C)
 ![MIT License](https://img.shields.io/badge/License-MIT-green)
 
-## What This Is
+AlphaCore is a solo research project on NSE equities with three parts:
 
-AlphaCore is an order book intelligence system for NSE Indian markets. It ingests real market data, runs detection algorithms on the order book in real time, and visualizes everything in a live React dashboard.
+1. **A C++20 matching engine**: flat-array price map, lock-free MPSC queue, primary–backup replication and a pybind11 bridge to Python.
+2. **Formal verification**: bounded TLA+ models of the queue, replication, matching and order-book logic, checked with TLC.
+3. **A signal research program**: nine experiments on NIFTY 50 daily data with pre-committed protocols and stationary-bootstrap confidence intervals. **The result is negative: no configuration produced a cost-surviving edge.**
 
-## Dashboard
+A Python backend (FastAPI, order-book detectors, backtester, paper-trading harness) and a React/Vite dashboard sit around these parts.
 
-![Dashboard](docs/dashboard.png)
+Every number below links to the file that produced it. The full honest-status audit is in [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md).
 
-The dashboard shows live L2 depth, flow imbalance, iceberg detections, spoof alerts, a liquidity heatmap, and narrative regime context in one terminal-style view. It is designed for dense operator visibility rather than generic UI polish.
+## Repository layout
 
-## Benchmark Results
-> Tested at 500 concurrent users on Apple M-series, Python 3.14, PostgreSQL local
-
-### Raw Numbers
-Full benchmark report: [`benchmarks/results.md`](benchmarks/results.md)
-
-## Performance
-
-### C Extension Benchmark (`backend/benchmarks/bench_c_ext.py`)
-
-- Python order book (`mid_price`): `22.442 ms` avg
-- C extension order book (`mid_price`): `332.842 ms` avg
-- Speedup: `0.07x`
-- Python iceberg scan: `17.177 ms` avg
-- C extension iceberg scan: `66.115 ms` avg
-- Speedup: `0.26x`
-
-Current C path is functionally correct but not yet faster due to high Python↔ctypes call overhead per operation and repeated clear/insert loops in benchmark setup. Next optimisation path:
-1. Batch insert API in C to reduce call crossings.
-2. Keep C order book state warm across iterations.
-3. Move benchmark hot loop fully into C-exported function.
-
-## Detection Algorithms
-
-### Iceberg Detection
-
-AlphaCore’s iceberg detector watches the same price level across consecutive order book updates and looks for visible liquidity that keeps refilling after being consumed. When the same bid or ask replenishes repeatedly inside a short time window, the engine increments a refill counter and interprets that pattern as potential hidden parent liquidity. Confidence rises as the refill count rises, and the detector estimates hidden size by multiplying the visible clip by the observed refill count. Each emitted signal includes `symbol`, `price`, `side`, `estimated_hidden_volume`, `confidence` from `0-100`, and `refill_count`. The result is not just “this order type exists”, but “this level is behaving like institutional accumulation or distribution”.
-
-### Spoofing Detection
-
-The spoof detector uses a five-check scoring model rather than a single heuristic. It flags large displayed orders, measures how fast they disappear, evaluates their fill ratio, measures their price impact while they were visible, and checks for counter-trade style behaviour after cancellation. Those sub-scores combine into a `spoof_score` and severity bucket. Alerts are labeled `HIGH`, `MEDIUM`, or `LOW` based on the aggregate score. This makes the output explainable: operators can see why a large order looks manipulative instead of treating spoofing as a black-box guess.
-
-## Architecture
-
-```text
-NSE Market Data
-     |
-NSEFetcher (jugaad-trader + direct scraping)
-     |
-OrderBookStateManager
-     |
-┌────┼────┬────────┐
-│    │    │        │
-Iceberg Spoof Flow Heatmap
-Detector Detector Engine Engine
-│    │    │        │
-└────┴────┴────────┘
-     |
-PostgreSQL
-     |
-FastAPI REST + WebSocket
-     |
-React Dashboard
-```
-
-## Tech Stack
-
-| Backend | Frontend |
+| Path | Contents |
 |---|---|
-| Python 3.11 | React 19 |
-| FastAPI | Vite |
-| PostgreSQL | D3.js |
-| SQLAlchemy | Recharts |
-| APScheduler | lucide-react |
-| jugaad-trader |  |
-| nsetools |  |
-| pandas |  |
-| numpy |  |
+| `engine/` | C++ matching engine, tests, benchmarks, pybind11 bindings (`CMakeLists.txt`) |
+| `engine/legacy/` | Older `std::map`-based order book and its benchmark |
+| `specs/tla/` | TLA+ specs checked in CI (MpscQueue, PrimaryBackup, plus KillSwitch, DetectionQueue, OrderBook) |
+| `specs/tla_from_frontend/` | A second, differently-configured set of TLA+ models (MpscQueue, MatchingEngine, OrderBook, PrimaryBackup) |
+| `backend/` | Python: detectors, signals, backtester, experiments, paper-trading harness, tests |
+| `frontend/` | React/Vite dashboard |
+| `research/` | Experiment protocols, reports and result JSONs |
+| `benchmarks/` | Legacy HTTP-layer load test (see below) |
 
-## API Reference
+## Matching engine (C++)
 
-| Method | Endpoint | Description |
-|---|---|---|
-| GET | /api/orderbook/{symbol} | Live L2 order book snapshot |
-| GET | /api/orderbook/{symbol}/history | Historical snapshots |
-| WS | /ws/orderbook/{symbol} | Live WebSocket stream |
-| GET | /api/detections/icebergs | Active iceberg detections |
-| GET | /api/detections/spoof | Spoof detection alerts |
-| GET | /api/detections/summary | Detection counts + breakdown |
-| GET | /api/flow/{symbol} | Order flow imbalance score |
-| GET | /api/heatmap/{symbol} | Liquidity heatmap matrix |
-| POST | /api/narrative/signal | Receive NarrativeEdge signal |
-| GET | /api/narrative/current | Current active regime |
-| GET | /api/health | System health check |
+Components in `engine/src/`: `FlatPriceMap` (array-indexed price levels), `MatchingEngine` with worker threads, a lock-free MPSC ring buffer, an object pool, primary–backup replication with heartbeats, an ITCH parser/gateway and pybind11 bindings (`alphacore_cpp`).
+
+**Benchmarks** (Release build; source: [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md), "Benchmark Numbers"). These are two different benchmarks and are not comparable to each other:
+
+| Benchmark | What it measures | Result |
+|---|---|---:|
+| `engine/benchmarks/flat_price_map_bench.cpp` | `FlatPriceMap` insert, 1M random-priced inserts | 4.40–5.85 ns/op (run-to-run variance) |
+| `engine/legacy/benchmarks/bench.cpp` | `OrderBook::add_order` on the older `std::map` book, 1M orders | 44.89 ns/op |
+
+**Tests:** `engine_test`, `replication_test`, `gateway_test`, `fault_test`, `ha_chaos_test`, `deterministic_replay_test`, plus `mpsc_tsan_test` built under ThreadSanitizer. All pass locally and run in CI.
+
+## Formal verification (TLA+)
+
+All results are from **bounded / reduced models**: small constants, checked exhaustively by TLC. They are not proofs about the unbounded system.
+
+Specs in `specs/tla/`, checked in CI with tla2tools v1.7.4 (source: [`research/ALPHACORE_CPP_UPGRADE_REPORT.md`](research/ALPHACORE_CPP_UPGRADE_REPORT.md), Part 3):
+
+| Spec | Model | States generated | Distinct states | Invariants |
+|---|---|---:|---:|---|
+| `MpscQueue.tla` | 2 producers, 1 consumer, Capacity=4 | 1,243,889 | 327,308 | NoTornRead, ItemsInOutAreFromEnqueue, NoDuplicates, FullQueueBackpressure |
+| `PrimaryBackup.tla` | 2 nodes, epoch fencing, network faults | 280,331 | 29,500 | AtMostOneLeader, ActiveEpochUnique, NoSplitBrain, EpochFencing, PromotionOnlyOnTimeout, CommittedDataSafe |
+
+Models in `specs/tla_from_frontend/` (source: [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md), "TLA+ Formal Verification"):
+
+| Spec | Model | States generated | Distinct states | Invariants |
+|---|---|---:|---:|---|
+| `MpscQueue.tla` | bounded | 421 | 289 | TypeInv, NeverOverflow, Linearizability, NoDataLoss |
+| `MatchingEngine.tla` | reduced model | 24,445 | 22,177 | PriceTimePriority, NoCrossTrading, NoOrderLoss |
+| `OrderBook.tla` | reduced model (3 prices, 3 order IDs, 2 quantities) | 2,901,043 | 1,786,483 | NoGhostOrders, QuantityConservation |
+
+## Signal research
+
+Nine experiments on NIFTY 50 data. Each was run against a protocol (or selection rule) committed before the test period was evaluated. Confidence intervals come from a stationary bootstrap (Politis–Romano). The cost model is in `backend/engines/cost_model.py`.
+
+**Result: no configuration produced a cost-surviving, statistically significant edge.** The least-bad configuration was 49 symbols, K=1 (one long and one short), a 21-trading-day rebalance, daily bars: **Sharpe −1.57, 95% CI [−3.14, +0.05]**. Sources: [`UNIVERSE_EXPANSION_EXPERIMENT_REPORT.md`](research/UNIVERSE_EXPANSION_EXPERIMENT_REPORT.md), [`K_EXPANSION_EXPERIMENT_REPORT.md`](research/K_EXPANSION_EXPERIMENT_REPORT.md).
+
+The list follows [`INTRADAY_SIGNAL_EXPERIMENT_PROTOCOL.md`](research/INTRADAY_SIGNAL_EXPERIMENT_PROTOCOL.md):
+
+| # | Experiment | Protocol | Report |
+|---|---|---|---|
+| 1 | Single-symbol momentum / mean-reversion / OFI | selection rule in `run_real_backtest.py` | [report](research/ALPHACORE_BACKTEST_REPORT.md) |
+| 2 | NSGA-II vs equal signal weights | [synthetic](research/EXPERIMENT_PROTOCOL.md), [real data](research/REAL_DATA_EXPERIMENT_PROTOCOL.md) | [synthetic](research/SIGNAL_WEIGHT_EXPERIMENT_REPORT.md), [real data](research/REAL_DATA_EXPERIMENT_REPORT.md) |
+| 3 | Cross-sectional relative strength, 5-day rebalance | [protocol](research/CROSS_SECTIONAL_EXPERIMENT_PROTOCOL.md) | [report](research/CROSS_SECTIONAL_EXPERIMENT_REPORT.md) |
+| 4 | Cross-sectional relative strength, monthly rebalance | [protocol](research/CROSS_SECTIONAL_MONTHLY_PROTOCOL.md) | [report](research/CROSS_SECTIONAL_MONTHLY_REPORT.md) |
+| 5–6 | Overnight gap reversal; post-earnings drift (PEAD) | [protocol](research/OVERNIGHT_GAP_EXPERIMENT_PROTOCOL.md) | [report](research/OVERNIGHT_GAP_EXPERIMENT_REPORT.md) |
+| 7 | Universe expansion, 5 → 49 symbols | [protocol](research/UNIVERSE_EXPANSION_EXPERIMENT_PROTOCOL.md) | [report](research/UNIVERSE_EXPANSION_EXPERIMENT_REPORT.md) |
+| 8 | Position-count expansion, K = 1 / 5 / 10 | [protocol](research/K_EXPANSION_EXPERIMENT_PROTOCOL.md) | [report](research/K_EXPANSION_EXPERIMENT_REPORT.md) |
+| 9 | Same signal on 60-minute bars | [protocol](research/INTRADAY_SIGNAL_EXPERIMENT_PROTOCOL.md) | [report](research/INTRADAY_SIGNAL_EXPERIMENT_REPORT.md) |
+
+Result JSONs sit next to the reports in `research/`.
+
+## Data
+
+Historical data is daily OHLCV for NIFTY 50 symbols, pulled with `yfinance` (`backend/experiments/fetch_nifty50_data.py`); experiment 9 used 60-minute bars, also from `yfinance`. The CSVs are gitignored and must be fetched locally. The backend's paper session polls `yfinance` on a schedule. **There is no live NSE feed or WebSocket market-data stream** (`ALPHACORE_STATUS_REPORT.md`).
+
+## Order-book detectors
+
+The backend includes a rule-based iceberg detector (repeated refills at one price level, `backend/engines/iceberg_detector.py`) and a spoof detector (a score built from cancel speed, fill ratio, price impact, counter-trade and repeat sub-scores, `backend/engines/spoof_detector.py`). **They have been exercised only on synthetic data**: hand-built fixtures and Hypothesis-generated order books in `backend/tests/`. No evaluation on real or labelled market data exists, so no accuracy, precision or recall is claimed.
+
+## Paper trading
+
+[`backend/paper_trading/`](backend/paper_trading/) holds a harness for the Upstox **sandbox**. It ports the 49-symbol K=1 strategy and logs realized vs. modelled cost. Its status, per [`PAPER_TRADING_LOG.md`](PAPER_TRADING_LOG.md), is "harness built, awaiting credentials". The sandbox provides order lifecycle only: Upstox documents no simulated matching engine and no fill-price semantics. **No fill data exists**, so the backtest cost model has not been validated against real execution.
+
+## Limitations
+
+From [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md):
+
+- **RL:** the "multi-agent" PPO code is single-agent (independent copies, no interaction) and runs on synthetic data only.
+- **NSGA-II:** an earlier Sharpe 1.70 / Calmar 3.33 figure was **not reproduced**; its origin is unclear.
+- **Fault injection:** only 2 of the 10 fault types in `engine/src/fault_injector.hpp` (`POOL_EXHAUSTION`, `QUEUE_FULL`) are wired into production code.
+- **ITCH gateway:** Linux-only (`epoll`/`sendmsg`). On macOS, `gateway_test` runs a stub.
+- **Benchmarks:** `benchmarks/results.md` is a **legacy HTTP-layer load test run on Python 3.14**. It measures the FastAPI layer, not the engine, and is not used for any claim here.
+
+## Tests
+
+On Python 3.11 (macOS), `pytest backend/tests` gives **961 passed, 11 skipped, 4 errors**:
+
+- The 4 errors are in `tests/paper_trading/test_harness.py`. Their fixture needs the gitignored NIFTY 50 CSVs in `backend/data/nifty50_data/`.
+- The skipped tests need a live Postgres (6) or the `alphacore_cpp` module on `sys.path` (5).
 
 ## Setup
 
-1. Clone the repo.
-2. Create a virtual environment and install dependencies.
+These are the commands used to verify this README (macOS, Python 3.11, CMake, Node):
 
 ```bash
-cd backend
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+# Python backend + tests
+python3.11 -m venv .venv && source .venv/bin/activate
+pip install -r backend/requirements.txt
+pip install pytest pytest-asyncio httpx hypothesis
+cd backend && DATABASE_URL=postgresql+asyncpg://soham:alphacore@localhost:5432/alphacore_test python3.11 -m pytest tests/ -q && cd ..
+
+# C++ engine + tests
+cmake -S engine -B engine/build -DCMAKE_BUILD_TYPE=Release
+cmake --build engine/build -j8
+(cd engine/build && ./engine_test && ./replication_test && ./gateway_test \
+  && ./ha_chaos_test && ./deterministic_replay_test \
+  && OB_FAULT_POOL_EXHAUSTION=1 OB_FAULT_QUEUE_FULL=1 ./fault_test)
+
+# ThreadSanitizer build
+cmake -S engine -B engine/build_tsan -DALPHACORE_TSAN=ON
+cmake --build engine/build_tsan --target mpsc_tsan_test && ./engine/build_tsan/mpsc_tsan_test
+
+# TLA+ (tla2tools v1.7.4)
+cd specs/tla
+java -cp /path/to/tla2tools.jar tlc2.TLC MpscQueue.tla -config MpscQueue.cfg -deadlock
+java -cp /path/to/tla2tools.jar tlc2.TLC PrimaryBackup.tla -config PrimaryBackup.cfg -deadlock
+cd ../..
+
+# Dashboard
+cd frontend && npm ci && npm run build
 ```
-
-3. Create `.env` from `.env.example` and fill in `DATABASE_URL`.
-4. Create the PostgreSQL database.
-
-```bash
-createdb alphacore
-```
-
-5. Start the backend.
-
-```bash
-../venv/bin/python3 -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
-
-6. In a new terminal, start the frontend.
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-7. Open `http://localhost:5173`.
-
-## Project Context
-
-AlphaCore is Phase 1 of a larger system. The current layer turns raw order book behaviour into structured microstructure signals such as iceberg accumulation, flow imbalance, spoof activity, and liquidity concentration. Those signals are intended to feed AlphaCore’s next-stage alpha engine, which will fuse them with macro and regime context coming from NarrativeEdge. V1 is the intelligence layer; V2 adds the conviction-scored decision layer above it.
 
 ## License
 
