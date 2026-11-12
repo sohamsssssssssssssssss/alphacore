@@ -90,7 +90,7 @@ The backend includes a rule-based iceberg detector (repeated refills at one pric
 
 ## Paper trading
 
-[`backend/paper_trading/`](backend/paper_trading/) holds a harness for the Upstox **sandbox**. It ports the 49-symbol K=1 strategy and logs realized vs. modelled cost. Its status, per [`PAPER_TRADING_LOG.md`](PAPER_TRADING_LOG.md), is "harness built, awaiting credentials". The sandbox provides order lifecycle only: Upstox documents no simulated matching engine and no fill-price semantics. **No fill data exists**, so the backtest cost model has not been validated against real execution.
+[`backend/paper_trading/`](backend/paper_trading/) holds the locked K=1 Upstox sandbox harness. A separate K=12 basket harness in a local export submitted sandbox orders on 2026-08-15; the inspected history remained `open pending` with zero filled quantity. See the raw evidence and source paths in the [2026-11-13 addendum](PAPER_TRADING_LOG.md#addendum-2026-11-13). This does not establish that the K=1 scheduler ran. **No confirmed fills were found**, so execution costs remain unvalidated.
 
 ## Limitations
 
