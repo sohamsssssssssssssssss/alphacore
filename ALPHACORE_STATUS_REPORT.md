@@ -195,3 +195,17 @@ The "1,000+ tests" claim is **accurate** (confirmed: 1,056 passing tests).
 **Contradiction 1 (Benchmark numbers):** Resolved. The three numbers (9.86, 10.06, 43.678 ns/op) are from **two different benchmarks**: `flat_price_map_bench` (4.4–5.9 ns/op, measuring array-based price-level insertion) vs `bench.cpp` (44.9 ns/op, measuring `std::map`-based `OrderBook::add_order`). Audit passes conflated them.
 
 **Contradiction 2 (Fault injection):** Resolved. Both claims were partially correct but referred to different codebases: **C++ fault injection partially exists** (2/10 types wired, `fault_test` passes). **Python backend fault injection does not exist** (3 `assert True` placeholders). The "None" claim was about the backend; the "2-of-10" claim was about C++. Neither was wrong about their scope.
+
+
+## Addendum 2026-11-13
+
+Phase 1 cleanup paths: `engine/` contains the C++ engine, `research/` holds
+research reports and protocols, and `specs/` contains the TLA+ models. Earlier
+report text above is historical and has not been rewritten.
+
+Post-cleanup verification on macOS, Python 3.11, with `DATABASE_URL` unset:
+`python3.11 -m pytest tests/ -q -m "not benchmark" -p no:cacheprovider`
+from `backend/`: **961 passed, 15 skipped, 2 warnings in 12.34s**.
+The 15 skips comprise four tests requiring local NIFTY50 CSVs, six existing
+live-database skips, and five bridge modules requiring `alphacore_cpp`.
+The benchmark threshold remains unchanged and is excluded from CI by marker.
