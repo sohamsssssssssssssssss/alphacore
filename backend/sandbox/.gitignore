@@ -1,0 +1,5 @@
+# Runtime artifacts — never commit these.
+.venv/
+__pycache__/
+logs/
+instruments_cache.json

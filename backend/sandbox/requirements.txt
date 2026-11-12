@@ -1,0 +1,10 @@
+# Isolated deps for the Upstox sandbox harness. Install into backend/sandbox/.venv
+# with python3.11 (NEVER system-default python):
+#   python3.11 -m venv backend/sandbox/.venv
+#   backend/sandbox/.venv/bin/pip install -r backend/sandbox/requirements.txt
+requests>=2.31
+pandas>=2.0
+numpy>=1.24
+scipy>=1.11  # engines/backtest_metrics (stationary bootstrap CI)
+yfinance>=0.2.40
+pytest>=8.0

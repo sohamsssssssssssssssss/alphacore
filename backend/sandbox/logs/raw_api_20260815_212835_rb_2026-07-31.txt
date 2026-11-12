@@ -1,0 +1,568 @@
+# Upstox SANDBOX raw API log — started 2026-08-15T21:28:35.418553
+
+==============================================================================
+===== [1] GET https://api-sandbox.upstox.com/v2/user/profile =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 404
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:49 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: b92fd15e-fe1f-450f-8e2d-f1993488413a
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: b92fd15e-fe1f-450f-8e2d-f1993488413a
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9672a1f9547f0-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100060",
+      "message": "Resource not Found.",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100060",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [2] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 61, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|7229", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:50 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: c5630d7e-1cb9-42a3-a994-baae14149988
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 9a63edd8-23f3-419d-bf7d-016f7b986bef
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b9672afc6547f4-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|7229",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|7229"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [3] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 10, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|10940", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:50 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 579fea04-ed6e-4e5f-8a0f-df70103dec02
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 4746f590-b138-4847-b7a9-31b89cc2afca
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b9672bae624704-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|10940",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|10940"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [4] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 50, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|13538", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:50 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: c13fd54c-5a5a-43f4-9278-e7d23333d448
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 283fb164-f635-4c56-a6eb-0c601b3b3262
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b9672c9dcc80aa-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|13538",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|13538"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [5] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 7, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|16669", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:50 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 66f3d954-fd1d-4cef-8066-0d40d6261de4
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 0ab1f1a0-f24d-48dc-86d2-225515d45f8e
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b9672d1da869a5-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|16669",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|16669"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [6] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 35, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|11536", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:50 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 90f0cc87-c1a9-4899-9e84-268083ef0d0b
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: c768eab8-d556-4fcf-bd66-9bf210b448ba
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b9672e0faa3f47-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|11536",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|11536"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [7] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 15, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|1348", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:50 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 5744a304-a779-44b1-a4d0-1536fb4e84e2
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: d12b797c-eb9b-40b5-a5cd-bb3b48de10cd
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b9672e791dcd4d-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|1348",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|1348"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [8] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 73, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|317", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:50 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 8c92cea9-8282-4da7-8b06-08d3f7fe41f1
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: b8a08afb-d4c8-4f50-ab72-b7f8e4296dfc
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b9672f9a764847-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|317",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|317"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [9] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 41, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|16675", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:50 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 197443f4-5796-4e55-88ed-978d33b33f2a
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 801fe53b-7ddd-4659-bf1e-9c59cfab7870
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b967303d123fc6-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|16675",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|16675"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [10] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 10, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|910", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:51 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 5c556292-1565-4218-9f62-8501afab4fef
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 54d1ead3-df13-4e33-b3c8-4a861c64ab12
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b967311cf655a5-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|910",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|910"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [11] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 17, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|3506", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:51 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: d8d21163-cf10-403e-848f-553f8be91568
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 3c74e1b1-584f-459a-bc5f-7be542edaba3
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Server: cloudflare
+  CF-RAY: a2b967325e1f8b0b-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|3506",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|3506"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [12] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 73, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|1594", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:51 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: afcc2e16-90ed-48c4-aad8-ee09f4b3d409
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: b462118e-93c7-4b1c-810f-6c5188ef2742
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b967338fb590f3-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|1594",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|1594"
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [13] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 24, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|2031", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 400
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 15:58:51 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 35e0eeba-ed6a-4211-84c1-82da1c7aa3bc
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: aa22a279-491a-4d0f-bee3-eacaf1b1f93b
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Server: cloudflare
+  CF-RAY: a2b96733e9dd6edd-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100011",
+      "message": "Invalid Instrument key",
+      "propertyPath": "instrument_token",
+      "invalidValue": "NSE_EQ|2031",
+      "error_code": "UDAPI100011",
+      "property_path": "instrument_token",
+      "invalid_value": "NSE_EQ|2031"
+    }
+  ]
+}
+==============================================================================
