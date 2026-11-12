@@ -10,6 +10,7 @@
 // backup (BackupReceiver + HeartbeatMonitor), runs a workload, induces the
 // failure, and verifies correct recovery.
 
+#include <arpa/inet.h>
 #include <algorithm>
 #include <atomic>
 #include <chrono>
