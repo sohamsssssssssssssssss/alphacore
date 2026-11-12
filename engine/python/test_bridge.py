@@ -1,7 +1,6 @@
-import alphacore_cpp as ac
-
-
 def main() -> int:
+    import alphacore_cpp as ac
+
     eng = ac.MatchingEngine(4)
     eng.start()
 
