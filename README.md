@@ -111,16 +111,24 @@ From [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md):
 
 ## Tests
 
-Python 3.11 non-benchmark suite (`cd backend && python3.11 -m pytest tests/ -q -m "not benchmark"`):
+Python 3.11 non-benchmark results observed on 2026-11-13:
 
-| Environment | Passed | Skipped | Errors |
+| Environment | Passed | Skipped | Deselected |
 |---|---:|---:|---:|
-| Local macOS, `DATABASE_URL` unset | 961 | 15 | 0 |
-| [Linux CI](https://github.com/sohamsssssssssssssssss/alphacore/actions/runs/43288458290) | 961 | 15 | 0 |
+| Local macOS, `make py-test` (built bridge and fetched daily CSVs) | 1063 | 19 | 1 |
+| [Linux backend CI](https://github.com/sohamsssssssssssssssss/alphacore/actions/runs/43310349447/job/131504486823) | 1018 | 15 | 0 |
 
-Both runs emitted two numerical-precision warnings. The skips are four harness tests requiring local NIFTY50 CSVs, six existing live-Postgres tests, and five bridge modules requiring `alphacore_cpp` on `sys.path`. The Python bridge suites are not validated by these runs; C++ executables run separately in CI. The throughput benchmark keeps its original threshold and is excluded from CI with `-m "not benchmark"`.
+Both runs emitted two numerical-precision warnings. CI skips four harness tests
+requiring local NIFTY50 CSVs, six existing live-Postgres tests and five optional
+bridge modules requiring `alphacore_cpp`. The local run exercises the bridge
+but its 19 existing skips include five ITCH subprocess checks that skip on
+SIGABRT; those parser cases are not validated. The throughput benchmark keeps
+its original threshold and is excluded with `-m "not benchmark"`.
 
-Plain repository-root pytest collection also succeeds with `DATABASE_URL` unset: **971 tests collected**, with five optional bridge modules skipped.
+Repository-root collection succeeds: **1028 tests collected**, with five
+optional bridge modules skipped. C++ Release and TSan tests pass, but overall
+Phase 2 CI is **failing**: the newly exercised, unchanged engine PrimaryBackup
+TLA model violates SinglePrimaryPerEpoch (see [specs/README.md](specs/README.md)).
 
 ## Setup
 
@@ -180,7 +188,11 @@ the committed hourly period (2024-08-01 through 2026-07-30). It preserves
 tracked metadata and never substitutes a more recent interval. On 2026-11-13,
 49 daily symbols were recovered but Yahoo refused the hourly range because
 it lies outside its 730-day retention window. Original CSV snapshots are
-absent, so exact historical input recovery is not established.
+absent, so exact historical input recovery is not established. The fetched
+RELIANCE and TCS CSVs each have 1235 rows ending 2026-07-29; the committed
+five-symbol metadata records 1239 rows ending 2026-07-30. These are not
+identical inputs, and the window/count mismatch does not establish a cause
+for every metric difference.
 
 `experiments` runs the unchanged research scripts in a disposable copy,
 compares nested Sharpe/CI/net-PnL/trade metrics exactly against committed
