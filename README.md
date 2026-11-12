@@ -40,6 +40,8 @@ Components in `engine/src/`: `FlatPriceMap` (array-indexed price levels), `Match
 | `engine/benchmarks/flat_price_map_bench.cpp` | `FlatPriceMap` insert, 1M random-priced inserts | 4.40–5.85 ns/op (run-to-run variance) |
 | `engine/legacy/benchmarks/bench.cpp` | `OrderBook::add_order` on the older `std::map` book, 1M orders | 44.89 ns/op |
 
+New dated local measurements, including machine, compiler and build flags, are in [engine/benchmarks/RESULTS.md](engine/benchmarks/RESULTS.md). The historical status-report numbers above are retained.
+
 **Tests:** `engine_test`, `replication_test`, `gateway_test`, `fault_test`, `ha_chaos_test`, `deterministic_replay_test`, plus `mpsc_tsan_test` built under ThreadSanitizer. Linux CI passes these Release tests and the TSan test; the macOS gateway test uses a stub.
 
 ## Formal verification (TLA+)
@@ -155,3 +157,48 @@ cd frontend && npm ci && npm run build
 ## License
 
 MIT
+
+## Reproduction
+
+Use Python 3.11 and the backend dependencies; install `pybind11==3.0.1` for
+the C++ bridge, and `pytest pytest-asyncio httpx hypothesis` for tests.
+CMake, a C++20 compiler, Java and curl are also required. From the repo root:
+
+```sh
+make all
+```
+
+Individual targets are `engine-build`, `engine-test`, `engine-bench`, `tla`,
+`py-test`, `fetch-data`, and `experiments`; override the interpreter with
+`make PYTHON=/path/to/python3.11 ...` and Java with the `JAVA` environment
+variable. Build artifacts and experiment outputs go under ignored
+`.reproduce/`. Engine tests/benchmarks require `engine-build` first. The
+benchmark target appends actual measurements to `engine/benchmarks/RESULTS.md`.
+
+`fetch-data` uses the original daily downloader's fixed dates, then attempts
+the committed hourly period (2024-08-01 through 2026-07-30). It preserves
+tracked metadata and never substitutes a more recent interval. On 2026-11-13,
+49 daily symbols were recovered but Yahoo refused the hourly range because
+it lies outside its 730-day retention window. Original CSV snapshots are
+absent, so exact historical input recovery is not established.
+
+`experiments` runs the unchanged research scripts in a disposable copy,
+compares nested Sharpe/CI/net-PnL/trade metrics exactly against committed
+JSONs, and prints `experiment | committed | reproduced | match`. The legacy
+real-data validation baseline remains `backend/real_data_results.json`.
+The scratch directory retains stdout logs, comparison.json, source/data
+hashes and package versions. Source research files are checked unchanged.
+Missing outputs, mismatches and blocked runs produce a nonzero exit status.
+The two original NSGA-II drivers are blocked because they reselect weights;
+the K12 quotation is blocked because its original return series is missing.
+The existing seeded synthetic weight-comparison run stays labelled synthetic.
+No new parameter search is performed. Differences are not called data
+revisions without evidence from an original input snapshot or hash.
+
+`all` attempts every target and reports failure if any target fails.
+Complete reproduction is currently **not green**: hourly inputs and K12 raw
+returns are missing, fetched-data daily metrics differ from the historical
+JSONs, and the unchanged engine PrimaryBackup model violates
+SinglePrimaryPerEpoch. [specs/README.md](specs/README.md) records the exact
+configurations, timing measurements and counterexample; its CI failure is
+kept visible. Other engine-model configurations are not claimed checked.

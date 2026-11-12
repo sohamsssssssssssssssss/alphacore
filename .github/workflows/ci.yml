@@ -44,7 +44,7 @@ jobs:
           DATABASE_URL: postgresql+asyncpg://soham:alphacore@localhost:5432/alphacore_test
         run: |
           cd backend
-          pytest tests/ sandbox/tests/ -v --tb=short -m "not benchmark"
+          pytest tests/ sandbox/tests/ ../scripts/tests/ -v --tb=short -m "not benchmark"
 
       - name: Check imports
         env:
