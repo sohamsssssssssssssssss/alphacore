@@ -1,6 +1,7 @@
 #include <chrono>
 #include <cstring>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <thread>
 
@@ -16,10 +17,11 @@
 
 int main() {
 #ifdef __linux__
-    MatchingEngine engine(1, 1, 1000, 1);
-    engine.start();
+    // The engine embeds a trade queue larger than the default Linux stack.
+    auto engine = std::make_unique<MatchingEngine>(1, 1, 1000, 1);
+    engine->start();
 
-    Gateway gateway(engine, 19000);
+    Gateway gateway(*engine, 19000);
     gateway.start();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -28,7 +30,7 @@ int main() {
     if (fd < 0) {
         std::cout << "Gateway FIX roundtrip: FAIL\n";
         gateway.stop();
-        engine.stop();
+        engine->stop();
         return 1;
     }
 
@@ -41,7 +43,7 @@ int main() {
         ::close(fd);
         std::cout << "Gateway FIX roundtrip: FAIL\n";
         gateway.stop();
-        engine.stop();
+        engine->stop();
         return 1;
     }
 
@@ -60,7 +62,7 @@ int main() {
         ::close(fd);
         std::cout << "Gateway FIX roundtrip: FAIL\n";
         gateway.stop();
-        engine.stop();
+        engine->stop();
         return 1;
     }
 
@@ -97,7 +99,7 @@ int main() {
 
     ::close(fd);
     gateway.stop();
-    engine.stop();
+    engine->stop();
 
     std::cout << "Gateway FIX roundtrip: " << (ok ? "PASS" : "FAIL") << "\n";
     return ok ? 0 : 1;
