@@ -53,3 +53,20 @@ states/
 .claude/
 .antigravitycli/
 WorkingPattern.cfg
+
+# Build dirs, TLC traces, backups
+build_*/
+build-*/
+*_TTrace_*
+*.bak
+
+# Untracked legacy / template content (kept locally, not in repo)
+/alphacore/
+docs_legacy/
+docs/blog/
+docs/docs/tutorial-basics/
+docs/docs/tutorial-extras/
+docs/src/components/HomepageFeatures/
+docs/src/pages/markdown-page.mdx
+docs/static/img/docusaurus*
+docs/static/img/undraw_*

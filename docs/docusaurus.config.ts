@@ -5,7 +5,6 @@ import type * as Preset from '@docusaurus/preset-classic';
 const config: Config = {
   title: 'AlphaCore',
   tagline: 'Sub-10ns order matching for Indian equity markets',
-  favicon: 'img/favicon.ico',
   future: {
     v4: true,
   },
@@ -33,16 +32,11 @@ const config: Config = {
     ],
   ],
   themeConfig: {
-    image: 'img/docusaurus-social-card.jpg',
     colorMode: {
       respectPrefersColorScheme: true,
     },
     navbar: {
       title: 'AlphaCore',
-      logo: {
-        alt: 'AlphaCore Logo',
-        src: 'img/logo.svg',
-      },
       items: [
         {to: '/docs/architecture', label: 'Architecture', position: 'left'},
         {to: '/docs/api-reference', label: 'API Reference', position: 'left'},

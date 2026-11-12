@@ -1,7 +1,7 @@
 fastapi
 uvicorn[standard]
 websockets
-sqlalchemy
+sqlalchemy<2.1
 asyncpg
 databases
 pydantic
@@ -20,3 +20,12 @@ psycopg2-binary
 prometheus-fastapi-instrumentator
 slowapi
 scikit-learn
+greenlet
+hmmlearn
+xgboost
+yfinance
+lightgbm
+pymoo
+torch
+gymnasium
+stable-baselines3

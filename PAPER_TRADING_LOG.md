@@ -119,3 +119,22 @@ conclusion yet.*
 
 *See task Step 5 for what must go here — the central realized-vs-assumed cost
 comparison, and an honest verdict either way.*
+
+
+## Addendum 2026-11-13
+
+Real sandbox output was found outside this checkout at `/Users/soham/Downloads/alphacore-main/backend/sandbox/logs/rebalance_2026-07-31.jsonl`,
+line 45, with matching raw HTTP output in the sibling
+`raw_api_20260815_213950_rb_2026-07-31.txt`. This is the separate
+`backend/sandbox/` basket harness (K=12), not evidence that the locked K=1
+`backend/paper_trading/` scheduler ran. The recorded sandbox order was accepted
+and its history remained `open pending` with zero filled quantity at that
+poll. This establishes order submission only; there is no confirmed fill or
+realized-cost validation in this record. It does not establish current order
+status or unattended uptime. The earlier status text is historical.
+
+Raw JSONL line (no credentials present):
+
+```json
+{"schema_version": 1, "event": "order_leg", "rebalance_date": "2026-07-31", "utc_timestamp": "2026-08-15T21:39:58+05:30", "symbol": "HCLTECH", "side": "BUY", "qty": 61, "order_type": "MARKET", "instrument_token": "NSE_EQ|INE860A01027", "ref_price": 1346.9000244140625, "adv_inr": 4342812307.735384, "assumed_cost_inr": 61.09505689752114, "assumed_cost_bps": 7.436, "place_status_code": 200, "place_response": {"status": "success", "data": {"order_id": "260815213958572"}}, "order_id": "260815213958572", "poll_order_history": {"status": 200, "response": {"status": "success", "data": [{"exchange": "NSE", "price": 0.0, "product": "D", "quantity": 61, "status": "put order req received", "tag": "alphacore-basket-2026-07-31", "validity": "DAY", "average_price": 0.0, "disclosed_quantity": 0, "exchange_order_id": null, "exchange_timestamp": null, "instrument_token": "NSE_EQ|INE860A01027", "is_amo": false, "status_message": null, "order_id": "260815213958572", "order_request_id": "UDAPI-f86804e9-f76a-49b7-8b42-afba354d2b87", "order_type": "MARKET", "parent_order_id": "NA", "tradingsymbol": "HCLTECH", "trading_symbol": "HCLTECH", "order_timestamp": "2026-08-15 21:39:58", "filled_quantity": 0, "transaction_type": "BUY", "trigger_price": 0.0, "placed_by": null, "variety": null}, {"exchange": "NSE", "price": 0.0, "product": "D", "quantity": 61, "status": "validation pending", "tag": "alphacore-basket-2026-07-31", "validity": "DAY", "average_price": 0.0, "disclosed_quantity": 0, "exchange_order_id": null, "exchange_timestamp": null, "instrument_token": "NSE_EQ|INE860A01027", "is_amo": false, "status_message": null, "order_id": "260815213958572", "order_request_id": "UDAPI-f86804e9-f76a-49b7-8b42-afba354d2b87", "order_type": "MARKET", "parent_order_id": "NA", "tradingsymbol": "HCLTECH", "trading_symbol": "HCLTECH", "order_timestamp": "2026-08-15 21:39:58", "filled_quantity": 0, "transaction_type": "BUY", "trigger_price": 0.0, "placed_by": null, "variety": null}, {"exchange": "NSE", "price": 0.0, "product": "D", "quantity": 61, "status": "open pending", "tag": "alphacore-basket-2026-07-31", "validity": "DAY", "average_price": 0.0, "disclosed_quantity": 0, "exchange_order_id": null, "exchange_timestamp": null, "instrument_token": "NSE_EQ|INE860A01027", "is_amo": false, "status_message": null, "order_id": "260815213958572", "order_request_id": "UDAPI-f86804e9-f76a-49b7-8b42-afba354d2b87", "order_type": "MARKET", "parent_order_id": "NA", "tradingsymbol": "HCLTECH", "trading_symbol": "HCLTECH", "order_timestamp": "2026-08-15 21:39:58", "filled_quantity": 0, "transaction_type": "BUY", "trigger_price": 0.0, "placed_by": null, "variety": null}]}}, "poll_order_trades": {"status": 500, "response": {"status": "error", "errors": [{"errorCode": "UDAPI100500", "message": "Something went wrong... please contact us", "propertyPath": null, "invalidValue": null, "error_code": "UDAPI100500", "property_path": null, "invalid_value": null}]}}, "fill_status": "ACCEPTED", "fill_reason": null, "fill_price": null, "fill_qty": null, "fill_timestamp": null, "observed_fees_inr": null, "observed_slippage_bps": null}
+```

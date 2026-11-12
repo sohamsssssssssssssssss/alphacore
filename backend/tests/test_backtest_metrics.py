@@ -47,11 +47,6 @@ def test_spa_significant_when_combined_clearly_beats_individuals():
     assert out["significant"] is True
 
 
-def test_pass_fail_summary():
-    print("PASS: backtest metric assertions validated")
-    assert True
-
-
 def test_dsr_all_zero_returns():
     out = deflated_sharpe_ratio(np.zeros(100))
     assert out["raw_sharpe"] == 0.0

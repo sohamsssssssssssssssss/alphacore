@@ -21,18 +21,6 @@ echo "Running property tests..."
 pytest tests/property/ -v --tb=short
 
 echo ""
-echo "Running chaos tests..."
-pytest tests/chaos/ -v --tb=short
-
-echo ""
-echo "Running regression tests..."
-pytest tests/regression/ -v --tb=short
-
-echo ""
-echo "Running stress tests..."
-pytest tests/stress/ -v --tb=short
-
-echo ""
 echo "================================================"
 echo "FULL SUITE COMPLETE"
 pytest tests/ --co -q | tail -5

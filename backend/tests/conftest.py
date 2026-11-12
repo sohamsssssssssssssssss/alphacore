@@ -1,3 +1,8 @@
+import os
+
+# Collection imports settings; API tests below mock database access.
+os.environ.setdefault("DATABASE_URL", "postgresql+asyncpg://test:test@127.0.0.1:5432/alphacore_test")
+
 import pytest
 from datetime import datetime, timezone
 from models.schemas import OrderBookSnapshot, OrderLevel

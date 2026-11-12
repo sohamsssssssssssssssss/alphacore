@@ -585,7 +585,7 @@ def main():
         },
     }
 
-    output_path = Path(__file__).resolve().parent.parent.parent / "overnight_gap_results.json"
+    output_path = Path(__file__).resolve().parent.parent.parent / "research" / "overnight_gap_results.json"
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2, default=str)
     print(f">>> Results saved to {output_path}")

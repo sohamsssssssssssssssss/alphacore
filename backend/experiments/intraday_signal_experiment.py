@@ -214,7 +214,7 @@ def main():
     print(sep)
 
     prior = json.loads(
-        (Path(__file__).resolve().parent.parent.parent / "k_expansion_results.json").read_text()
+        (Path(__file__).resolve().parent.parent.parent / "research" / "k_expansion_results.json").read_text()
     )
     for kk in [1, 5, 10]:
         r = prior["results_by_k"][str(kk)]
@@ -330,7 +330,7 @@ def main():
         },
     }
 
-    output_path = Path(__file__).resolve().parent.parent.parent / "intraday_signal_results.json"
+    output_path = Path(__file__).resolve().parent.parent.parent / "research" / "intraday_signal_results.json"
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2, default=str)
     print(f">>> Results saved to {output_path}")
