@@ -1,5 +1,7 @@
 # AlphaCore
 
+[![CI](https://github.com/sohamsssssssssssssssss/alphacore/actions/workflows/ci.yml/badge.svg?branch=cleanup%2Fphase1&event=pull_request)](https://github.com/sohamsssssssssssssssss/alphacore/actions/workflows/ci.yml)
+
 ![Python 3.11](https://img.shields.io/badge/Python-3.11-blue)
 ![C++20](https://img.shields.io/badge/C%2B%2B-20-00599C)
 ![MIT License](https://img.shields.io/badge/License-MIT-green)
@@ -38,7 +40,7 @@ Components in `engine/src/`: `FlatPriceMap` (array-indexed price levels), `Match
 | `engine/benchmarks/flat_price_map_bench.cpp` | `FlatPriceMap` insert, 1M random-priced inserts | 4.40–5.85 ns/op (run-to-run variance) |
 | `engine/legacy/benchmarks/bench.cpp` | `OrderBook::add_order` on the older `std::map` book, 1M orders | 44.89 ns/op |
 
-**Tests:** `engine_test`, `replication_test`, `gateway_test`, `fault_test`, `ha_chaos_test`, `deterministic_replay_test`, plus `mpsc_tsan_test` built under ThreadSanitizer. All pass locally and run in CI.
+**Tests:** `engine_test`, `replication_test`, `gateway_test`, `fault_test`, `ha_chaos_test`, `deterministic_replay_test`, plus `mpsc_tsan_test` built under ThreadSanitizer. Linux CI passes these Release tests and the TSan test; the macOS gateway test uses a stub.
 
 ## Formal verification (TLA+)
 
@@ -104,10 +106,16 @@ From [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md):
 
 ## Tests
 
-On Python 3.11 (macOS), `pytest backend/tests` gives **961 passed, 11 skipped, 4 errors**:
+Python 3.11 non-benchmark suite (`cd backend && python3.11 -m pytest tests/ -q -m "not benchmark"`):
 
-- The 4 errors are in `tests/paper_trading/test_harness.py`. Their fixture needs the gitignored NIFTY 50 CSVs in `backend/data/nifty50_data/`.
-- The skipped tests need a live Postgres (6) or the `alphacore_cpp` module on `sys.path` (5).
+| Environment | Passed | Skipped | Errors |
+|---|---:|---:|---:|
+| Local macOS, `DATABASE_URL` unset | 961 | 15 | 0 |
+| [Linux CI](https://github.com/sohamsssssssssssssssss/alphacore/actions/runs/43288458290) | 961 | 15 | 0 |
+
+Both runs emitted two numerical-precision warnings. The skips are four harness tests requiring local NIFTY50 CSVs, six existing live-Postgres tests, and five bridge modules requiring `alphacore_cpp` on `sys.path`. The Python bridge suites are not validated by these runs; C++ executables run separately in CI. The throughput benchmark keeps its original threshold and is excluded from CI with `-m "not benchmark"`.
+
+Plain repository-root pytest collection also succeeds with `DATABASE_URL` unset: **971 tests collected**, with five optional bridge modules skipped.
 
 ## Setup
 
@@ -118,7 +126,7 @@ These are the commands used to verify this README (macOS, Python 3.11, CMake, No
 python3.11 -m venv .venv && source .venv/bin/activate
 pip install -r backend/requirements.txt
 pip install pytest pytest-asyncio httpx hypothesis
-cd backend && DATABASE_URL=postgresql+asyncpg://soham:alphacore@localhost:5432/alphacore_test python3.11 -m pytest tests/ -q && cd ..
+cd backend && python3.11 -m pytest tests/ -q -m "not benchmark" && cd ..
 
 # C++ engine + tests
 cmake -S engine -B engine/build -DCMAKE_BUILD_TYPE=Release
