@@ -34,7 +34,7 @@ if _SANDBOX_DIR not in sys.path:
     sys.path.insert(0, _SANDBOX_DIR)
 
 from costs import BACKTEST_ASSUMED_COST_PARAMS, cost_in_bps, observed_slippage_bps
-from hypothesis import BASKET_HYPOTHESIS_HEADER
+from basket_hypothesis import BASKET_HYPOTHESIS_HEADER
 
 LOGS_DIR_DEFAULT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "logs")
 

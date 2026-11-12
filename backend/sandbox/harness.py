@@ -3,7 +3,7 @@ AlphaCore top-quartile basket (k=12) monthly cross-sectional relative-strength
 — Upstox sandbox paper-trading harness.
 
 What it does, per rebalance (LAST trading day of month, default schedule):
-  1. States the PRECOMMITTED HYPOTHESIS (hypothesis.py) before touching data.
+  1. States the PRECOMMITTED HYPOTHESIS (basket_hypothesis.py) before touching data.
   2. Fetches NSE daily bars (yfinance) for the 49-symbol universe.
   3. Ranks by trailing 21-trading-day return as of the rebalance date and
      selects the TOP-QUARTILE basket (k = n_ranked // 4, 12 of 49) via the
@@ -45,7 +45,7 @@ if _SANDBOX_DIR not in sys.path:
 
 from basket_backtest import top_quartile  # same selection fn as the Phase 1 backtest
 from costs import BACKTEST_ASSUMED_COST_PARAMS, assumed_total_cost, cost_in_bps, extract_observed_fill
-from hypothesis import BASKET_HYPOTHESIS_HEADER, HYPOTHESIS_HEADER
+from basket_hypothesis import BASKET_HYPOTHESIS_HEADER, HYPOTHESIS_HEADER
 from instruments import DEFAULT_CACHE_PATH, resolve_instrument_keys
 from prices import fetch_daily_bars, now_utc_iso
 from rs_signal import LOOKBACK_TRADING_DAYS, previous_rebalance_date, rank_table, rebalance_dates

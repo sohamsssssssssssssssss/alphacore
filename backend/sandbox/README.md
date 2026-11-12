@@ -15,7 +15,7 @@ cost-dominated; see `hypothesis.md` for both pre-committed hypotheses.)
 
 ## Pre-committed hypothesis (do not skip)
 
-`hypothesis.py` is printed by the harness and the report **before any sandbox
+`basket_hypothesis.py` is printed by the harness and the report **before any sandbox
 data is pulled**: sandbox-observed execution costs are **expected to be higher
 than backtest-assumed costs** (the original K=1 validation hypothesis). The
 Phase 1/2 basket hypotheses (`hypothesis.md`) were satisfied; this harness
@@ -178,7 +178,7 @@ report compares it against assumed costs rather than claiming live fidelity.
 
 ```
 backend/sandbox/
-├── hypothesis.py        # pre-committed hypothesis (printed before every run)
+├── basket_hypothesis.py        # pre-committed hypothesis (printed before every run)
 ├── hypothesis.md        # pre-committed hypotheses: Phase 1 Step 1 basket + Phase 2 overfit sanity check
 ├── universe.py          # 49-symbol universe (Nifty 50 minus SBILIFE) + historical token snapshot (reference only)
 ├── instruments.py       # Upstox instrument master download/cache + symbol -> instrument_key lookup (fail-loud)
