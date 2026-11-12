@@ -9,17 +9,19 @@ import json
 import os
 from pathlib import Path
 import platform
+import pickle
 import re
 import shutil
 import subprocess
 import sys
 import tempfile
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRATCH = ROOT / ".reproduce"
 RELEASE = SCRATCH / "engine-release"
 TSAN = SCRATCH / "engine-tsan"
+K12_INPUT = SCRATCH / "k12-input.pkl"
 OUTPUTS = {
     "cross_sectional_experiment": "cross_sectional_results.json",
     "cross_sectional_diagnostic": "cross_sectional_diagnostic_results.json",
@@ -34,7 +36,6 @@ OUTPUTS = {
 BLOCKED = {
     "run_real_backtest": "driver reselects NSGA-II weights; prohibited by no-tuning rule",
     "run_real_data_experiment": "driver reselects NSGA-II weights; prohibited by no-tuning rule",
-    "basket_backtest": "original K12 period returns/input snapshot absent; quotation cannot be reproduced",
 }
 MODELS = [
     ("MpscQueue", "ModelMpsc_tiny"),
@@ -76,6 +77,13 @@ def metric_values(value, path=()):
     return result
 
 
+def basket_output(text):
+    for line in text.splitlines():
+        if line.startswith("[JSON] "):
+            return json.loads(line.removeprefix("[JSON] "))
+    raise ValueError("basket CLI produced no JSON summary")
+
+
 def experiments():
     work = workspace("experiments-")
     for directory in (ROOT / "backend/data").iterdir():
@@ -87,6 +95,8 @@ def experiments():
     before = {p: p.read_bytes() for p in (ROOT / "research").rglob("*") if p.is_file()}
     data_hashes = {str(p.relative_to(ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                    for p in (ROOT / "backend/data").rglob("*.csv")}
+    if K12_INPUT.exists():
+        data_hashes[str(K12_INPUT.relative_to(ROOT))] = hashlib.sha256(K12_INPUT.read_bytes()).hexdigest()
     manifest = {"captured_at": datetime.now(timezone.utc).isoformat(), "python": sys.version,
                 "packages": {name: metadata.version(name) for name in ["numpy", "pandas", "scipy", "yfinance"]},
                 "data_sha256": data_hashes,
@@ -106,6 +116,8 @@ def experiments():
         row = {"experiment": name, "committed": expected, "reproduced": {}, "status": "", "reason": ""}
         if name in BLOCKED:
             row.update(status="BLOCKED", reason=BLOCKED[name])
+        elif name == "basket_backtest" and not K12_INPUT.exists():
+            row.update(status="MISSING INPUT", reason="run fetch-data to obtain fresh inputs at the documented 2026-08-13 cutoff")
         else:
             output = work / "research" / OUTPUTS[name] if name in OUTPUTS else None
             if output and output.exists():
@@ -113,14 +125,20 @@ def experiments():
             log = work / (name + ".log")
             try:
                 with log.open("w") as stream:
-                    run([sys.executable, script], cwd=work, stdout=stream, stderr=subprocess.STDOUT, timeout=1800)
+                    args = [sys.executable, script]
+                    if name == "basket_backtest":
+                        args += ["--frequency", "monthly", "--as-of", "2026-08-13", "--cache", str(K12_INPUT)]
+                    run(args, cwd=work, stdout=stream, stderr=subprocess.STDOUT, timeout=1800)
+                if name == "basket_backtest":
+                    output = work / "basket_backtest_results.json"
+                    output.write_text(json.dumps(basket_output(log.read_text()), indent=2))
                 if output and output.exists():
                     actual = metric_values(json.loads(output.read_text()))
                     row["reproduced"] = actual
                     row["status"] = "MATCH" if expected and expected == actual else "MISMATCH" if expected else "NO BASELINE"
                 else:
                     row.update(status="DIAGNOSTIC PASS" if not baseline else "NO METRIC ARTIFACT", reason="script completed but writes no comparable result JSON")
-            except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
+            except (subprocess.CalledProcessError, subprocess.TimeoutExpired, ValueError) as exc:
                 row.update(status="ERROR", reason=f"{type(exc).__name__}; see {log.relative_to(ROOT)}")
         rows.append(row)
         keys = sorted(set(expected) | set(row["reproduced"]))
@@ -129,7 +147,7 @@ def experiments():
                 left, right = expected.get(key), row["reproduced"].get(key)
                 print(f"{name}:{key} | {left} | {right} | {'yes' if key in expected and key in row['reproduced'] and left == right else 'NO'}", flush=True)
         else:
-            print(f"{name} | {json.dumps(expected, sort_keys=True)} | {row['reason'] or row['reproduced']} | {row['status']}", flush=True)
+            print(f"{name} | {json.dumps(expected, sort_keys=True)} | {json.dumps(row['reproduced'], sort_keys=True) if row['reproduced'] else row['reason']} | {row['status']}", flush=True)
     (work / "comparison.json").write_text(json.dumps(rows, indent=2, allow_nan=False))
     assert all(p.read_bytes() == content for p, content in before.items()), "research source changed"
     assert all(hashlib.sha256((ROOT / p).read_bytes()).hexdigest() == digest
@@ -151,6 +169,14 @@ def fetch_data():
         shutil.copyfile(csv, ROOT / "backend/data/nifty50_data" / csv.name)
         if csv.stem in {"RELIANCE", "TCS", "INFY", "HDFCBANK", "ICICIBANK"}:
             shutil.copyfile(csv, ROOT / "backend/data/real_nse_data" / csv.name)
+
+    if not K12_INPUT.exists():
+        sys.path.insert(0, str(ROOT / "backend"))
+        from experiments.basket_backtest import fetch_daily_bars, UNIVERSE_49, FETCH_PERIOD_DAYS
+        closes, adv, opens = fetch_daily_bars(UNIVERSE_49, as_of=date(2026, 8, 13),
+                                             fetch_period_days=FETCH_PERIOD_DAYS, include_open=True)
+        with K12_INPUT.open("wb") as stream:
+            pickle.dump({"closes": closes, "adv": adv, "opens": opens}, stream)
     import yfinance as yf
     import pandas as pd
     committed = json.loads((ROOT / "research/intraday_signal_results.json").read_text())

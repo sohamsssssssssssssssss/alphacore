@@ -26,3 +26,10 @@ def test_all_attempts_remaining_targets_and_reports_failure(monkeypatch, tmp_pat
     monkeypatch.setattr(reproduce.sys, "argv", ["reproduce.py", "all"])
     assert reproduce.main() == 1
     assert calls == names
+
+
+def test_basket_output_requires_the_original_cli_summary():
+    import pytest
+    assert reproduce.basket_output('narrative\n[JSON] {"sharpe": 0.25, "ci_lower": -0.1}') == {"sharpe": 0.25, "ci_lower": -0.1}
+    with pytest.raises(ValueError, match="no JSON summary"):
+        reproduce.basket_output('a narrative claim is not a result')

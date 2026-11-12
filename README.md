@@ -115,8 +115,8 @@ Python 3.11 non-benchmark results observed on 2026-11-13:
 
 | Environment | Passed | Skipped | Deselected |
 |---|---:|---:|---:|
-| Local macOS, `make py-test` (built bridge and fetched daily CSVs) | 1063 | 19 | 1 |
-| [Linux backend CI](https://github.com/sohamsssssssssssssssss/alphacore/actions/runs/43310349447/job/131504486823) | 1018 | 15 | 0 |
+| Local macOS, `make py-test` (built bridge and fetched daily CSVs) | 1064 | 19 | 1 |
+| [Initial Linux backend CI](https://github.com/sohamsssssssssssssssss/alphacore/actions/runs/43310349447/job/131504486823) | 1018 | 15 | 0 |
 
 Both runs emitted two numerical-precision warnings. CI skips four harness tests
 requiring local NIFTY50 CSVs, six existing live-Postgres tests and five optional
@@ -125,7 +125,7 @@ but its 19 existing skips include five ITCH subprocess checks that skip on
 SIGABRT; those parser cases are not validated. The throughput benchmark keeps
 its original threshold and is excluded with `-m "not benchmark"`.
 
-Repository-root collection succeeds: **1028 tests collected**, with five
+Repository-root collection before the final basket-summary self-check succeeded: **1028 tests collected**, with five
 optional bridge modules skipped. C++ Release and TSan tests pass, but overall
 Phase 2 CI is **failing**: the newly exercised, unchanged engine PrimaryBackup
 TLA model violates SinglePrimaryPerEpoch (see [specs/README.md](specs/README.md)).
@@ -186,7 +186,7 @@ benchmark target appends actual measurements to `engine/benchmarks/RESULTS.md`.
 `fetch-data` uses the original daily downloader's fixed dates, then attempts
 the committed hourly period (2024-08-01 through 2026-07-30). It preserves
 tracked metadata and never substitutes a more recent interval. On 2026-11-13,
-49 daily symbols were recovered but Yahoo refused the hourly range because
+49 daily symbols were recovered; the K12 fetch uses its separate documented window and universe. Yahoo refused the hourly range because
 it lies outside its 730-day retention window. Original CSV snapshots are
 absent, so exact historical input recovery is not established. The fetched
 RELIANCE and TCS CSVs each have 1235 rows ending 2026-07-29; the committed
@@ -202,7 +202,7 @@ The scratch directory retains stdout logs, comparison.json, source/data
 hashes and package versions. Source research files are checked unchanged.
 Missing outputs, mismatches and blocked runs produce a nonzero exit status.
 The two original NSGA-II drivers are blocked because they reselect weights;
-the K12 quotation is blocked because its original return series is missing.
+the K12 script uses its documented 2026-08-13 cutoff and unchanged monthly defaults on a fresh cache, but has no original JSON baseline. A fresh run cannot verify the missing original return series.
 The existing seeded synthetic weight-comparison run stays labelled synthetic.
 No new parameter search is performed. Differences are not called data
 revisions without evidence from an original input snapshot or hash.

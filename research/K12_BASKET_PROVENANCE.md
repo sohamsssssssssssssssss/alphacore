@@ -83,3 +83,33 @@ The numerical claim is unsupported by a recoverable raw result artifact.
 Keep the README headline unchanged. Imported historical assertions are
 preserved for provenance, not endorsed. No fresh parameter search or rerun
 with changed parameters was performed for this audit.
+
+
+## Addendum 2026-11-13 — unchanged-parameter fresh rerun
+
+The original raw result and return series remain absent. Separately, the
+imported CLI was run on freshly fetched data at the documented original
+cutoff, without parameter tuning:
+
+```sh
+python3.11 backend/experiments/basket_backtest.py --frequency monthly \
+  --as-of 2026-08-13 --cache .reproduce/k12-input.pkl
+```
+
+The fetch used the script's unchanged 2190-day window, 49-symbol universe
+excluding SBILIFE, and default top-quartile selection, lookback 21, budget
+1,000,000 and spread 10 bps. TATAMOTORS failed both provider tickers, leaving
+48 symbols, 1485 sessions, 2020-08-14 through 2026-08-13; the script selected
+K=12. The fresh result has 70 period returns and is:
+
+- Sharpe: **0.6575851555529214**.
+- Stationary-bootstrap 95% CI: **[0.5708059735482527, 1.9477991082373192]**.
+
+These differ from the narrative quotation 0.6610 / [0.5718, 1.9514], even at
+four decimal places. They are fresh computed results, not a recovered original
+artifact or a recomputation from original raw JSON. The scratch run retains
+the original CLI's JSON summary, logs and input/cache hashes; `make all`
+attempts the same fixed-cutoff run. With no original input snapshot, the
+numerical difference cannot be conclusively attributed to data revisions.
+The pre-registration, Sharpe-definition, selection-bias and future-ADV
+limitations above remain. This run does not justify changing the headline.
