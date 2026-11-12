@@ -490,7 +490,7 @@ def main():
     print(sep)
 
     prior = json.loads(
-        (Path(__file__).resolve().parent.parent.parent / "universe_expansion_results.json").read_text()
+        (Path(__file__).resolve().parent.parent.parent / "research" / "universe_expansion_results.json").read_text()
     )
     prior_rows = [
         ("5-symbol K=1", prior["results_5_symbol"]),
@@ -602,7 +602,7 @@ def main():
         },
     }
 
-    output_path = Path(__file__).resolve().parent.parent.parent / "k_expansion_results.json"
+    output_path = Path(__file__).resolve().parent.parent.parent / "research" / "k_expansion_results.json"
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2, default=str)
     print(f"\n>>> Results saved to {output_path}")

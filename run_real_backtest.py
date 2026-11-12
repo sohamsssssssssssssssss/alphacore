@@ -623,13 +623,13 @@ print(f"""
 """)
 
 # Save locked parameters to JSON
-params_path = os.path.join(os.path.dirname(__file__), "locked_params.json")
+params_path = os.path.join(os.path.dirname(__file__), "research", "locked_params.json")
 with open(params_path, "w") as f:
     json.dump(LOCKED_PARAMS, f, indent=2, default=str)
 print(f"Locked parameters saved to {params_path}")
 
 # Save full results
-results_path = os.path.join(os.path.dirname(__file__), "backtest_results.json")
+results_path = os.path.join(os.path.dirname(__file__), "research", "backtest_results.json")
 with open(results_path, "w") as f:
     json.dump({
         "test_metrics": test_metrics,

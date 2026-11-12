@@ -784,7 +784,7 @@ def main():
         },
     }
 
-    output_path = Path(__file__).resolve().parent.parent.parent / "universe_expansion_results.json"
+    output_path = Path(__file__).resolve().parent.parent.parent / "research" / "universe_expansion_results.json"
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2, default=str)
     print(f"\n>>> Results saved to {output_path}")

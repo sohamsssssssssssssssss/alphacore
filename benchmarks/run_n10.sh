@@ -9,7 +9,7 @@ set -uo pipefail
 # Resolve paths relative to script location
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-BENCH_DIR="${PROJECT_ROOT}/frontend/build"
+BENCH_DIR="${PROJECT_ROOT}/engine/build"
 
 N=10
 MODE="${1:-}"

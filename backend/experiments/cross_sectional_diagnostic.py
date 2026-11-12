@@ -905,7 +905,7 @@ def main():
         },
     }
 
-    output_path = Path(__file__).resolve().parent.parent.parent / "cross_sectional_diagnostic_results.json"
+    output_path = Path(__file__).resolve().parent.parent.parent / "research" / "cross_sectional_diagnostic_results.json"
     with open(output_path, "w") as f:
         json.dump(output, f, indent=2, default=str)
     print(f">>> Results saved to {output_path}")

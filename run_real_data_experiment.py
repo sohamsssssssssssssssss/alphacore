@@ -539,10 +539,10 @@ def run_experiment():
         "results": all_results,
     }
 
-    with open("EXPERIMENT_RESULTS.json", "w") as f:
+    with open("research/EXPERIMENT_RESULTS.json", "w") as f:
         json.dump(output, f, indent=2, default=str)
 
-    print("\n[✓] Results saved to EXPERIMENT_RESULTS.json")
+    print("\n[✓] Results saved to research/EXPERIMENT_RESULTS.json")
     return all_results
 
 
