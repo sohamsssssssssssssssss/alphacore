@@ -1,18 +1,19 @@
-# AlphaCore: Sub-10ns Order Matching for Indian Equity Markets
+# AlphaCore: Matching Engine Performance Notes
 
 ## Abstract
-AlphaCore is designed for deterministic matching and feature extraction under Indian equity microstructure constraints, targeting sustained sub-10ns core-path operations where feasible.
+AlphaCore is designed for deterministic matching and feature extraction under Indian equity microstructure constraints.
 
 ## Methodology
 Benchmarks were collected on Apple Silicon M-series hardware. Timing is measured with a high-resolution counter path and a chrono fallback when `rdtsc`-style counters are unavailable.
 
 ## Results
 
-| Benchmark | AlphaCore | Baseline | Improvement |
-|---|---:|---:|---:|
-| FlatPriceMap lookup/update | 7.77 ns | Atharva OME 39.8 ns | 5.1x faster |
-| ITCH parser throughput | 5.63 ns/msg | CppTrader 24 ns/msg | 4.3x faster |
-| MPSC queue throughput | 10.1M ops/s | Target 5M ops/s | 2.0x target |
+Numbers below are taken from `ALPHACORE_STATUS_REPORT.md` (Release build). They are two different benchmarks and should not be compared to each other.
+
+| Benchmark | Source | Result |
+|---|---|---:|
+| `FlatPriceMap` insert, 1M random-priced inserts | `engine/benchmarks/flat_price_map_bench.cpp` | 4.40–5.85 ns/op (run-to-run variance) |
+| `OrderBook::add_order` (older `std::map` book), 1M orders | `engine/legacy/benchmarks/bench.cpp` | 44.89 ns/op |
 
 ## Design Decisions
 - Preallocated contiguous `PriceLevel` vector.
@@ -22,8 +23,7 @@ Benchmarks were collected on Apple Silicon M-series hardware. Timing is measured
 - Split bid/ask cache lines to reduce false sharing.
 
 ## TLA+ Verification
-Formal specs were model checked across 1M+ states.
-- 3 specifications were validated for safety/liveness and fault transitions.
+Bounded / reduced-model checks are recorded in `ALPHACORE_STATUS_REPORT.md` (TLA+ section): MpscQueue (bounded), MatchingEngine (reduced model), OrderBook (reduced model). These are small configurations, not exhaustive proofs of the full engine.
 
 ## Conclusion
-AlphaCore meets its low-latency engineering targets through cache-aware data layout, lock-free concurrency primitives, and formal verification in critical correctness paths.
+AlphaCore uses cache-aware data layout, a lock-free MPSC queue, and bounded TLA+ model checking of its queue, matching and order-book logic.

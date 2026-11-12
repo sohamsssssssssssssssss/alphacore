@@ -35,24 +35,8 @@ Run at: 2026-05-14 10:21:25
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 162.20 | 202.72 | 203.93 | 53.15 | 204.73 | 155.77 | 973.31 | 0.00% |
 
-## AlphaCore vs Standard OME
-| Metric | AlphaCore | Standard OME | AlphaCore Advantage |
-| --- | --- | --- | --- |
-| p50 latency (orderbook endpoint) | 24.26 ms | ~8 ms | 0.33x |
-| p99 latency (orderbook endpoint) | 28.92 ms | ~45 ms | 1.56x |
-| Throughput (req/sec, sustained) | 13072.82 | ~400 | 32.68x |
-| Detection engines | ✅ | ❌ | ✅ |
-| Iceberg detection | ✅ | ❌ | ✅ |
-| Spoof detection | ✅ | ❌ | ✅ |
-| Flow analysis | ✅ | ❌ | ✅ |
-| Liquidity heatmap | ✅ | ❌ | ✅ |
-| Narrative signals | ✅ | ❌ | ✅ |
-| WebSocket streaming | ❌ | ❌ | ❌ |
-| Real-time DB persistence | ✅ | ❌ | ✅ |
-
 ## Summary
 - Best performing endpoint: `/api/orderbook/TCS` at `23.35ms` p50
 - Worst performing endpoint: `/api/detections/summary` at `473.31ms` p99
 - Overall system throughput: `13072.82` req/sec sustained
 - WebSocket: `0/100` connections successful
-- Verdict: AlphaCore outperforms standard OME on `2` of `3` metrics

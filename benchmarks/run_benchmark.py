@@ -226,33 +226,6 @@ def build_detection_table(det: dict[str, Any]) -> Table:
     return table
 
 
-def build_comparison_table(alpha: dict[str, Any], ws_success: bool) -> Table:
-    std_p50 = 8.0
-    std_p99 = 45.0
-    std_rps = 400.0
-
-    rows = [
-        ("p50 latency (orderbook endpoint)", f"{alpha['p50']:.2f} ms", f"~{std_p50:.0f} ms", f"{(std_p50/alpha['p50']):.2f}x" if alpha['p50'] > 0 else "N/A"),
-        ("p99 latency (orderbook endpoint)", f"{alpha['p99']:.2f} ms", f"~{std_p99:.0f} ms", f"{(std_p99/alpha['p99']):.2f}x" if alpha['p99'] > 0 else "N/A"),
-        ("Throughput (req/sec, sustained)", f"{alpha['throughput']:.2f}", f"~{std_rps:.0f}", f"{(alpha['throughput']/std_rps):.2f}x" if std_rps > 0 else "N/A"),
-        ("Detection engines", "✅", "❌", "✅"),
-        ("Iceberg detection", "✅", "❌", "✅"),
-        ("Spoof detection", "✅", "❌", "✅"),
-        ("Flow analysis", "✅", "❌", "✅"),
-        ("Liquidity heatmap", "✅", "❌", "✅"),
-        ("Narrative signals", "✅", "❌", "✅"),
-        ("WebSocket streaming", "✅" if ws_success else "❌", "❌", "✅" if ws_success else "❌"),
-        ("Real-time DB persistence", "✅", "❌", "✅"),
-    ]
-
-    table = Table(title="AlphaCore vs Standard OME")
-    for c in ["Metric", "AlphaCore", "Standard OME", "AlphaCore Advantage"]:
-        table.add_column(c)
-    for r in rows:
-        table.add_row(*r)
-    return table
-
-
 def markdown_table(headers: list[str], rows: list[list[str]]) -> str:
     out = []
     out.append("| " + " | ".join(headers) + " |")
@@ -302,22 +275,11 @@ async def main() -> int:
         det_results, det_wall = await run_endpoint_benchmark(session, "/api/detections/summary", DETECTION_CONCURRENCY)
         det_stats = compute_latency_stats(det_results, det_wall)
 
-    orderbook_rel = next((x for x in endpoint_stats if x["endpoint"] == "/api/orderbook/RELIANCE"), None)
-    if orderbook_rel is None:
-        orderbook_rel = {"p50": 0.0, "p99": 0.0}
-
-    comparison = {
-        "p50": orderbook_rel["p50"],
-        "p99": orderbook_rel["p99"],
-        "throughput": sustained["overall_rps"],
-    }
-
     console.rule("ALPHACORE BENCHMARK RESULTS — 500 CONCURRENT USERS")
     console.print(build_endpoint_table(endpoint_stats))
     console.print(build_sustained_table(sustained))
     console.print(build_ws_table(ws_result))
     console.print(build_detection_table(det_stats))
-    console.print(build_comparison_table(comparison, ws_result["successful"] > 0))
 
     if raw_errors:
         console.print("\nEndpoint transport errors (sample):", style="bold red")
@@ -347,34 +309,8 @@ async def main() -> int:
     ws_rows = [[ws_result["status"], f"{ws_result['successful']}/{ws_result['total']}", f"{ws_result['mean_conn_ms']:.2f}", f"{ws_result['mean_first_msg_ms']:.2f}", " ; ".join(ws_result["errors"]) if ws_result["errors"] else "None"]]
     det_rows = [[f"{det_stats['p50']:.2f}", f"{det_stats['p95']:.2f}", f"{det_stats['p99']:.2f}", f"{det_stats['min']:.2f}", f"{det_stats['max']:.2f}", f"{det_stats['mean']:.2f}", f"{det_stats['rps']:.2f}", f"{det_stats['error_rate']:.2f}%"]]
 
-    std_p50 = 8.0
-    std_p99 = 45.0
-    std_rps = 400.0
-    comp_rows = [
-        ["p50 latency (orderbook endpoint)", f"{comparison['p50']:.2f} ms", f"~{std_p50:.0f} ms", f"{(std_p50/comparison['p50']):.2f}x" if comparison['p50'] > 0 else "N/A"],
-        ["p99 latency (orderbook endpoint)", f"{comparison['p99']:.2f} ms", f"~{std_p99:.0f} ms", f"{(std_p99/comparison['p99']):.2f}x" if comparison['p99'] > 0 else "N/A"],
-        ["Throughput (req/sec, sustained)", f"{comparison['throughput']:.2f}", f"~{std_rps:.0f}", f"{(comparison['throughput']/std_rps):.2f}x" if std_rps > 0 else "N/A"],
-        ["Detection engines", "✅", "❌", "✅"],
-        ["Iceberg detection", "✅", "❌", "✅"],
-        ["Spoof detection", "✅", "❌", "✅"],
-        ["Flow analysis", "✅", "❌", "✅"],
-        ["Liquidity heatmap", "✅", "❌", "✅"],
-        ["Narrative signals", "✅", "❌", "✅"],
-        ["WebSocket streaming", "✅" if ws_result["successful"] > 0 else "❌", "❌", "✅" if ws_result["successful"] > 0 else "❌"],
-        ["Real-time DB persistence", "✅", "❌", "✅"],
-    ]
-
     best_ep = min(endpoint_stats, key=lambda x: x["p50"]) if endpoint_stats else None
     worst_ep = max(endpoint_stats, key=lambda x: x["p99"]) if endpoint_stats else None
-
-    wins = 0
-    total_metrics = 3
-    if comparison["p50"] < std_p50:
-        wins += 1
-    if comparison["p99"] < std_p99:
-        wins += 1
-    if comparison["throughput"] > std_rps:
-        wins += 1
 
     md = []
     md.append("# AlphaCore Benchmark Results")
@@ -398,9 +334,6 @@ async def main() -> int:
     md.append("## Detection engine latency")
     md.append(markdown_table(["p50 (ms)", "p95 (ms)", "p99 (ms)", "min", "max", "mean", "req/sec", "error rate"], det_rows))
     md.append("")
-    md.append("## AlphaCore vs Standard OME")
-    md.append(markdown_table(["Metric", "AlphaCore", "Standard OME", "AlphaCore Advantage"], comp_rows))
-    md.append("")
     md.append("## Summary")
     if best_ep:
         md.append(f"- Best performing endpoint: `{best_ep['endpoint']}` at `{best_ep['p50']:.2f}ms` p50")
@@ -408,7 +341,6 @@ async def main() -> int:
         md.append(f"- Worst performing endpoint: `{worst_ep['endpoint']}` at `{worst_ep['p99']:.2f}ms` p99")
     md.append(f"- Overall system throughput: `{sustained['overall_rps']:.2f}` req/sec sustained")
     md.append(f"- WebSocket: `{ws_result['successful']}/100` connections successful")
-    md.append(f"- Verdict: AlphaCore outperforms standard OME on `{wins}` of `{total_metrics}` metrics")
 
     with open("benchmarks/results.md", "w", encoding="utf-8") as f:
         f.write("\n".join(md) + "\n")

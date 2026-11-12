@@ -193,7 +193,7 @@ class WalkForwardBacktester:
     def apply_dsr_gate(summary: pd.DataFrame, threshold: float = 0.95) -> pd.DataFrame:
         """Return only models that pass the DSR gate.
 
-        Atharva's standard: DSR > 0.95 means 95% probability the edge is real.
+        Gate: DSR > 0.95 means 95% probability the edge is real.
         Models below this threshold are considered overfit and excluded.
         """
         passed = summary[summary["dsr"] > threshold].copy()

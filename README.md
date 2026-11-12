@@ -1,8 +1,5 @@
 # AlphaCore — Order Book Intelligence Engine
 
-> Real NSE market data. Iceberg detection. Spoofing detection.
-> Live React dashboard. The trading system Atharva's engine can't be.
-
 ![Python 3.11](https://img.shields.io/badge/Python-3.11-blue)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688)
 ![React](https://img.shields.io/badge/React-19-61dafb)
@@ -14,49 +11,14 @@
 
 AlphaCore is an order book intelligence system for NSE Indian markets. It ingests real market data, runs detection algorithms on the order book in real time, and visualizes everything in a live React dashboard.
 
-A matching engine processes orders: it accepts bids and asks, applies price-time priority, and outputs trades with low latency. An intelligence system does a different job: it watches the book, measures behaviour, and infers what larger participants may be doing. That distinction matters because supporting an iceberg order type is not the same as detecting hidden accumulation in live flow. AlphaCore is built to understand the order book, not just replay it.
-
 ## Dashboard
 
 ![Dashboard](docs/dashboard.png)
 
 The dashboard shows live L2 depth, flow imbalance, iceberg detections, spoof alerts, a liquidity heatmap, and narrative regime context in one terminal-style view. It is designed for dense operator visibility rather than generic UI polish.
 
-## Features vs Generic Matching Engine
-
-| Feature | Generic C++ Matching Engine | AlphaCore |
-|---|---|---|
-| Real NSE market data | ❌ Synthetic benchmarks | ✅ Live + historical |
-| Iceberg **detection** | ❌ Just order type support | ✅ Refill algorithm |
-| Spoofing **detection** | ❌ Not possible | ✅ 5-check scoring system |
-| Order flow imbalance | ❌ | ✅ -1.0 to +1.0 live score |
-| Liquidity heatmap | ❌ | ✅ Price × time × volume |
-| Narrative regime context | ❌ | ✅ NarrativeEdge integration |
-| India market specific | ❌ Generic | ✅ NSE / BSE |
-| React dashboard | ❌ | ✅ Bloomberg-style terminal |
-| Accuracy benchmarks | ❌ Only latency numbers | ✅ Precision + recall |
-
 ## Benchmark Results
 > Tested at 500 concurrent users on Apple M-series, Python 3.14, PostgreSQL local
-
-### Throughput
-| Metric | AlphaCore | Standard OME | Advantage |
-|--------|-----------|--------------|-----------|
-| Sustained req/sec | 13,072 | ~400 | **32.68x faster** |
-| Orderbook p50 latency | 24ms | ~8ms | competitive |
-| Orderbook p99 latency | 28ms | ~45ms | **1.56x faster** |
-| Error rate (500 concurrent) | 0% | — | ✅ |
-
-### Feature Comparison
-| Feature | AlphaCore | Standard OME |
-|---------|-----------|--------------|
-| Iceberg detection | ✅ | ❌ |
-| Spoof detection | ✅ | ❌ |
-| Flow analysis | ✅ | ❌ |
-| Liquidity heatmap | ✅ | ❌ |
-| Narrative signals | ✅ | ❌ |
-| Real-time DB persistence | ✅ | ❌ |
-| WebSocket streaming | ✅ | ❌ |
 
 ### Raw Numbers
 Full benchmark report: [`benchmarks/results.md`](benchmarks/results.md)
