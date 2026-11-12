@@ -37,7 +37,10 @@ def tmp_state(tmp_path):
 
 @pytest.fixture()
 def symbols():
-    return sorted(p.stem for p in config.DATA_DIR_50.glob("*.csv"))
+    names = sorted(p.stem for p in config.DATA_DIR_50.glob("*.csv"))
+    if not names:
+        pytest.skip("requires local NIFTY50 CSVs (run backend/experiments/fetch_nifty50_data.py)")
+    return names
 
 
 @pytest.fixture()
