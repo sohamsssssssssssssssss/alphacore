@@ -244,6 +244,7 @@ class TestCppPythonIntegration:
             assert r.get("logged_at") is not None
             assert str(r.get("symbol", "")).strip() != ""
 
+    @pytest.mark.benchmark
     def test_pipeline_throughput(self, full_pipeline):
         n = 1000
         t0 = time.perf_counter()
