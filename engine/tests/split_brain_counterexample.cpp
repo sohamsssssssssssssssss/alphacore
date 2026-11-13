@@ -17,7 +17,7 @@ int main() {
     if (sink < 0 || ::bind(sink, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0) return 2;
     socklen_t size = sizeof(addr);
     if (::getsockname(sink, reinterpret_cast<sockaddr*>(&addr), &size) != 0) return 2;
-    LeaderLease primary_lease, backup_lease;
+    LeaderLease primary_lease(0), backup_lease(1);  // two distinct nodes
     primary_lease.promote(); // A prior failover left the live primary at epoch 2.
     HeartbeatMonitor primary(primary_lease), backup(backup_lease);
     std::atomic<bool> backup_serving{false};

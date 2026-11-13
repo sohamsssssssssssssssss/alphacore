@@ -23,10 +23,28 @@ bool send_all(int fd, const std::uint8_t* data, std::size_t len) {
     return true;
 }
 
+constexpr std::size_t kFrameHeaderBytes = 4 + 2 + 8;
+
+void put_be(std::uint8_t* out, std::uint64_t v, int bytes) {
+    for (int i = bytes - 1; i >= 0; --i) {
+        out[i] = static_cast<std::uint8_t>(v & 0xffu);
+        v >>= 8;
+    }
+}
+
+std::uint64_t get_be(const std::uint8_t* in, int bytes) {
+    std::uint64_t v = 0;
+    for (int i = 0; i < bytes; ++i) {
+        v = (v << 8) | in[i];
+    }
+    return v;
+}
+
 }  // namespace
 
-ReplicationLog::ReplicationLog(const std::string& journal_path)
+ReplicationLog::ReplicationLog(const std::string& journal_path, LeaderLease& lease)
     : journal_path_(journal_path),
+      lease_(lease),
       backup_host_("127.0.0.1"),
       backup_port_(0),
       sock_fd_(-1),
@@ -92,18 +110,11 @@ bool ReplicationLog::connect_locked() {
     return true;
 }
 
-bool ReplicationLog::send_frame_locked(const std::uint8_t* entry, std::size_t len) {
+bool ReplicationLog::send_frame_locked(const std::vector<std::uint8_t>& frame) {
     if (sock_fd_ < 0) {
         return false;
     }
-
-    const std::uint32_t be_len = htonl(static_cast<std::uint32_t>(len));
-    if (!send_all(sock_fd_, reinterpret_cast<const std::uint8_t*>(&be_len), sizeof(be_len))) {
-        ::close(sock_fd_);
-        sock_fd_ = -1;
-        return false;
-    }
-    if (!send_all(sock_fd_, entry, len)) {
+    if (!send_all(sock_fd_, frame.data(), frame.size())) {
         ::close(sock_fd_);
         sock_fd_ = -1;
         return false;
@@ -113,18 +124,28 @@ bool ReplicationLog::send_frame_locked(const std::uint8_t* entry, std::size_t le
 
 void ReplicationLog::flush_buffered_locked() {
     while (!buffered_.empty() && sock_fd_ >= 0) {
-        const auto& e = buffered_.front();
-        if (!send_frame_locked(e.data(), e.size())) {
+        if (!send_frame_locked(buffered_.front())) {
             return;
         }
         buffered_.pop_front();
     }
 }
 
-void ReplicationLog::append(const std::uint8_t* entry, std::size_t len) {
-    if (entry == nullptr || len == 0) {
-        return;
+bool ReplicationLog::append(const std::uint8_t* entry, std::size_t len) {
+    if (entry == nullptr || len == 0 || len > kMaxEntryBytes) {
+        return false;
     }
+    // Buffered frames keep the epoch they were appended under, so a receiver
+    // that has since seen a newer epoch rejects them after a heal.
+    const std::uint64_t epoch = lease_.epoch();
+    if (!lease_.is_current()) {
+        return false;
+    }
+    std::vector<std::uint8_t> frame(kFrameHeaderBytes + len);
+    put_be(frame.data(), len, 4);
+    put_be(frame.data() + 4, kReplicationFrameVersion, 2);
+    put_be(frame.data() + 6, epoch, 8);
+    std::memcpy(frame.data() + kFrameHeaderBytes, entry, len);
 
     {
         std::ofstream out(journal_path_, std::ios::binary | std::ios::app);
@@ -137,9 +158,10 @@ void ReplicationLog::append(const std::uint8_t* entry, std::size_t len) {
     }
 
     std::lock_guard<std::mutex> lock(mu_);
-    if (!send_frame_locked(entry, len)) {
-        buffered_.emplace_back(entry, entry + len);
+    if (!send_frame_locked(frame)) {
+        buffered_.push_back(std::move(frame));
     }
+    return true;
 }
 
 void ReplicationLog::retry_loop() {
@@ -156,9 +178,11 @@ void ReplicationLog::retry_loop() {
     }
 }
 
-BackupReceiver::BackupReceiver()
-    : running_(false),
+BackupReceiver::BackupReceiver(LeaderLease& lease)
+    : lease_(lease),
+      running_(false),
       listening_ready_(false),
+      rejected_stale_(0),
       thread_(),
       apply_handler_(),
       apply_mu_(),
@@ -186,15 +210,13 @@ void BackupReceiver::stop() {
     running_.store(false, std::memory_order_release);
     listening_ready_.store(false, std::memory_order_release);
 
-    if (conn_fd_ >= 0) {
-        ::shutdown(conn_fd_, SHUT_RDWR);
-        ::close(conn_fd_);
-        conn_fd_ = -1;
-    }
-    if (listen_fd_ >= 0) {
-        ::shutdown(listen_fd_, SHUT_RDWR);
-        ::close(listen_fd_);
-        listen_fd_ = -1;
+    // exchange: the receiver thread reads these fds concurrently; close each once.
+    for (auto* slot : {&conn_fd_, &listen_fd_}) {
+        const int fd = slot->exchange(-1);
+        if (fd >= 0) {
+            ::shutdown(fd, SHUT_RDWR);
+            ::close(fd);
+        }
     }
     if (thread_.joinable()) {
         thread_.join();
@@ -203,6 +225,10 @@ void BackupReceiver::stop() {
 
 bool BackupReceiver::is_listening() const {
     return listening_ready_.load(std::memory_order_acquire);
+}
+
+std::size_t BackupReceiver::rejected_stale() const {
+    return rejected_stale_.load(std::memory_order_acquire);
 }
 
 bool BackupReceiver::recv_exact(int fd, std::uint8_t* out, std::size_t len) {
@@ -245,8 +271,10 @@ void BackupReceiver::run(std::uint16_t port) {
 
     if (::bind(listen_fd_, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0 ||
         ::listen(listen_fd_, 1) != 0) {
-        ::close(listen_fd_);
-        listen_fd_ = -1;
+        const int fd = listen_fd_.exchange(-1);
+        if (fd >= 0) {
+            ::close(fd);
+        }
         running_.store(false, std::memory_order_release);
         return;
     }
@@ -264,19 +292,29 @@ void BackupReceiver::run(std::uint16_t port) {
         }
 
         while (running_.load(std::memory_order_acquire)) {
-            std::uint32_t be_len = 0;
-            if (!recv_exact(conn_fd_, reinterpret_cast<std::uint8_t*>(&be_len), sizeof(be_len))) {
+            std::uint8_t header[kFrameHeaderBytes];
+            if (!recv_exact(conn_fd_, header, sizeof(header))) {
                 break;
             }
-            const std::uint32_t len = ntohl(be_len);
+            const auto len = static_cast<std::uint32_t>(get_be(header, 4));
+            if (get_be(header + 4, 2) != kReplicationFrameVersion || len > kMaxEntryBytes) {
+                break;  // unknown version or oversized frame: drop the connection
+            }
+            const std::uint64_t epoch = get_be(header + 6, 8);
             std::vector<std::uint8_t> entry(len);
             if (!recv_exact(conn_fd_, entry.data(), len)) {
                 break;
             }
+            if (!lease_.accept(epoch)) {  // rule (d): epoch < max_seen
+                rejected_stale_.fetch_add(1, std::memory_order_acq_rel);
+                continue;
+            }
             apply_entry(entry);
         }
 
-        ::close(conn_fd_);
-        conn_fd_ = -1;
+        const int fd = conn_fd_.exchange(-1);
+        if (fd >= 0) {
+            ::close(fd);
+        }
     }
 }

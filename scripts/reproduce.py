@@ -171,16 +171,18 @@ def engine_build():
     run(["cmake", "-S", "engine", "-B", RELEASE, "-DCMAKE_BUILD_TYPE=Release", "-DPYBIND11_FINDPYTHON=ON", f"-DPython_EXECUTABLE={sys.executable}", f"-DPYTHON_EXECUTABLE={sys.executable}"])
     run(["cmake", "--build", RELEASE, "--parallel", "2"])
     run(["cmake", "-S", "engine", "-B", TSAN, "-DALPHACORE_TSAN=ON", "-DPYBIND11_FINDPYTHON=ON", f"-DPython_EXECUTABLE={sys.executable}", f"-DPYTHON_EXECUTABLE={sys.executable}"])
-    run(["cmake", "--build", TSAN, "--parallel", "2", "--target", "mpsc_tsan_test"])
+    run(["cmake", "--build", TSAN, "--parallel", "2", "--target", "mpsc_tsan_test", "fencing_tsan_test"])
     run([sys.executable, "-c", "import alphacore_cpp; print('Python 3.11 bridge import OK')"], env=os.environ | {"PYTHONPATH": str(RELEASE)})
     return 0
 
 
 def engine_test():
     env = os.environ | {"OB_FAULT_POOL_EXHAUSTION": "1", "OB_FAULT_QUEUE_FULL": "1"}
-    for name in ["engine_test", "replication_test", "gateway_test", "fault_test", "ha_chaos_test", "deterministic_replay_test"]:
+    for name in ["engine_test", "replication_test", "gateway_test", "fault_test", "ha_chaos_test",
+                 "deterministic_replay_test", "split_brain_counterexample", "fencing_test"]:
         run([RELEASE / name], cwd=SCRATCH, env=env, timeout=300)
-    run([TSAN / "mpsc_tsan_test"], cwd=SCRATCH, timeout=300)
+    for name in ["mpsc_tsan_test", "fencing_tsan_test"]:
+        run([TSAN / name], cwd=SCRATCH, timeout=300)
     return 0
 
 
