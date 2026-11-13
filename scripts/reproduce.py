@@ -158,44 +158,7 @@ def experiments():
 
 
 def fetch_data():
-    # Run the original fixed-window downloader in a copy, preserving tracked metadata.
-    work = workspace("fetch-")
-    run([sys.executable, work / "backend/experiments/fetch_nifty50_data.py"], cwd=work)
-    source = work / "backend/data/nifty50_data"
-    csvs = list(source.glob("*.csv"))
-    if not csvs:
-        raise RuntimeError("No daily CSVs fetched; historical inputs remain unavailable")
-    for csv in csvs:
-        shutil.copyfile(csv, ROOT / "backend/data/nifty50_data" / csv.name)
-        if csv.stem in {"RELIANCE", "TCS", "INFY", "HDFCBANK", "ICICIBANK"}:
-            shutil.copyfile(csv, ROOT / "backend/data/real_nse_data" / csv.name)
-
-    if not K12_INPUT.exists():
-        sys.path.insert(0, str(ROOT / "backend"))
-        from experiments.basket_backtest import fetch_daily_bars, UNIVERSE_49, FETCH_PERIOD_DAYS
-        closes, adv, opens = fetch_daily_bars(UNIVERSE_49, as_of=date(2026, 8, 13),
-                                             fetch_period_days=FETCH_PERIOD_DAYS, include_open=True)
-        with K12_INPUT.open("wb") as stream:
-            pickle.dump({"closes": closes, "adv": adv, "opens": opens}, stream)
-    import yfinance as yf
-    import pandas as pd
-    committed = json.loads((ROOT / "research/intraday_signal_results.json").read_text())
-    dest = ROOT / "backend/data/nifty50_intraday_1h"
-    dest.mkdir(exist_ok=True)
-    missing = []
-    for symbol in committed["data"]["symbols"]:
-        # Same historical window and interval; no shift to fit provider retention limits.
-        frame = yf.download(symbol + ".NS", start="2024-08-01", end="2026-07-31", interval="60m", auto_adjust=True, progress=False)
-        if frame is None or frame.empty:
-            missing.append(symbol)
-            continue
-        if isinstance(frame.columns, pd.MultiIndex):
-            frame.columns = frame.columns.get_level_values(0)
-        frame.index.name = "Datetime"
-        frame.reset_index().to_csv(dest / (symbol + ".csv"), index=False)
-    (work / "fetch-summary.json").write_text(json.dumps({"daily_symbols": [p.stem for p in csvs], "missing_hourly": missing}, indent=2))
-    if missing:
-        raise RuntimeError(f"Historical hourly data unavailable for {missing}; no replacement window used")
+    run([sys.executable, ROOT / "scripts/freeze_data.py"])
     return 0
 
 
