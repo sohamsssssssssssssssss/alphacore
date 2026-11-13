@@ -33,14 +33,19 @@ Every number below links to the file that produced it. The full honest-status au
 
 Components in `engine/src/`: `FlatPriceMap` (array-indexed price levels), `MatchingEngine` with worker threads, a lock-free MPSC ring buffer, an object pool, primary–backup replication with heartbeats, an ITCH parser/gateway and pybind11 bindings (`alphacore_cpp`).
 
-**Benchmarks** (Release build; source: [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md), "Benchmark Numbers"). These are two different benchmarks and are not comparable to each other:
+**Benchmarks** ([measured record](engine/benchmarks/RESULTS.md)): Apple M5,
+macOS 27.2 arm64, Apple Clang 21.0.0 (clang-2100.4.1.1), Release build,
+2026-11-12 21:19:27 UTC. These measure different operations and workloads;
+no like-for-like speedup ratio is claimed.
 
-| Benchmark | What it measures | Result |
+| Benchmark | What it measures | Measured result |
 |---|---|---:|
-| `engine/benchmarks/flat_price_map_bench.cpp` | `FlatPriceMap` insert, 1M random-priced inserts | 4.40–5.85 ns/op (run-to-run variance) |
-| `engine/legacy/benchmarks/bench.cpp` | `OrderBook::add_order` on the older `std::map` book, 1M orders | 44.89 ns/op |
+| `engine/benchmarks/flat_price_map_bench.cpp` | `FlatPriceMap` insert, 1M random-priced inserts | 7.54 ns/op |
+| `engine/legacy/benchmarks/bench.cpp` | Legacy `OrderBook::add_order`, 1M orders | 55.4124 ns/op |
 
-New dated local measurements, including machine, compiler and build flags, are in [engine/benchmarks/RESULTS.md](engine/benchmarks/RESULTS.md). The historical status-report numbers above are retained.
+**Earlier run:** the [status report](ALPHACORE_STATUS_REPORT.md) recorded
+4.40–5.85 ns/op for flat-map insert and 44.89 ns/op for legacy add-order.
+Those earlier-run figures are historical, not the measurements in this table.
 
 **Tests:** `engine_test`, `replication_test`, `gateway_test`, `fault_test`, `ha_chaos_test`, `deterministic_replay_test`, plus `mpsc_tsan_test` built under ThreadSanitizer. Linux CI passes these Release tests and the TSan test; the macOS gateway test uses a stub.
 
@@ -142,7 +147,7 @@ SIGABRT; those parser cases are not validated. The throughput benchmark keeps
 its original threshold and is excluded with `-m "not benchmark"`.
 
 Repository-root collection before the final basket-summary self-check succeeded: **1028 tests collected**, with five
-optional bridge modules skipped. C++ Release and TSan tests pass, but overall
+optional bridge modules skipped. C++ Release and TSan tests pass;
 the unchanged engine PrimaryBackup model still violates SinglePrimaryPerEpoch.
 Its separate `tla-known-counterexample` job is advisory; see [the finding](specs/REPLICATION_FINDING.md).
 
