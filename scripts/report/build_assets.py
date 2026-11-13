@@ -1,0 +1,143 @@
+"""Single entry point for the report: generate assets, optionally check them, build the PDF.
+
+    python scripts/report/build_assets.py            # write report/generated/ and report/figures/
+    python scripts/report/build_assets.py --check    # ... then run scripts/report/check_report.py
+    python scripts/report/build_assets.py --check --pdf   # ... then build report/main.pdf (`make report`)
+
+Every value written to an asset goes through Asset.val(), which reads it from a
+tracked file and records (file, field). Those records become report/SOURCES.md
+and report/generated/provenance.json, which check_report.py verifies.
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+REPORT = ROOT / "report"
+GENERATED = REPORT / "generated"
+FIGURES = REPORT / "figures"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+
+class MissingSource(Exception):
+    """A source file the asset needs is absent; the asset is emitted as n/a."""
+
+
+LATEX_ESCAPES = {"\\": r"\textbackslash{}", "&": r"\&", "%": r"\%", "$": r"\$", "#": r"\#",
+                 "_": r"\_", "{": r"\{", "}": r"\}", "~": r"\textasciitilde{}", "^": r"\textasciicircum{}"}
+
+
+def tex(text: str) -> str:
+    return "".join(LATEX_ESCAPES.get(c, c) for c in str(text))
+
+
+def fmt_sharpe(x: float) -> str:
+    return f"{x:.2f}"
+
+
+def fmt_count(n: int) -> str:
+    return f"{int(n):,}"
+
+
+class Asset:
+    """One generated file plus the provenance of every value written into it."""
+
+    def __init__(self, path: str, func: str):
+        self.path = path            # relative to report/
+        self.func = func
+        self.inputs: list[str] = []
+        self.fields: list[tuple[str, str]] = []
+        self.values: list[dict] = []
+
+    def _use(self, rel: str) -> Path:
+        p = ROOT / rel
+        if not p.exists():
+            raise MissingSource(f"{rel} not found")
+        if rel not in self.inputs:
+            self.inputs.append(rel)
+        return p
+
+    def json(self, rel: str):
+        return json.loads(self._use(rel).read_text())
+
+    def text(self, rel: str) -> str:
+        return self._use(rel).read_text()
+
+    def exists(self, rel: str) -> bool:
+        """Existence check counted as an input (the asset reports on it)."""
+        if rel not in self.inputs:
+            self.inputs.append(rel)
+        return (ROOT / rel).exists()
+
+    def val(self, value, rel: str, field: str, fmt=None, latex: bool = True) -> str:
+        """Render a value read from `rel` and record where it came from."""
+        if rel not in self.inputs:
+            self.inputs.append(rel)
+        if (rel, field) not in self.fields:
+            self.fields.append((rel, field))
+        out = fmt(value) if fmt else str(value)
+        if latex:
+            out = tex(out)
+        self.values.append({"text": out, "source": rel, "field": field})
+        return out
+
+
+def write_text(asset: Asset, content: str) -> None:
+    out = REPORT / asset.path
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(content)
+
+
+GENERATORS: list = []  # (asset path, function(asset) -> str | None); filled by later modules
+
+
+def generate() -> list[Asset]:
+    assets = []
+    for path, fn in GENERATORS:
+        a = Asset(path, fn.__name__)
+        try:
+            content = fn(a)
+        except MissingSource as exc:
+            a.values.append({"text": "n/a", "source": "", "field": f"missing source: {exc}"})
+            content = f"% n/a: {exc}\n\\par\\noindent n/a: {tex(str(exc))}\n" if path.endswith(".tex") else None
+            print(f"n/a  {path}: {exc}")
+        if content is not None:
+            write_text(a, content)
+        assets.append(a)
+        print(f"wrote report/{path}")
+    return assets
+
+
+def build_pdf() -> int:
+    for engine, cmd in (("tectonic", ["tectonic", "main.tex"]),
+                        ("latexmk", ["latexmk", "-pdf", "-interaction=nonstopmode", "-halt-on-error", "main.tex"])):
+        if shutil.which(engine):
+            print(f"TeX engine: {engine}")
+            return subprocess.run(cmd, cwd=REPORT).returncode
+    print("TeX engine: none found (looked for tectonic, latexmk). Assets were generated; PDF not built.\n"
+          "Install one, e.g. `brew install tectonic` or `apt-get install latexmk texlive-latex-extra`.")
+    return 1
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--check", action="store_true", help="run check_report.py after generating")
+    ap.add_argument("--pdf", action="store_true", help="build report/main.pdf after generating")
+    args = ap.parse_args()
+    GENERATED.mkdir(exist_ok=True)
+    FIGURES.mkdir(exist_ok=True)
+    generate()
+    if args.check:
+        import check_report
+        if check_report.main() != 0:
+            return 1
+    return build_pdf() if args.pdf else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
