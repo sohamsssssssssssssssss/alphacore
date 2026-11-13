@@ -1,0 +1,93 @@
+{
+  "source": "fresh local run by scripts/report/record_test_counts.py",
+  "recorded_at": "2026-11-13T12:03:03.548735+00:00",
+  "commit": "e345ffa3cb2a44c932d9b2786c1131d0b9f4ab65",
+  "machine": "macOS-27.2-arm64-arm-64bit",
+  "python": "3.11.15",
+  "suites": [
+    {
+      "suite": "backend/tests/",
+      "kind": "pytest",
+      "passed": 1009,
+      "skipped": 19,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "suite": "backend/sandbox/tests/",
+      "kind": "pytest",
+      "passed": 54,
+      "skipped": 0,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "suite": "scripts/tests/",
+      "kind": "pytest",
+      "passed": 19,
+      "skipped": 0,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "suite": "engine_test",
+      "kind": "C++ executable",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "suite": "replication_test",
+      "kind": "C++ executable",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "suite": "gateway_test",
+      "kind": "C++ executable",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "suite": "fault_test",
+      "kind": "C++ executable",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "suite": "ha_chaos_test",
+      "kind": "C++ executable",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "suite": "deterministic_replay_test",
+      "kind": "C++ executable",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "suite": "split_brain_counterexample",
+      "kind": "C++ executable",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "suite": "fencing_test",
+      "kind": "C++ executable",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "suite": "mpsc_tsan_test",
+      "kind": "C++ executable",
+      "exit_code": 0,
+      "result": "pass"
+    },
+    {
+      "suite": "fencing_tsan_test",
+      "kind": "C++ executable",
+      "exit_code": 0,
+      "result": "pass"
+    }
+  ]
+}

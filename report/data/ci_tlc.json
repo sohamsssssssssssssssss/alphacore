@@ -1,0 +1,64 @@
+{
+  "source": "GitHub Actions tla job log, extracted by scripts/report/record_ci_tlc.py",
+  "run_id": 43412391511,
+  "url": "https://github.com/sohamsssssssssssssssss/alphacore/actions/runs/43412391511",
+  "head_sha": "a5848a1559aef2dd6812fd109eb530a6e8d89b5f",
+  "created_at": "2026-11-13T10:51:51Z",
+  "job_conclusion": "success",
+  "models": [
+    {
+      "dir": "specs/tla",
+      "spec": "MpscQueue.tla",
+      "config": "MpscQueue.cfg",
+      "result": "no error",
+      "generated": 1243889,
+      "distinct": 327308,
+      "left": 0
+    },
+    {
+      "dir": "specs/tla",
+      "spec": "PrimaryBackup.tla",
+      "config": "PrimaryBackup.cfg",
+      "result": "no error",
+      "generated": 280331,
+      "distinct": 29500,
+      "left": 0
+    },
+    {
+      "dir": "specs/tla_engine_models",
+      "spec": "MpscQueue.tla",
+      "config": "ModelMpsc_tiny.cfg",
+      "result": "no error",
+      "generated": 8,
+      "distinct": 7,
+      "left": 0
+    },
+    {
+      "dir": "specs/tla_engine_models",
+      "spec": "MatchingEngine.tla",
+      "config": "ModelMatching_small2.cfg",
+      "result": "no error",
+      "generated": 901,
+      "distinct": 901,
+      "left": 0
+    },
+    {
+      "dir": "specs/tla_engine_models",
+      "spec": "OrderBook.tla",
+      "config": "ModelOrderBook_small3.cfg",
+      "result": "no error",
+      "generated": 1045,
+      "distinct": 709,
+      "left": 0
+    },
+    {
+      "dir": "specs/tla_engine_models",
+      "spec": "PrimaryBackup.tla",
+      "config": "ModelPrimaryBackup.cfg",
+      "result": "no error",
+      "generated": 526142487,
+      "distinct": 65620528,
+      "left": 0
+    }
+  ]
+}
