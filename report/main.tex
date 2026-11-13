@@ -7,9 +7,14 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{xltabular}
+\usepackage{pdflscape}
 \usepackage{graphicx}
 \usepackage[hidelinks]{hyperref}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+% Wide / medium / narrow wrapping columns (used by generated tables; widths must sum to the X-column count).
+\newcolumntype{W}{>{\hsize=1.5\hsize\raggedright\arraybackslash}X}
+\newcolumntype{M}{>{\hsize=1.25\hsize\raggedright\arraybackslash}X}
+\newcolumntype{N}{>{\hsize=.75\hsize\raggedright\arraybackslash}X}
 \graphicspath{{./}}
 
 \input{generated/macros}

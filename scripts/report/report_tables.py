@@ -132,10 +132,13 @@ def merged_note(a, rows) -> str:
 
 
 def table(spec: str, header: list[str], body: list[list[str]], caption: str, label: str,
-          notes: str = "", env: str = "tabularx") -> str:
+          notes: str = "", env: str = "tabularx", landscape: bool = False) -> str:
     lines = [HEADER]
+    if landscape:
+        lines.append(r"\begin{landscape}")
     if env == "xltabular":
-        lines += [r"{\footnotesize", rf"\begin{{xltabular}}{{\textwidth}}{{{spec}}}",
+        lines += [r"{\scriptsize" if landscape else r"{\footnotesize",
+                  rf"\begin{{xltabular}}{{\linewidth}}{{{spec}}}",
                   rf"\caption{{{caption}}}\label{{{label}}}\\", r"\toprule",
                   " & ".join(header) + r" \\", r"\midrule", r"\endhead"]
     else:
@@ -153,7 +156,14 @@ def table(spec: str, header: list[str], body: list[list[str]], caption: str, lab
         if notes:
             lines += [r"\par\smallskip{\raggedright " + notes + r"\par}"]
         lines += [rf"\caption{{{caption}}}\label{{{label}}}", r"\end{table}"]
+    if landscape:
+        lines.append(r"\end{landscape}")
     return "\n".join(lines) + "\n"
+
+
+def brk(cell: str) -> str:
+    """Let long underscore-joined names wrap inside a table cell."""
+    return cell.replace(r"\_", r"\_\allowbreak ")
 
 
 def conf_level(a) -> str:
@@ -183,7 +193,7 @@ def results_main(a) -> str:
                f"an interval that includes zero is inconclusive, or exploratory if the result has an "
                f"exploratory provenance label.")
     notes = merged_note(a, rows)
-    return table("lYllll", ["Experiment", "Deployed (from code)", "Primary", "Sharpe", f"{level}\\% CI", "Category"],
+    return table("NWlrlN", ["Experiment", "Deployed (from code)", "Primary", "Sharpe", f"{level}\\% CI", "Category"],
                  body, caption, "tab:results-main", notes)
 
 
@@ -297,15 +307,16 @@ def tla_models(a) -> str:
         if r["consts"]:
             cfg += " (" + a.val(r["consts"], r["cfg"], "CONSTANTS") + ")"
         checks_src = r["cfg"] if r["cfg"] != "not recorded" else r["src"]
-        body.append([r"\texttt{" + a.val(r["spec"].replace("specs/", ""), r["src"], "spec path") + "}", cfg,
+        spec_path = a.val(r["spec"].replace("specs/", ""), r["src"], "spec path").replace("/", r"/\allowbreak ")
+        body.append([r"\texttt{" + spec_path + "}", cfg,
                      a.val(r["gen"], r["src"], "states generated", count),
                      a.val(r["dist"], r["src"], "distinct states", count),
                      a.val(", ".join(r["checks"]), checks_src, "INVARIANT(S)/PROPERTY"),
                      a.val(r["result"], r["src"], "result"), a.val(r["where"], r["src"], "where run")])
-    return table("YYrrYll", ["Spec", "Config", "Generated", "Distinct", "Invariants checked", "Result", "Where run"],
+    return table("YYrrYYY", ["Spec", "Config", "Generated", "Distinct", "Invariants checked", "Result", "Where run"],
                  body, "Bounded model checking with TLC: every model, configuration and state count. "
                        "Rows marked earlier run quote an older report and are not what CI runs now.",
-                 "tab:tla-models", env="xltabular")
+                 "tab:tla-models", env="xltabular", landscape=True)
 
 
 def replication_before_after(a) -> str:
@@ -359,7 +370,9 @@ def erratum(a) -> str:
                      a.val(defs, rel, "Point / CI definition")])
     if not body:
         raise MissingSource("erratum table not found in research/METRICS_ERRATUM.md")
-    return table("Yllll", ["Report (branch)", "Point", "CI", "Point outside CI?", "Point / CI definition"], body,
+    body = [[brk(row[0])] + row[1:] for row in body]
+    return table("MrllN",
+                 ["Report (branch)", "Point", "CI", "Outside CI?", "Point / CI definition"], body,
                  "Metrics erratum: v1 point and interval pairs and the definition each used.",
                  "tab:erratum", env="xltabular")
 
@@ -419,6 +432,7 @@ def preregistration(a) -> str:
         exists = ("yes: " + ", ".join(r"\texttt{" + a.val(p.split("/")[-1], p, "file exists") + "}" for p in present)
                   if present else "no")
         body.append([a.val(f'{r["num"]} {r["name"]}', README, "experiment table: # and Experiment"), exists, label])
+    body = [[brk(c) for c in row] for row in body]
     return table("YYY", ["Experiment", "Protocol file exists?", "Status label"], body,
                  "Pre-registration status per experiment, as linked from the README experiment list. "
                  "A protocol file in the repository does not by itself prove when it was written.",
