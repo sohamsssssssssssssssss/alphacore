@@ -1,185 +1,190 @@
 ------------------------------ MODULE PrimaryBackup ------------------------------
-EXTENDS Naturals, Sequences, FiniteSets, TLC
-
-SeqToSet(s) == {s[i] : i \in 1..Len(s)}
-
 (***************************************************************************
-TLA+ spec for AlphaCore's primary-backup replication with epoch-based leader
-fencing.
+Fenced primary-backup replication for AlphaCore (2 nodes, ids 0 and 1).
+This is the intended protocol that engine/src/heartbeat.* and
+engine/src/replication.* implement. The unfenced model that TLC refuted
+is kept in history/ together with its counterexample trace.
 
-Model:
-  - One primary and one backup process.
-  - The primary holds a monotonically increasing epoch number.
-  - Messages (heartbeats + replicated log entries) may be lost or reordered
-    across the "network" (modelled by a bounded message buffer).
-  - The backup promotes itself when it misses enough heartbeats.
-  - Fencing invariant: at most one node believes it is the primary for any
-    given epoch at any logical time.
+Each action changes only the acting node's own state; there is no atomic
+remote demotion. The network may delay, reorder, drop and partition.
 
-TLC command (full):
-  java -jar tla2tools.jar -config tla/ModelPrimaryBackup.cfg \
-       tla/PrimaryBackup.tla
+Protocol rules:
+  a) Every node tracks maxSeen, the largest epoch carried by any message it
+     has received (heartbeat or log entry; a promoted node's heartbeats are
+     the epoch notifications).
+  b) Promotion picks NextOwned(maxSeen, n): the smallest epoch > maxSeen
+     owned by n (epoch % 2 = n). It sets epoch = maxSeen = that value, and
+     both are persisted (Restart keeps them) before the node acts as primary.
+     Owned epochs are the tie-break by node id: two distinct nodes can never
+     hold the same epoch.
+  c) Every heartbeat and log entry carries the sender's epoch.
+  d) A receiver rejects a log entry with epoch < its maxSeen.
+  e) A primary that receives epoch >= its own from the other node steps
+     itself down. Under (b) equal epochs from a different node cannot occur;
+     >= is kept so that an equal epoch still fences.
+  A primary appends only while its lease is current (epoch = maxSeen).
 
-Expected state space (default cfg, N=6, H=2, MaxMsgs=3): ~500k-1.5M states.
+NOT guaranteed (stated deliberately):
+  - No quorum. Two nodes cannot prevent two primaries across a partition.
+    Both may be primary at once in *different* epochs; this model allows it.
+  - Fencing bounds the damage: once the partition heals, the older-epoch
+    primary steps down and its writes are rejected by any node that has
+    seen the newer epoch. Writes the stale primary committed locally during
+    the partition are neither replicated nor reconciled; nothing here
+    merges divergent histories.
+  - Liveness is not checked.
+  - Persistence: this model persists epoch/maxSeen across Restart. The C++
+    implementation keeps them in memory only (no epoch metadata mechanism
+    exists), so restart safety is not covered there. Owned epochs still keep
+    a restarted node from colliding with its peer, but it may reuse one of
+    its own earlier epochs.
 
-Hardest invariant:
-  SinglePrimaryPerEpoch requires globally tracking which (node, epoch) pairs
-  are "active" at each step — because the epoch counter increments on promotion
-  and the old primary may still be alive with a stale epoch, the invariant must
-  prove they cannot both commit writes.
-**************************************************************************)
+TLC (tla2tools v1.7.4, ModelPrimaryBackup.cfg N=6 HeartbeatLoss=2 MaxMsgs=3,
+-deadlock, 10 workers, 2026-11-13): no error; 526,142,487 states generated,
+65,620,528 distinct, depth 44, 4 min 12 s. Mutation checks (same cfg):
+NextOwned := maxSeen + 1 violates SinglePrimaryPerEpoch (2,577 distinct);
+removing the rule (d) guard violates NoStaleApply (942 distinct).
+***************************************************************************)
+EXTENDS Naturals, FiniteSets, TLC
 
 CONSTANTS
     N,             \* Bound on epoch numbers (0..N)
-    HeartbeatLoss, \* Number of consecutive heartbeats that can be lost
-    MaxMsgs        \* Max messages in flight
+    HeartbeatLoss, \* Missed heartbeat ticks before a backup may promote
+    MaxMsgs        \* Max messages in flight, and max entries per node
 
-\* Message types
-HeartbeatMsg(epoch) == [type |-> "heartbeat", epoch |-> epoch]
-ReplicateMsg(seq, data) == [type |-> "replicate", seq |-> seq, data |-> data]
+Nodes == {0, 1}
+Other(n) == 1 - n
+Max(a, b) == IF a >= b THEN a ELSE b
+NextOwned(m, n) == IF (m + 1) % 2 = n THEN m + 1 ELSE m + 2
 
-Message ==
-    [type : {"heartbeat"}, epoch : 0..N] \cup
-    [type : {"replicate"}, seq : Nat, data : Nat]
+Msg == [type : {"hb", "entry"}, src : Nodes, dst : Nodes, epoch : 0..N, seq : 0..MaxMsgs]
 
 VARIABLES
-    primaryEpoch,        \* Current epoch at the primary
-    backupRole,          \* "backup" or "primary"
-    backupEpoch,         \* Last epoch seen by backup (from heartbeat)
-    messageQueue,        \* In-flight messages (bounded)
-    missedHeartbeats,    \* Counter of consecutive missed heartbeats at backup
-    nextSeq,             \* Next replication sequence number
-    primaryAlive,        \* Whether primary can send (models partition or crash)
-    committedMsgs        \* Set of (epoch, seq) pairs that have been committed
+    role,       \* role[n] \in {"primary", "backup"}
+    epoch,      \* epoch[n]: epoch n last promoted to (persisted)
+    maxSeen,    \* maxSeen[n]: largest epoch n has seen (persisted)
+    missed,     \* missed heartbeat ticks at a backup
+    net,        \* set of in-flight messages
+    link,       \* FALSE while the two nodes are partitioned
+    nextSeq,    \* next log sequence number per node
+    committed,  \* <<node, epoch, seq>> written to a primary's own log
+    applied,    \* applied[n]: <<epoch, seq>> entries applied at n
+    staleApply  \* ghost: staleApply[n] = TRUE once n applied an entry with epoch < its maxSeen
 
+vars == <<role, epoch, maxSeen, missed, net, link, nextSeq, committed, applied, staleApply>>
+
+\* Node 0 boots as primary via promote() from a fresh lease: NextOwned(0, 0) = 2.
 Init ==
-    /\ primaryEpoch = 1
-    /\ backupRole = "backup"
-    /\ backupEpoch = 0
-    /\ messageQueue = <<>>
-    /\ missedHeartbeats = 0
-    /\ nextSeq = 0
-    /\ primaryAlive = TRUE
-    /\ committedMsgs = {}
+    /\ role = [n \in Nodes |-> IF n = 0 THEN "primary" ELSE "backup"]
+    /\ epoch = [n \in Nodes |-> IF n = 0 THEN 2 ELSE 0]
+    /\ maxSeen = [n \in Nodes |-> IF n = 0 THEN 2 ELSE 0]
+    /\ missed = [n \in Nodes |-> 0]
+    /\ net = {}
+    /\ link = TRUE
+    /\ nextSeq = [n \in Nodes |-> 0]
+    /\ committed = {}
+    /\ applied = [n \in Nodes |-> {}]
+    /\ staleApply = [n \in Nodes |-> FALSE]
 
-\* Send a message (add to queue if not full)
-Send(msg) ==
-    /\ Len(messageQueue) < MaxMsgs
-    /\ messageQueue' = Append(messageQueue, msg)
+Send(m) ==
+    /\ Cardinality(net) < MaxMsgs
+    /\ net' = net \cup {m}
 
-\* Receive a message at the backup (remove from front if present)
-Receive ==
-    /\ messageQueue # <<>>
-    /\ LET msg == Head(messageQueue) IN
-       /\ messageQueue' = Tail(messageQueue)
-       /\ IF msg.type = "heartbeat" THEN
-              /\ backupEpoch' = msg.epoch
-              /\ missedHeartbeats' = 0
-              /\ UNCHANGED <<backupRole, primaryEpoch, nextSeq, primaryAlive, committedMsgs>>
-          ELSE
-              /\ committedMsgs' = committedMsgs \cup {<<backupEpoch, msg.seq>>}
-              /\ UNCHANGED <<backupEpoch, backupRole, primaryEpoch, nextSeq, primaryAlive, missedHeartbeats>>
+SendHeartbeat(n) ==
+    /\ role[n] = "primary"
+    /\ Send([type |-> "hb", src |-> n, dst |-> Other(n), epoch |-> epoch[n], seq |-> 0])
+    /\ UNCHANGED <<role, epoch, maxSeen, missed, link, nextSeq, committed, applied, staleApply>>
 
-\* Primary sends heartbeat
-PrimaryHeartbeat ==
-    /\ primaryAlive = TRUE
-    /\ Send(HeartbeatMsg(primaryEpoch))
-    /\ UNCHANGED <<primaryEpoch, backupRole, backupEpoch, missedHeartbeats, nextSeq, primaryAlive, committedMsgs>>
+Replicate(n) ==
+    /\ role[n] = "primary"
+    /\ epoch[n] = maxSeen[n]                 \* lease is current
+    /\ nextSeq[n] < MaxMsgs
+    /\ Send([type |-> "entry", src |-> n, dst |-> Other(n), epoch |-> epoch[n], seq |-> nextSeq[n]])
+    /\ committed' = committed \cup {<<n, epoch[n], nextSeq[n]>>}
+    /\ nextSeq' = [nextSeq EXCEPT ![n] = @ + 1]
+    /\ UNCHANGED <<role, epoch, maxSeen, missed, link, applied, staleApply>>
 
-\* Primary replicates a log entry
-PrimaryReplicate ==
-    /\ primaryAlive = TRUE
-    /\ nextSeq < MaxMsgs  \* Bound the sequence
-    /\ Send(ReplicateMsg(nextSeq, nextSeq))
-    /\ nextSeq' = nextSeq + 1
-    /\ UNCHANGED <<primaryEpoch, backupRole, backupEpoch, missedHeartbeats, primaryAlive, committedMsgs>>
+Receive(m) ==
+    /\ link
+    /\ m \in net
+    /\ LET d == m.dst
+           fresh == m.epoch >= maxSeen[d]             \* rule (d)
+           fence == role[d] = "primary" /\ m.epoch >= epoch[d]   \* rule (e)
+       IN
+       /\ net' = net \ {m}
+       /\ maxSeen' = [maxSeen EXCEPT ![d] = Max(@, m.epoch)]      \* rule (a)
+       /\ role' = IF fence THEN [role EXCEPT ![d] = "backup"] ELSE role
+       /\ missed' = IF fence \/ (m.type = "hb" /\ fresh)
+                        THEN [missed EXCEPT ![d] = 0] ELSE missed
+       /\ applied' = IF m.type = "entry" /\ fresh
+                         THEN [applied EXCEPT ![d] = @ \cup {<<m.epoch, m.seq>>}]
+                         ELSE applied
+       \* Ghost observes the effect on applied', not the guard above.
+       /\ staleApply' = IF applied'[d] # applied[d] /\ m.epoch < maxSeen[d]
+                            THEN [staleApply EXCEPT ![d] = TRUE] ELSE staleApply
+       /\ UNCHANGED <<epoch, link, nextSeq, committed>>
 
-\* Primary is partitioned from network (its messages are dropped)
-PartitionPrimary ==
-    /\ primaryAlive = TRUE
-    /\ primaryAlive' = FALSE
-    /\ UNCHANGED <<primaryEpoch, backupRole, backupEpoch, missedHeartbeats, nextSeq, messageQueue, committedMsgs>>
+MissHeartbeat(n) ==
+    /\ role[n] = "backup"
+    /\ missed[n] < HeartbeatLoss
+    /\ missed' = [missed EXCEPT ![n] = @ + 1]
+    /\ UNCHANGED <<role, epoch, maxSeen, net, link, nextSeq, committed, applied, staleApply>>
 
-\* Partition heals
-HealPartition ==
-    /\ primaryAlive = FALSE
-    /\ primaryAlive' = TRUE
-    /\ UNCHANGED <<primaryEpoch, backupRole, backupEpoch, missedHeartbeats, nextSeq, messageQueue, committedMsgs>>
+Promote(n) ==                                          \* rule (b)
+    /\ role[n] = "backup"
+    /\ missed[n] >= HeartbeatLoss
+    /\ NextOwned(maxSeen[n], n) <= N
+    /\ epoch' = [epoch EXCEPT ![n] = NextOwned(maxSeen[n], n)]
+    /\ maxSeen' = [maxSeen EXCEPT ![n] = NextOwned(maxSeen[n], n)]
+    /\ role' = [role EXCEPT ![n] = "primary"]
+    /\ missed' = [missed EXCEPT ![n] = 0]
+    /\ UNCHANGED <<net, link, nextSeq, committed, applied, staleApply>>
 
-\* Backup misses a heartbeat (no message received this tick)
-BackupMissHeartbeat ==
-    /\ missedHeartbeats < HeartbeatLoss
-    /\ missedHeartbeats' = missedHeartbeats + 1
-    /\ UNCHANGED <<primaryEpoch, backupRole, backupEpoch, nextSeq, messageQueue, primaryAlive, committedMsgs>>
+\* Crash and restart as backup; persisted epoch/maxSeen survive.
+Restart(n) ==
+    /\ role' = [role EXCEPT ![n] = "backup"]
+    /\ missed' = [missed EXCEPT ![n] = 0]
+    /\ UNCHANGED <<epoch, maxSeen, net, link, nextSeq, committed, applied, staleApply>>
 
-\* Backup promotes itself after too many missed heartbeats.
-\* Promotion is triggered by heartbeat loss alone — the backup does not have
-\* direct knowledge of primaryAlive; it only knows it missed heartbeats.
-\* The interval between BackupMissHeartbeat steps represents one heartbeat
-\* interval in the real system.
-BackupPromote ==
-    /\ missedHeartbeats >= HeartbeatLoss
-    /\ backupRole = "backup"
-    /\ LET newEpoch == backupEpoch + 1 IN
-       backupRole' = "primary"
-       /\ backupEpoch' = newEpoch
-       /\ missedHeartbeats' = 0  \* Reset counter after promotion
-       /\ UNCHANGED <<primaryEpoch, nextSeq, messageQueue, primaryAlive, committedMsgs>>
-
-\* Old primary tries to send with stale epoch (should be fenced by epoch check
-\* on the backup/receiver side)
-StalePrimarySend ==
-    /\ primaryAlive = TRUE
-    /\ \E oldEpoch \in 1..(primaryEpoch - 1):
-       Send(HeartbeatMsg(oldEpoch))
-    /\ UNCHANGED <<primaryEpoch, backupRole, backupEpoch, missedHeartbeats, nextSeq, primaryAlive, committedMsgs>>
+Partition == link /\ link' = FALSE
+             /\ UNCHANGED <<role, epoch, maxSeen, missed, net, nextSeq, committed, applied, staleApply>>
+Heal == ~link /\ link' = TRUE
+        /\ UNCHANGED <<role, epoch, maxSeen, missed, net, nextSeq, committed, applied, staleApply>>
+Drop(m) == m \in net /\ net' = net \ {m}
+           /\ UNCHANGED <<role, epoch, maxSeen, missed, link, nextSeq, committed, applied, staleApply>>
 
 Next ==
-    \/ PrimaryHeartbeat
-    \/ PrimaryReplicate
-    \/ PartitionPrimary
-    \/ HealPartition
-    \/ Receive
-    \/ BackupMissHeartbeat
-    \/ BackupPromote
-    \/ StalePrimarySend
-
-\* ─── Invariants ─────────────────────────────────────────────────────
-
-\* Safety: at most one primary per epoch at any logical time
-SinglePrimaryPerEpoch ==
-    \A epoch \in 0..N:
-        ~ (primaryEpoch = epoch /\ backupRole = "primary" /\ backupEpoch = epoch)
-
-\* Safety: a stale-epoch message from old primary is never accepted as current
-\* (the backup ignores heartbeats carrying an epoch lower than its own)
-StaleEpochFenced ==
-    \A msg \in {m \in SeqToSet(messageQueue) : m.type = "heartbeat"}:
-        msg.epoch <= primaryEpoch
-
-\* Safety: promotion happens only after enough missed heartbeats
-PromotionRequiresMissedHeartbeats ==
-    (backupRole = "primary") => (missedHeartbeats >= HeartbeatLoss \/ backupEpoch > 0)
-
-\* Type invariant
-TypeInv ==
-    /\ primaryEpoch \in 1..N
-    /\ backupRole \in {"backup", "primary"}
-    /\ backupEpoch \in 0..N
-    /\ messageQueue \in Seq(Message)
-    /\ Len(messageQueue) <= MaxMsgs
-    /\ missedHeartbeats \in 0..HeartbeatLoss
-    /\ nextSeq \in 0..MaxMsgs
-    /\ primaryAlive \in BOOLEAN
-
-\* ─── Specification ───────────────────────────────────────────────────
-vars == <<primaryEpoch, backupRole, backupEpoch, messageQueue, missedHeartbeats, nextSeq, primaryAlive, committedMsgs>>
+    \/ \E n \in Nodes : SendHeartbeat(n) \/ Replicate(n) \/ MissHeartbeat(n)
+                        \/ Promote(n) \/ Restart(n)
+    \/ \E m \in net : Receive(m) \/ Drop(m)
+    \/ Partition \/ Heal
 
 Spec == Init /\ [][Next]_vars
 
-\* ─── Liveness (optional) ──────────────────────────────────────────────
-\* Under fair conditions, the backup eventually detects a partition and promotes
-PromotionLiveness ==
-    <>[](primaryAlive = FALSE) => <>(backupRole = "primary")
+\* ─── Invariants ─────────────────────────────────────────────────────
+
+TypeInv ==
+    /\ role \in [Nodes -> {"primary", "backup"}]
+    /\ epoch \in [Nodes -> 0..N]
+    /\ maxSeen \in [Nodes -> 0..N]
+    /\ missed \in [Nodes -> 0..HeartbeatLoss]
+    /\ net \subseteq Msg /\ Cardinality(net) <= MaxMsgs
+    /\ link \in BOOLEAN
+    /\ nextSeq \in [Nodes -> 0..MaxMsgs]
+    /\ \A n \in Nodes : epoch[n] <= maxSeen[n]
+
+\* At most one primary per epoch, even while both nodes are primary.
+SinglePrimaryPerEpoch ==
+    ~(role[0] = "primary" /\ role[1] = "primary" /\ epoch[0] = epoch[1])
+
+\* No entry from an older epoch is applied after a newer epoch was seen.
+NoStaleApply ==
+    \A n \in Nodes : ~staleApply[n]
+
+\* An (epoch, seq) slot is written by at most one node, and every applied
+\* entry is one that its sender actually committed.
+CommittedDataSafe ==
+    /\ \A c1, c2 \in committed : (c1[2] = c2[2] /\ c1[3] = c2[3]) => c1[1] = c2[1]
+    /\ \A n \in Nodes : \A a \in applied[n] : <<Other(n), a[1], a[2]>> \in committed
 
 =============================================================================
