@@ -1,18 +1,75 @@
 {
-  "description": "Engine components for the architecture figure. Each edge means 'uses': some source file of `from` includes a header of `to`; scripts/report/report_figures.py fails if a named file is missing or an edge has no matching #include.",
+  "description": "Engine components for the architecture figure. Each edge means 'uses': some source file of `from` includes a header of `to`; scripts/report/report_figures.py fails if a named file is missing or an edge has no matching #include. Optional `pos` is [column, row] for a fixed layout.",
   "components": [
-    {"id": "bridge", "label": "pybind11 bridge", "files": ["engine/src/bindings.cpp"]},
-    {"id": "gateway", "label": "ITCH gateway", "files": ["engine/src/gateway.hpp", "engine/src/gateway.cpp"]},
-    {"id": "itch", "label": "ITCH parser", "files": ["engine/src/itch_parser.hpp", "engine/src/itch_parser.cpp"]},
-    {"id": "engine", "label": "Matching engine", "files": ["engine/src/engine.hpp", "engine/src/engine.cpp"]},
-    {"id": "mpsc", "label": "MPSC queue", "files": ["engine/src/mpsc_queue.hpp"]},
-    {"id": "pool", "label": "Object pool", "files": ["engine/src/pool.hpp"]},
-    {"id": "fpm", "label": "FlatPriceMap", "files": ["engine/src/flat_price_map.hpp", "engine/src/flat_price_map.cpp"]},
-    {"id": "repl", "label": "Replication log", "files": ["engine/src/replication.hpp", "engine/src/replication.cpp"]},
-    {"id": "hb", "label": "Heartbeat, lease", "files": ["engine/src/heartbeat.hpp", "engine/src/heartbeat.cpp"]}
+    {
+      "id": "bridge",
+      "label": "pybind11 bridge",
+      "files": [
+        "engine/src/bindings.cpp"
+      ],
+      "pos": [0, 1]
+    },
+    {
+      "id": "gateway",
+      "label": "ITCH gateway",
+      "files": ["engine/src/gateway.hpp", "engine/src/gateway.cpp"],
+      "pos": [0, 2]
+    },
+    {
+      "id": "itch",
+      "label": "ITCH parser",
+      "files": ["engine/src/itch_parser.hpp", "engine/src/itch_parser.cpp"],
+      "pos": [1, 0]
+    },
+    {
+      "id": "engine",
+      "label": "Matching engine",
+      "files": ["engine/src/engine.hpp", "engine/src/engine.cpp"],
+      "pos": [2, 1]
+    },
+    {
+      "id": "mpsc",
+      "label": "MPSC queue",
+      "files": [
+        "engine/src/mpsc_queue.hpp"
+      ],
+      "pos": [3, 0]
+    },
+    {
+      "id": "pool",
+      "label": "Object pool",
+      "files": [
+        "engine/src/pool.hpp"
+      ],
+      "pos": [3, 1]
+    },
+    {
+      "id": "fpm",
+      "label": "FlatPriceMap",
+      "files": ["engine/src/flat_price_map.hpp", "engine/src/flat_price_map.cpp"],
+      "pos": [3, 2]
+    },
+    {
+      "id": "repl",
+      "label": "Replication log",
+      "files": ["engine/src/replication.hpp", "engine/src/replication.cpp"],
+      "pos": [0, 3.5]
+    },
+    {
+      "id": "hb",
+      "label": "Heartbeat, lease",
+      "files": ["engine/src/heartbeat.hpp", "engine/src/heartbeat.cpp"],
+      "pos": [1, 3.5]
+    }
   ],
   "edges": [
-    ["bridge", "engine"], ["bridge", "itch"], ["gateway", "engine"], ["itch", "engine"],
-    ["engine", "mpsc"], ["engine", "pool"], ["engine", "fpm"], ["repl", "hb"]
+    ["bridge", "engine"],
+    ["bridge", "itch"],
+    ["gateway", "engine"],
+    ["itch", "engine"],
+    ["engine", "mpsc"],
+    ["engine", "pool"],
+    ["engine", "fpm"],
+    ["repl", "hb"]
   ]
 }

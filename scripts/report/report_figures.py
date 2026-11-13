@@ -177,6 +177,10 @@ def fig_architecture(a) -> str:
                 pos[c] = (col * 2.9, top - i * 1.1)
                 rows = max(rows, i + 1)
         top -= rows * 1.1 + 0.5
+    fixed = all("pos" in c for c in spec["components"])
+    if fixed:  # explicit [column, row] layout from the spec; no edge crosses a box
+        pos = {c["id"]: (c["pos"][0] * 2.9, -c["pos"][1] * 1.1) for c in spec["components"]}
+        top = min(y for _, y in pos.values()) - 1.1
     fig, ax = plt.subplots(figsize=(WIDTH, 0.62 * (-top)))
     for cid, (x, yy) in pos.items():
         c = comps[cid]
@@ -189,7 +193,7 @@ def fig_architecture(a) -> str:
                 fontsize=6.5, family="monospace")
     for src, dst in spec["edges"]:
         (x0, y0), (x1, y1) = pos[src], pos[dst]
-        bend = 0.0 if x1 - x0 < 4 else (-0.55 if y0 == y1 else -0.3)  # edges that skip a column arc over it
+        bend = 0.0 if fixed or x1 - x0 < 4 else (-0.55 if y0 == y1 else -0.3)  # edges that skip a column arc over it
         ax.annotate("", (x1 - 1.17, y1), (x0 + 1.17, y0),
                     arrowprops=dict(arrowstyle="->", lw=0.8, shrinkA=0, shrinkB=0,
                                     connectionstyle=f"arc3,rad={bend}"))
