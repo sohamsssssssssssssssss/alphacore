@@ -74,3 +74,18 @@ docs/static/img/undraw_*
 # Reproduction scratch data/results; keep the root task Makefile.
 /.reproduce/
 !/Makefile
+
+# Report: generated assets and LaTeX outputs (scripts/report/build_assets.py)
+report/generated/*
+!report/generated/.gitkeep
+report/figures/*
+!report/figures/.gitkeep
+report/*.pdf
+report/*.aux
+report/*.out
+report/*.fls
+report/*.fdb_latexmk
+report/*.synctex.gz
+report/*.toc
+report/*.bbl
+report/*.blg

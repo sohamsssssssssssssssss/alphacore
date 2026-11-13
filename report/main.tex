@@ -1,0 +1,38 @@
+% AlphaCore technical report. Build with `make report` (scripts/report/build_assets.py --check --pdf).
+% Every number comes from report/generated/ (macros, tables, figure captions); see report/SOURCES.md.
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=2.2cm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{xltabular}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\graphicspath{{./}}
+
+\input{generated/macros}
+
+\title{AlphaCore: A Model-Checked Replication Protocol and Matching Engine,\\
+and a Reproducible Negative Result for Momentum-Style Signals on NSE Equities}
+\author{Soham}
+\date{Working paper}
+
+\begin{document}
+\maketitle
+
+\input{sections/01_summary}
+\input{sections/02_system}
+\input{sections/03_model_checking}
+\input{sections/04_method}
+\input{sections/05_results}
+\input{sections/06_errors}
+\input{sections/07_limitations}
+\input{sections/08_reproduction}
+
+\appendix
+\input{sections/appendix}
+
+% refs.bib is an empty stub; add \bibliographystyle{plain}\bibliography{refs} once it has entries.
+\end{document}

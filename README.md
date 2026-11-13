@@ -9,7 +9,7 @@
 AlphaCore is a solo research project on NSE equities with three parts:
 
 1. **A C++20 matching engine**: flat-array price map, lock-free MPSC queue, primary–backup replication and a pybind11 bridge to Python.
-2. **Formal verification**: bounded TLA+ models of the queue, replication, matching and order-book logic, checked with TLC.
+2. **Model checking**: bounded TLA+ models of the queue, replication, matching and order-book logic, checked with TLC.
 3. **A signal research program**: nine experiments on NIFTY 50 daily data with pre-committed protocols and stationary-bootstrap confidence intervals. **Frozen-data v2 reruns do not establish a statistically significant, cost-surviving edge.**
 
 A Python backend (FastAPI, order-book detectors, backtester, paper-trading harness) and a React/Vite dashboard sit around these parts.
@@ -49,25 +49,30 @@ Those earlier-run figures are historical, not the measurements in this table.
 
 **Tests:** `engine_test`, `replication_test`, `gateway_test`, `fault_test`, `ha_chaos_test`, `deterministic_replay_test`, plus `mpsc_tsan_test` built under ThreadSanitizer. Linux CI passes these Release tests and the TSan test; the macOS gateway test uses a stub.
 
-## Formal verification (TLA+)
+## Model checking (TLA+)
 
 All results are from **bounded / reduced models**: small constants, checked exhaustively by TLC. They are not proofs about the unbounded system.
 
-Specs in `specs/tla/`, checked in CI with tla2tools v1.7.4 (source: [`research/ALPHACORE_CPP_UPGRADE_REPORT.md`](research/ALPHACORE_CPP_UPGRADE_REPORT.md), Part 3):
+Every model, configuration and state count below is generated from tracked
+records (CI log extract [`report/data/ci_tlc.json`](report/data/ci_tlc.json),
+the [specs README](specs/README.md), the [counterexample trace](specs/tla_engine_models/history/SinglePrimaryPerEpoch.txt)),
+checked with tla2tools v1.7.4. Rows labelled *earlier run* quote
+[`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md) and are not what CI runs now.
 
-| Spec | Model | States generated | Distinct states | Invariants |
-|---|---|---:|---:|---|
-| `MpscQueue.tla` | 2 producers, 1 consumer, Capacity=4 | 1,243,889 | 327,308 | NoTornRead, ItemsInOutAreFromEnqueue, NoDuplicates, FullQueueBackpressure |
-| `PrimaryBackup.tla` | 2 nodes, epoch fencing, network faults | 280,331 | 29,500 | AtMostOneLeader, ActiveEpochUnique, NoSplitBrain, EpochFencing, PromotionOnlyOnTimeout, CommittedDataSafe |
-
-Models in `specs/tla_engine_models/` (source: [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md), "TLA+ Formal Verification"):
-
-| Spec | Model | States generated | Distinct states | Invariants |
-|---|---|---:|---:|---|
-| `MpscQueue.tla` | bounded | 421 | 289 | TypeInv, NeverOverflow, Linearizability, NoDataLoss |
-| `MatchingEngine.tla` | reduced model | 24,445 | 22,177 | PriceTimePriority, NoCrossTrading, NoOrderLoss |
-| `OrderBook.tla` | reduced model (3 prices, 3 order IDs, 2 quantities) | 2,901,043 | 1,786,483 | NoGhostOrders, QuantityConservation |
-| `PrimaryBackup.tla` | fenced 2-node replication, partitions/loss/restart, N=6, HeartbeatLoss=2, MaxMsgs=3 (local run 2026-11-13) | 526,142,487 | 65,620,528 | TypeInv, SinglePrimaryPerEpoch, NoStaleApply, CommittedDataSafe |
+<!-- BEGIN generated:tla (scripts/report/build_assets.py --update-readme; do not edit) -->
+| Spec | Config | States generated | Distinct states | Invariants checked | Result | Where run |
+|---|---|---:|---:|---|---|---|
+| `tla/MpscQueue.tla` | `MpscQueue.cfg` | 1,243,889 | 327,308 | NoTornRead, ItemsInOutAreFromEnqueue, NoDuplicates | no error | [CI](report/data/ci_tlc.json) |
+| `tla/PrimaryBackup.tla` | `PrimaryBackup.cfg` | 280,331 | 29,500 | AtMostOneLeader, ActiveEpochUnique, NoSplitBrain, PromotionOnlyOnTimeout (property), CommittedDataSafe (property), EpochFencing (property) | no error | [CI](report/data/ci_tlc.json) |
+| `tla_engine_models/MpscQueue.tla` | `ModelMpsc_tiny.cfg` | 8 | 7 | TypeInv, NeverOverflow, Linearizability, NoDataLoss | no error | [CI](report/data/ci_tlc.json) |
+| `tla_engine_models/MatchingEngine.tla` | `ModelMatching_small2.cfg` | 901 | 901 | PriceTimePriority, NoCrossTrading, NoOrderLoss | no error | [CI](report/data/ci_tlc.json) |
+| `tla_engine_models/OrderBook.tla` | `ModelOrderBook_small3.cfg` | 1,045 | 709 | NoGhostOrders, QuantityConservation | no error | [CI](report/data/ci_tlc.json) |
+| `tla_engine_models/PrimaryBackup.tla` | `ModelPrimaryBackup.cfg` | 526,142,487 | 65,620,528 | TypeInv, SinglePrimaryPerEpoch, NoStaleApply, CommittedDataSafe | no error | [CI](report/data/ci_tlc.json); local (specs/README.md) |
+| `tla_engine_models/MpscQueue.tla` | not recorded | 421 | 289 | TypeInv, NeverOverflow, Linearizability, NoDataLoss | no error (earlier run) | earlier run (ALPHACORE_STATUS_REPORT.md) |
+| `tla_engine_models/MatchingEngine.tla` | not recorded | 24,445 | 22,177 | PriceTimePriority, NoCrossTrading, NoOrderLoss | no error (earlier run) | earlier run (ALPHACORE_STATUS_REPORT.md) |
+| `tla_engine_models/OrderBook.tla` | not recorded | 2,901,043 | 1,786,483 | NoGhostOrders, QuantityConservation | no error (earlier run) | earlier run (ALPHACORE_STATUS_REPORT.md) |
+| `tla_engine_models/history/PrimaryBackup.tla` | `ModelPrimaryBackup.cfg` | 71 | 47 | TypeInv, SinglePrimaryPerEpoch, PromotionRequiresMissedHeartbeats, StaleEpochFenced | SinglePrimaryPerEpoch violated | local (history/SinglePrimaryPerEpoch.txt) |
+<!-- END generated:tla -->
 
 ## Signal research
 
@@ -84,17 +89,24 @@ The [metrics erratum](research/METRICS_ERRATUM.md) identifies inconsistent v1
 pairs and the already-consistent exceptions. No strategy, cost model, seed or
 locked configuration was tuned or reselected.
 
+<!-- BEGIN generated:headline (scripts/report/build_assets.py --update-readme; do not edit) -->
 **Result: no tested configuration establishes a statistically significant,
-cost-surviving edge in the v2 reruns.** Long/short K=1 on the expanded universe
-has zero-rf Sharpe **-1.9426672674071759**, CI **[-3.3210896840840416, -0.33916023789201966]**.
-With rf=0.065 it is -3.7785951031419356, CI [-5.172710614919728, -2.2318427709874316]
-([raw result](research/v2/experiment_7_universe_49.json)). The long-only K=12
-basket has excess-return Sharpe **0.6575848803769175**, CI **[-0.2336407666642999, 1.3619463317249594]**
-([raw result](research/v2/k12_basket.json)), versus 0.5815 for ^NSEI and 1.0057 for
-equal-weight buy-and-hold under the same convention. Its CI includes zero, and its final-63-session
-ADV cost lookahead remains. Under zero-rf, which is not its primary convention,
-the K12 CI is [0.5708, 1.9478]. That convention also flatters buy-and-hold
-(^NSEI 1.0473, equal-weight 1.4047). Its Sharpe is not comparable to the
+cost-surviving edge in the frozen-data reruns.** Of 9 distinct re-run
+configurations, 7 have primary-convention 95% CIs entirely below zero.
+Long/short K=1 on the expanded universe has zero-rf Sharpe **-1.94**,
+CI **[-3.32, -0.34]**; with rf=0.065 it is -3.78,
+CI [-5.17, -2.23] ([raw JSON](research/v2/experiment_7_universe_49.json)).
+Post-earnings drift is inconclusive: zero-rf Sharpe 0.02, CI [-1.66, 1.41],
+on 30 events, before explicit model fees ([raw JSON](research/v2/experiment_6_pead.json)).
+The long-only K=12 basket has excess-return Sharpe **0.66**,
+CI **[-0.23, 1.36]** ([raw JSON](research/v2/k12_basket.json)), versus
+0.58 for ^NSEI and 1.01 for equal-weight buy-and-hold (gross of
+costs) under the same convention. Its CI includes zero, and its ADV cost lookahead remains.
+Under zero-rf, which is not its primary convention, the basket CI is [0.57, 1.95];
+that convention also flatters buy-and-hold (^NSEI 1.05, equal-weight 1.40).
+Values are rounded to two decimals; full precision is in the linked JSON.
+<!-- END generated:headline -->
+The basket Sharpe is not comparable to the
 long/short experiments. See the [complete v2 table with both conventions, deployed fractions and limitations](research/v2/SUMMARY.md).
 V1 reports/results below are historical and remain unchanged. Experiment 9 is
 **not reproducible: source data no longer obtainable** under Yahoo's hourly

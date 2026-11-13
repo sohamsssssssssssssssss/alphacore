@@ -152,6 +152,30 @@ jobs:
           cd specs/tla_engine_models
           timeout 2400 java -Xmx10g -cp /tmp/tla2tools.jar tlc2.TLC PrimaryBackup.tla -config ModelPrimaryBackup.cfg -deadlock -workers auto
 
+  report-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install report dependencies
+        run: python -m pip install -r report/requirements.txt
+
+      # Generates report/generated/ and report/figures/ from tracked files and runs
+      # scripts/report/check_report.py; no TeX engine is needed.
+      - name: Build report assets and check consistency
+        run: python scripts/report/build_assets.py --check
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: report-assets
+          path: |
+            report/generated/
+            report/figures/
+
   frontend:
     runs-on: ubuntu-latest
     steps:
