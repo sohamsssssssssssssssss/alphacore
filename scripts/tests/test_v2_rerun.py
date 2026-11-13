@@ -35,3 +35,19 @@ def test_committed_v2_numbers_recompute_from_their_raw_returns(artifact):
                                      params['n_bootstrap'], params['mean_block_length'], params['seed'])
     assert point == pytest.approx(record['v2_sharpe'], rel=1e-12, abs=1e-12)
     assert [ci['ci_lower'], ci['ci_upper']] == pytest.approx(record['v2_ci'], rel=1e-12, abs=1e-12)
+    assert params['zero_rf_annual_risk_free'] == 0.0
+    point0, ci0 = v2.consistent_metrics(record['returns'], params['periods_per_year'], params['n_bootstrap'],
+                                       params['mean_block_length'], params['seed'], risk_free=0.0)
+    assert point0 == pytest.approx(record['v2_sharpe_zero_rf'], rel=1e-12, abs=1e-12)
+    assert [ci0['ci_lower'], ci0['ci_upper']] == pytest.approx(record['v2_ci_zero_rf'], rel=1e-12, abs=1e-12)
+    primary_ci = record['v2_ci_zero_rf'] if record['primary_convention'] == v2.ZERO_RF else record['v2_ci']
+    assert record['primary_convention'] == (v2.EXCESS if artifact.stem == 'k12_basket' else v2.ZERO_RF)
+    assert record['primary_positive_ci'] == (primary_ci[0] > 0)
+    assert record['deployed_fraction']['code']
+
+
+def test_zero_rf_differs_from_excess_only_by_rf():
+    returns = [.012, -.008, .025, -.017, .006, .019, -.004, .031, -.013, .008]
+    point0, ci0 = v2.consistent_metrics(returns, 12, 100, 3, 17, risk_free=0.0)
+    assert ci0['sharpe'] == pytest.approx(point0, rel=1e-14)
+    assert point0 > v2.consistent_metrics(returns, 12, 100, 3, 17)[0]

@@ -7,12 +7,31 @@
     -1.9353722569766492,
     1.1828173360360115
   ],
+  "v2_sharpe_zero_rf": 0.023492474053736955,
+  "v2_ci_zero_rf": [
+    -1.659985448840465,
+    1.4136557449310676
+  ],
+  "primary_convention": "zero-rf",
+  "deployed_fraction": {
+    "summary": "10% of equity per qualifying earnings event, one direction, held 10 sessions; unhedged",
+    "kind": "directional, partially deployed; not a self-financing overlay",
+    "code": [
+      "backend/experiments/overnight_gap_experiment.py:295: qty = (POSITION_SIZE_PCT * equity) / entry_price if entry_price > 0 else 0.0"
+    ]
+  },
+  "primary_sharpe": 0.023492474053736955,
+  "primary_ci_excludes_zero": false,
+  "primary_positive_ci": false,
   "sign_unchanged": null,
   "ci_excludes_zero": false,
   "positive_ci": false,
+  "positive_ci_zero_rf": false,
   "nifty50_buy_hold_sharpe": null,
   "equal_weight_buy_hold_sharpe": null,
-  "created_at": "2026-11-13T07:42:43.598661+00:00",
+  "nifty50_buy_hold_sharpe_zero_rf": null,
+  "equal_weight_buy_hold_sharpe_zero_rf": null,
+  "created_at": "2026-11-13T09:12:23.202511+00:00",
   "manifest": "data_snapshots/2026-11/MANIFEST.json",
   "manifest_sha256": "d971ce74e2ebeca58173850517a416149a70fb4f2fc3a9bc2195eb83b8a4afe1",
   "parameters": {
@@ -27,10 +46,12 @@
   },
   "metric_definition": {
     "annual_risk_free": 0.065,
+    "zero_rf_annual_risk_free": 0.0,
     "periods_per_year": 25,
     "n_bootstrap": 2000,
     "mean_block_length": 5,
-    "seed": 2026
+    "seed": 2026,
+    "keys": "v2_sharpe/v2_ci and consistent_bootstrap: excess, rf=0.065; *_zero_rf: rf=0; ci_excludes_zero/positive_ci: excess; primary_*: primary_convention"
   },
   "returns": [
     0.09915056159826285,
@@ -69,6 +90,16 @@
     "ci_lower": -1.9353722569766492,
     "ci_upper": 1.1828173360360115,
     "ci_width": 3.1181895930126604,
+    "confidence": 0.95,
+    "n_bootstrap": 2000,
+    "n_obs": 30,
+    "reliable": false
+  },
+  "consistent_bootstrap_zero_rf": {
+    "sharpe": 0.023492474053736955,
+    "ci_lower": -1.659985448840465,
+    "ci_upper": 1.4136557449310676,
+    "ci_width": 3.0736411937715324,
     "confidence": 0.95,
     "n_bootstrap": 2000,
     "n_obs": 30,

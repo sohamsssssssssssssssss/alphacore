@@ -10,12 +10,31 @@
     -0.2336407666642999,
     1.3619463317249594
   ],
+  "v2_sharpe_zero_rf": 1.2348124858145786,
+  "v2_ci_zero_rf": [
+    0.5708058892978265,
+    1.9477988180186856
+  ],
+  "primary_convention": "excess (rf=0.065)",
+  "deployed_fraction": {
+    "summary": "long-only, budget/k per name at entry (fully invested)",
+    "kind": "long-only, fully invested",
+    "code": [
+      "backend/experiments/basket_backtest.py:214: per_position = budget / max(len(basket), 1)"
+    ]
+  },
+  "primary_sharpe": 0.6575848803769175,
+  "primary_ci_excludes_zero": false,
+  "primary_positive_ci": false,
   "sign_unchanged": true,
   "ci_excludes_zero": false,
   "positive_ci": false,
+  "positive_ci_zero_rf": true,
   "nifty50_buy_hold_sharpe": 0.5815416254775335,
   "equal_weight_buy_hold_sharpe": 1.0057136423907516,
-  "created_at": "2026-11-13T07:42:44.781869+00:00",
+  "nifty50_buy_hold_sharpe_zero_rf": 1.047285435316514,
+  "equal_weight_buy_hold_sharpe_zero_rf": 1.404694863918583,
+  "created_at": "2026-11-13T09:12:24.822605+00:00",
   "manifest": "data_snapshots/2026-11/MANIFEST.json",
   "manifest_sha256": "d971ce74e2ebeca58173850517a416149a70fb4f2fc3a9bc2195eb83b8a4afe1",
   "parameters": {
@@ -31,10 +50,12 @@
   },
   "metric_definition": {
     "annual_risk_free": 0.065,
+    "zero_rf_annual_risk_free": 0.0,
     "periods_per_year": 12,
     "n_bootstrap": 1000,
     "mean_block_length": 10,
-    "seed": 42
+    "seed": 42,
+    "keys": "v2_sharpe/v2_ci and consistent_bootstrap: excess, rf=0.065; *_zero_rf: rf=0; ci_excludes_zero/positive_ci: excess; primary_*: primary_convention"
   },
   "returns": [
     0.01829864628954292,
@@ -117,6 +138,16 @@
     "n_bootstrap": 1000,
     "n_obs": 70,
     "reliable": false
+  },
+  "consistent_bootstrap_zero_rf": {
+    "sharpe": 1.2348124858145784,
+    "ci_lower": 0.5708058892978265,
+    "ci_upper": 1.9477988180186856,
+    "ci_width": 1.376992928720859,
+    "confidence": 0.95,
+    "n_bootstrap": 1000,
+    "n_obs": 70,
+    "reliable": true
   },
   "raw_backtest": {
     "k_used": 12,

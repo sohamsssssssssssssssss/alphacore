@@ -10,12 +10,32 @@
     -7.726057855688889,
     -3.5452241028571563
   ],
+  "v2_sharpe_zero_rf": -4.897412860550125,
+  "v2_ci_zero_rf": [
+    -6.945383216175387,
+    -2.6874719367724342
+  ],
+  "primary_convention": "zero-rf",
+  "deployed_fraction": {
+    "summary": "10% long + 10% short of equity at entry (20% gross, ~0 net); rest idle cash earning 0",
+    "kind": "self-financing long/short overlay",
+    "code": [
+      "backend/experiments/cross_sectional_experiment.py:270: qty_l = (self.position_size_pct * equity) / ask if ask > 0 else 0.0",
+      "backend/experiments/cross_sectional_experiment.py:292: qty_s = (self.position_size_pct * equity) / bid if bid > 0 else 0.0"
+    ]
+  },
+  "primary_sharpe": -4.897412860550125,
+  "primary_ci_excludes_zero": true,
+  "primary_positive_ci": false,
   "sign_unchanged": true,
   "ci_excludes_zero": true,
   "positive_ci": false,
+  "positive_ci_zero_rf": false,
   "nifty50_buy_hold_sharpe": null,
   "equal_weight_buy_hold_sharpe": null,
-  "created_at": "2026-11-13T07:42:43.280239+00:00",
+  "nifty50_buy_hold_sharpe_zero_rf": null,
+  "equal_weight_buy_hold_sharpe_zero_rf": null,
+  "created_at": "2026-11-13T09:12:22.606552+00:00",
   "manifest": "data_snapshots/2026-11/MANIFEST.json",
   "manifest_sha256": "d971ce74e2ebeca58173850517a416149a70fb4f2fc3a9bc2195eb83b8a4afe1",
   "parameters": {
@@ -31,10 +51,12 @@
   },
   "metric_definition": {
     "annual_risk_free": 0.065,
+    "zero_rf_annual_risk_free": 0.0,
     "periods_per_year": 252,
     "n_bootstrap": 2000,
     "mean_block_length": 5,
-    "seed": 2026
+    "seed": 2026,
+    "keys": "v2_sharpe/v2_ci and consistent_bootstrap: excess, rf=0.065; *_zero_rf: rf=0; ci_excludes_zero/positive_ci: excess; primary_*: primary_convention"
   },
   "returns": [
     -0.0012997000000000117,
@@ -392,6 +414,16 @@
     "ci_lower": -7.726057855688889,
     "ci_upper": -3.5452241028571563,
     "ci_width": 4.180833752831733,
+    "confidence": 0.95,
+    "n_bootstrap": 2000,
+    "n_obs": 349,
+    "reliable": false
+  },
+  "consistent_bootstrap_zero_rf": {
+    "sharpe": -4.897412860550125,
+    "ci_lower": -6.945383216175387,
+    "ci_upper": -2.6874719367724342,
+    "ci_width": 4.257911279402952,
     "confidence": 0.95,
     "n_bootstrap": 2000,
     "n_obs": 349,

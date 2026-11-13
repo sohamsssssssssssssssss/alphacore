@@ -10,12 +10,33 @@
     -5.172710614919728,
     -2.2318427709874316
   ],
+  "v2_sharpe_zero_rf": -1.9426672674071759,
+  "v2_ci_zero_rf": [
+    -3.3210896840840416,
+    -0.33916023789201966
+  ],
+  "primary_convention": "zero-rf",
+  "deployed_fraction": {
+    "summary": "10% of equity per leg split equally across K names (20% gross, ~0 net); rest idle cash earning 0",
+    "kind": "self-financing long/short overlay",
+    "code": [
+      "backend/experiments/k_expansion_experiment.py:96: per_position_pct = self.position_size_pct / k",
+      "backend/experiments/k_expansion_experiment.py:248: qty = (per_position_pct * equity) / ask if ask > 0 else 0.0",
+      "backend/experiments/k_expansion_experiment.py:273: qty = (per_position_pct * equity) / bid if bid > 0 else 0.0"
+    ]
+  },
+  "primary_sharpe": -1.9426672674071759,
+  "primary_ci_excludes_zero": true,
+  "primary_positive_ci": false,
   "sign_unchanged": true,
   "ci_excludes_zero": true,
   "positive_ci": false,
+  "positive_ci_zero_rf": false,
   "nifty50_buy_hold_sharpe": null,
   "equal_weight_buy_hold_sharpe": null,
-  "created_at": "2026-11-13T07:42:44.035692+00:00",
+  "nifty50_buy_hold_sharpe_zero_rf": null,
+  "equal_weight_buy_hold_sharpe_zero_rf": null,
+  "created_at": "2026-11-13T09:12:23.883144+00:00",
   "manifest": "data_snapshots/2026-11/MANIFEST.json",
   "manifest_sha256": "d971ce74e2ebeca58173850517a416149a70fb4f2fc3a9bc2195eb83b8a4afe1",
   "parameters": {
@@ -29,10 +50,12 @@
   },
   "metric_definition": {
     "annual_risk_free": 0.065,
+    "zero_rf_annual_risk_free": 0.0,
     "periods_per_year": 252,
     "n_bootstrap": 2000,
     "mean_block_length": 21,
-    "seed": 2026
+    "seed": 2026,
+    "keys": "v2_sharpe/v2_ci and consistent_bootstrap: excess, rf=0.065; *_zero_rf: rf=0; ci_excludes_zero/positive_ci: excess; primary_*: primary_convention"
   },
   "returns": [
     -0.0012997000000000117,
@@ -389,6 +412,16 @@
     "ci_lower": -5.172710614919728,
     "ci_upper": -2.2318427709874316,
     "ci_width": 2.9408678439322964,
+    "confidence": 0.95,
+    "n_bootstrap": 2000,
+    "n_obs": 348,
+    "reliable": false
+  },
+  "consistent_bootstrap_zero_rf": {
+    "sharpe": -1.9426672674071754,
+    "ci_lower": -3.3210896840840416,
+    "ci_upper": -0.33916023789201966,
+    "ci_width": 2.981929446192022,
     "confidence": 0.95,
     "n_bootstrap": 2000,
     "n_obs": 348,
