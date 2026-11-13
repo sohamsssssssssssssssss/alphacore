@@ -137,5 +137,3 @@ async def test_full_pipeline_smoke():
                     "timestamp": fill.get("filled_at", datetime.now(UTC)),
                 }
                 assert {"order_id", "symbol", "qty", "price", "timestamp"}.issubset(out_fill.keys())
-
-    assert True

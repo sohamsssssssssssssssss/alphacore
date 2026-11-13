@@ -70,3 +70,7 @@ docs/src/components/HomepageFeatures/
 docs/src/pages/markdown-page.mdx
 docs/static/img/docusaurus*
 docs/static/img/undraw_*
+
+# Reproduction scratch data/results; keep the root task Makefile.
+/.reproduce/
+!/Makefile

@@ -1,0 +1,5 @@
+{
+  "experiment": "9 Hourly",
+  "status": "not reproducible: source data no longer obtainable",
+  "reason": "Yahoo 730-day retention; no replacement window or synthetic bars used"
+}

@@ -15,8 +15,12 @@ int main() {
     constexpr std::uint16_t kReplPort = 19101;
     constexpr std::uint16_t kHbPort = 19201;
 
+    LeaderLease primary_lease(0);
+    LeaderLease backup_lease(1);
+    primary_lease.promote();  // bootstrap primary
+
     std::atomic<int> received{0};
-    BackupReceiver backup;
+    BackupReceiver backup(backup_lease);
     backup.set_apply_handler([&received](const std::vector<std::uint8_t>&) {
         received.fetch_add(1, std::memory_order_acq_rel);
     });
@@ -25,7 +29,7 @@ int main() {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
-    ReplicationLog primary("/tmp/alphacore_journal.bin");
+    ReplicationLog primary("/tmp/alphacore_journal.bin", primary_lease);
     bool connected = false;
     for (int i = 0; i < 100; ++i) {
         if (primary.connect_to_backup("127.0.0.1", kReplPort)) {
@@ -44,7 +48,10 @@ int main() {
         std::uint8_t payload[16];
         std::memcpy(payload, &i, sizeof(i));
         std::memset(payload + sizeof(i), 0xA5, sizeof(payload) - sizeof(i));
-        primary.append(payload, sizeof(payload));
+        if (!primary.append(payload, sizeof(payload))) {
+            std::puts("FAIL: append refused with a current lease");
+            all_ok = false;
+        }
     }
 
     const auto deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
@@ -61,9 +68,6 @@ int main() {
         std::printf("FAIL: backup received %d/100 log entries\n", received.load());
         all_ok = false;
     }
-
-    LeaderLease primary_lease;
-    LeaderLease backup_lease;
 
     HeartbeatMonitor hb_primary(primary_lease);
     HeartbeatMonitor hb_backup(backup_lease);

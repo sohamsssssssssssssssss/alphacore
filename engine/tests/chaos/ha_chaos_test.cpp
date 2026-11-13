@@ -89,8 +89,12 @@ int main() {
         std::vector<std::uint64_t> received_seqs;
         std::mutex recv_mutex;
 
+        LeaderLease primary_lease(0);
+        LeaderLease backup_lease(1);
+        primary_lease.promote();  // bootstrap primary
+
         // Start backup receiver
-        BackupReceiver backup;
+        BackupReceiver backup(backup_lease);
         backup.set_apply_handler([&](const std::vector<std::uint8_t>& entry) {
             if (entry.size() >= sizeof(std::uint64_t)) {
                 std::uint64_t seq = 0;
@@ -105,11 +109,8 @@ int main() {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
-        LeaderLease primary_lease;
-        LeaderLease backup_lease;
-
         // Primary sends heartbeats and ships log
-        ReplicationLog primary(journal);
+        ReplicationLog primary(journal, primary_lease);
         HeartbeatMonitor hb_primary(primary_lease);
 
         bool connected = false;
@@ -216,8 +217,12 @@ int main() {
         std::atomic<std::size_t> backup_received{0};
         std::atomic<bool> promoted{false};
 
+        LeaderLease primary_lease(0);
+        LeaderLease backup_lease(1);
+        primary_lease.promote();  // bootstrap primary
+
         // Backup receiver
-        BackupReceiver backup;
+        BackupReceiver backup(backup_lease);
         backup.set_apply_handler([&](const std::vector<std::uint8_t>&) {
             backup_received.fetch_add(1, std::memory_order_acq_rel);
         });
@@ -226,10 +231,7 @@ int main() {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
-        LeaderLease primary_lease;
-        LeaderLease backup_lease;
-
-        ReplicationLog primary(journal);
+        ReplicationLog primary(journal, primary_lease);
         HeartbeatMonitor hb_primary(primary_lease);
         HeartbeatMonitor hb_backup(backup_lease);
 
@@ -317,18 +319,18 @@ int main() {
         const std::string journal = "/tmp/alphacore_chaos_test3_journal.bin";
 
         std::atomic<bool> promoted{false};
-        std::atomic<bool> promote_fencing_ok{true};
 
-        LeaderLease primary_lease;
-        LeaderLease backup_lease;
+        LeaderLease primary_lease(0);
+        LeaderLease backup_lease(1);
+        primary_lease.promote();  // bootstrap primary
 
-        BackupReceiver backup;
+        BackupReceiver backup(backup_lease);
         backup.listen(repl_port);
         for (int i = 0; i < 100 && !backup.is_listening(); ++i) {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
-        ReplicationLog primary(journal);
+        ReplicationLog primary(journal, primary_lease);
         HeartbeatMonitor hb_primary(primary_lease);
         HeartbeatMonitor hb_backup(backup_lease);
 
@@ -349,19 +351,13 @@ int main() {
             continue;
         }
 
-        hb_backup.start_backup(hb_port);
-        hb_primary.start_primary("127.0.0.1", hb_port);
-
-        hb_backup.set_promote_callback([&promoted, &primary_lease, &backup_lease, &promote_fencing_ok]() {
-            // When promoted, simulate the epoch fencing check:
-            // old primary's epoch must be stale (less than new epoch)
-            std::uint64_t old_epoch = primary_lease.epoch();
-            std::uint64_t new_epoch = backup_lease.promote();
-            if (old_epoch >= new_epoch) {
-                promote_fencing_ok.store(false, std::memory_order_release);
-            }
+        // Production promotion and fencing; the callback only records that it
+        // fired (and avoids default_promote binding port 9000).
+        hb_backup.set_promote_callback([&promoted]() {
             promoted.store(true, std::memory_order_release);
         });
+        hb_backup.start_backup(hb_port);
+        hb_primary.start_primary("127.0.0.1", hb_port);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
@@ -384,17 +380,33 @@ int main() {
 
         // After promotion, check fencing invariant
         std::uint64_t backup_ep = backup_lease.epoch();
-        bool t3_fencing = (promote_fencing_ok.load() && backup_ep > primary_lease.epoch());
+        bool t3_fencing = (backup_ep > primary_lease.epoch());
         print_result("Fencing: backup epoch > primary epoch (" +
                      std::to_string(backup_ep) + " > " +
                      std::to_string(primary_lease.epoch()) + ")", t3_fencing);
         all_ok = all_ok && t3_fencing;
 
-        // Simulate old primary coming back (hb_primary restarts)
-        // It should be fenced — its epoch is stale
+        // Old primary comes back (partition heals): its stale heartbeat reaches
+        // the new primary, whose epoch notification makes it step down.
         bool t3_stale = primary_lease.epoch() < backup_ep;
         print_result("Old primary epoch is stale after promotion", t3_stale);
         all_ok = all_ok && t3_stale;
+
+        hb_primary.start_primary("127.0.0.1", hb_port);
+        auto heal_deadline = std::chrono::steady_clock::now() + std::chrono::seconds(3);
+        while (std::chrono::steady_clock::now() < heal_deadline && !hb_primary.stepped_down()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+        bool t3_down = hb_primary.stepped_down() && !primary_lease.is_primary() &&
+                       backup_lease.is_primary();
+        print_result("Old primary stepped down on heal (production path)", t3_down);
+        all_ok = all_ok && t3_down;
+
+        std::uint8_t late[16];
+        fill_payload(late, sizeof(late), 999);
+        bool t3_refused = !primary.append(late, sizeof(late));
+        print_result("Fenced old primary's append refused", t3_refused);
+        all_ok = all_ok && t3_refused;
 
         hb_backup.stop();
         hb_primary.stop();
@@ -420,7 +432,11 @@ int main() {
         std::atomic<std::size_t> received{0};
         std::vector<std::uint8_t> captured_entry;
 
-        BackupReceiver backup;
+        LeaderLease primary_lease(0);
+        LeaderLease backup_lease(1);
+        primary_lease.promote();  // bootstrap primary
+
+        BackupReceiver backup(backup_lease);
         backup.set_apply_handler([&](const std::vector<std::uint8_t>& entry) {
             received.fetch_add(1, std::memory_order_acq_rel);
         });
@@ -429,8 +445,7 @@ int main() {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
 
-        LeaderLease primary_lease;
-        ReplicationLog primary(journal);
+        ReplicationLog primary(journal, primary_lease);
 
         bool connected = false;
         for (int i = 0; i < 100; ++i) {
@@ -476,7 +491,8 @@ int main() {
         received.store(0, std::memory_order_release);
 
         // Phase 2: Start new backup instance and reconnect
-        BackupReceiver backup2;
+        LeaderLease backup2_lease(1);  // restarted backup: fresh in-memory lease
+        BackupReceiver backup2(backup2_lease);
         std::atomic<std::size_t> received2{0};
         backup2.set_apply_handler([&](const std::vector<std::uint8_t>&) {
             received2.fetch_add(1, std::memory_order_acq_rel);

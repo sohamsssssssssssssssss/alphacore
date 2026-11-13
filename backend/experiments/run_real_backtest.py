@@ -17,9 +17,9 @@ from datetime import datetime, timedelta
 from copy import deepcopy
 
 # ── Ensure we can import backend modules ──────────────────────────────
-BACKEND_DIR = os.path.join(os.path.dirname(__file__), "alphacore", "backend")
+BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BACKEND_DIR)
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "alphacore"))
+sys.path.insert(0, os.path.dirname(BACKEND_DIR))
 
 import numpy as np
 import pandas as pd
@@ -623,13 +623,13 @@ print(f"""
 """)
 
 # Save locked parameters to JSON
-params_path = os.path.join(os.path.dirname(__file__), "research", "locked_params.json")
+params_path = os.path.join(os.path.dirname(BACKEND_DIR), "research", "locked_params.json")
 with open(params_path, "w") as f:
     json.dump(LOCKED_PARAMS, f, indent=2, default=str)
 print(f"Locked parameters saved to {params_path}")
 
 # Save full results
-results_path = os.path.join(os.path.dirname(__file__), "research", "backtest_results.json")
+results_path = os.path.join(os.path.dirname(BACKEND_DIR), "research", "backtest_results.json")
 with open(results_path, "w") as f:
     json.dump({
         "test_metrics": test_metrics,

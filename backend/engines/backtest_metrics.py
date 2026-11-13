@@ -229,6 +229,7 @@ def stationary_bootstrap_sharpe_ci(
     mean_block_length: int = 10,
     periods_per_year: int = 252,
     seed: int = 42,
+    risk_free: float = 0.0,
 ) -> dict:
     """
     Politis-Romano stationary bootstrap confidence interval for annualised Sharpe ratio.
@@ -236,6 +237,8 @@ def stationary_bootstrap_sharpe_ci(
     Unlike IID bootstrap, stationary bootstrap draws variable-length blocks so the
     autocorrelation structure of the return series is preserved. Block lengths are
     geometrically distributed with mean = mean_block_length.
+
+    risk_free is annual, as in compute_sharpe; zero preserves the v1 calculation.
 
     Returns:
         sharpe        - point estimate
@@ -248,6 +251,8 @@ def stationary_bootstrap_sharpe_ci(
         reliable      - True if ci_lower > 0 (edge is positive with confidence)
     """
     arr = np.asarray(returns, dtype=float)
+    if risk_free != 0.0:
+        arr = arr - ((1.0 + risk_free) ** (1.0 / periods_per_year) - 1.0)
     n = arr.size
     if n < 2:
         return {

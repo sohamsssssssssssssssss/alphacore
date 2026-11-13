@@ -44,7 +44,7 @@ jobs:
           DATABASE_URL: postgresql+asyncpg://soham:alphacore@localhost:5432/alphacore_test
         run: |
           cd backend
-          pytest tests/ -v --tb=short -m "not benchmark"
+          pytest tests/ sandbox/tests/ ../scripts/tests/ -v --tb=short -m "not benchmark"
 
       - name: Check imports
         env:
@@ -80,6 +80,8 @@ jobs:
           cmake --build build -j$(nproc) --target fault_test
           cmake --build build -j$(nproc) --target ha_chaos_test
           cmake --build build -j$(nproc) --target deterministic_replay_test
+          cmake --build build -j$(nproc) --target split_brain_counterexample
+          cmake --build build -j$(nproc) --target fencing_test
           cmake --build build -j$(nproc) --target add_bench
 
       - name: Build C++ (TSan)
@@ -87,6 +89,7 @@ jobs:
           cd engine
           cmake -B build_tsan -DALPHACORE_TSAN=ON
           cmake --build build_tsan -j$(nproc) --target mpsc_tsan_test
+          cmake --build build_tsan -j$(nproc) --target fencing_tsan_test
 
       - name: Run unit tests
         run: |
@@ -94,6 +97,8 @@ jobs:
           ./gateway_test
           ./engine_test
           ./replication_test
+          ./split_brain_counterexample
+          ./fencing_test
           OB_FAULT_POOL_EXHAUSTION=1 OB_FAULT_QUEUE_FULL=1 ./fault_test
 
       - name: Run HA chaos tests
@@ -110,6 +115,7 @@ jobs:
         run: |
           cd engine/build_tsan
           ./mpsc_tsan_test
+          ./fencing_tsan_test
 
   tla:
     runs-on: ubuntu-latest
@@ -129,6 +135,22 @@ jobs:
           cd specs/tla
           timeout 600 java -Xmx8g -cp /tmp/tla2tools.jar tlc2.TLC MpscQueue.tla -config MpscQueue.cfg -deadlock 2>&1 | tail -10
           timeout 600 java -Xmx8g -cp /tmp/tla2tools.jar tlc2.TLC PrimaryBackup.tla -config PrimaryBackup.cfg -deadlock 2>&1 | tail -10
+
+
+      - name: Run bounded engine TLA+ models (each measured under 5 min)
+        shell: bash
+        run: |
+          cd specs/tla_engine_models
+          timeout 300 java -Xmx2g -cp /tmp/tla2tools.jar tlc2.TLC MpscQueue.tla -config ModelMpsc_tiny.cfg -deadlock
+          timeout 300 java -Xmx2g -cp /tmp/tla2tools.jar tlc2.TLC MatchingEngine.tla -config ModelMatching_small2.cfg -deadlock
+          timeout 300 java -Xmx2g -cp /tmp/tla2tools.jar tlc2.TLC OrderBook.tla -config ModelOrderBook_small3.cfg -deadlock
+
+      # Fenced replication model (specs/REPLICATION_FINDING.md); ~65.6M distinct states.
+      - name: Run fenced PrimaryBackup engine model
+        shell: bash
+        run: |
+          cd specs/tla_engine_models
+          timeout 2400 java -Xmx10g -cp /tmp/tla2tools.jar tlc2.TLC PrimaryBackup.tla -config ModelPrimaryBackup.cfg -deadlock -workers auto
 
   frontend:
     runs-on: ubuntu-latest

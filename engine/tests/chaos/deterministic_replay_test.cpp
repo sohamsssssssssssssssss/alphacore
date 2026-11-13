@@ -150,7 +150,9 @@ bool run_replay_test(const std::string& test_name, std::size_t num_orders, std::
     auto primary = std::make_unique<MatchingEngine>(4, 1, 1000, 1, 500);
     primary->start();
 
-    ReplicationLog replog(journal_path);
+    LeaderLease lease(0);
+    lease.promote();
+    ReplicationLog replog(journal_path, lease);
 
     // Route orders through primary
     std::uint64_t oid = 1;

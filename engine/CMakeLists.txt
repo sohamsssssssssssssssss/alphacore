@@ -72,6 +72,16 @@ target_compile_options(replication_test PRIVATE -O3 -march=native)
 target_compile_features(replication_test PRIVATE cxx_std_20)
 target_include_directories(replication_test PRIVATE src/)
 
+add_executable(fencing_test tests/fencing_test.cpp src/replication.cpp src/heartbeat.cpp)
+target_compile_options(fencing_test PRIVATE -O3 -march=native)
+target_compile_features(fencing_test PRIVATE cxx_std_20)
+target_include_directories(fencing_test PRIVATE src/)
+
+# Former split-brain counterexample; must pass since epoch fencing (specs/REPLICATION_FINDING.md).
+add_executable(split_brain_counterexample tests/split_brain_counterexample.cpp src/heartbeat.cpp)
+target_compile_features(split_brain_counterexample PRIVATE cxx_std_20)
+target_include_directories(split_brain_counterexample PRIVATE src/)
+
 add_executable(gateway_test tests/gateway_test.cpp src/engine.cpp src/flat_price_map.cpp src/gateway.cpp src/replication.cpp src/heartbeat.cpp)
 target_compile_options(gateway_test PRIVATE -O3 -march=native)
 target_compile_features(gateway_test PRIVATE cxx_std_20)
@@ -110,4 +120,14 @@ if(ALPHACORE_TSAN)
     target_compile_features(mpsc_tsan_test PRIVATE cxx_std_20)
     target_include_directories(mpsc_tsan_test PRIVATE src/)
     target_link_options(mpsc_tsan_test PRIVATE -fsanitize=thread)
+
+    add_executable(fencing_tsan_test tests/fencing_test.cpp src/replication.cpp src/heartbeat.cpp)
+    target_compile_options(fencing_tsan_test PRIVATE -g -O1 -fsanitize=thread)
+    target_compile_features(fencing_tsan_test PRIVATE cxx_std_20)
+    target_include_directories(fencing_tsan_test PRIVATE src/)
+    target_link_options(fencing_tsan_test PRIVATE -fsanitize=thread)
 endif()
+
+enable_testing()
+add_test(NAME split_brain_counterexample COMMAND split_brain_counterexample)
+add_test(NAME fencing_test COMMAND fencing_test)

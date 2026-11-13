@@ -1,0 +1,2356 @@
+# Upstox SANDBOX raw API log — started 2026-08-15T21:39:50.563273
+
+==============================================================================
+===== [1] GET https://api-sandbox.upstox.com/v2/user/profile =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 404
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:58 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 8fc625ff-a7b7-4ccc-b9e3-e9e55579b947
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 8fc625ff-a7b7-4ccc-b9e3-e9e55579b947
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9777c4e566145-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100060",
+      "message": "Resource not Found.",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100060",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [2] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 61, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE860A01027", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:58 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 46d52d71-3eb1-40e2-b100-308cc947843b
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: f86804e9-f76a-49b7-8b42-afba354d2b87
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9777ccd1ad896-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815213958572"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [3] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:58 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: c24de095-cdd6-4f56-83ee-db001226a4af
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: f85ff7a9-1a6b-401c-ab7a-257b10042def
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9777d98ee8827-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 61,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE860A01027",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213958572",
+      "order_request_id": "UDAPI-f86804e9-f76a-49b7-8b42-afba354d2b87",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "HCLTECH",
+      "trading_symbol": "HCLTECH",
+      "order_timestamp": "2026-08-15 21:39:58",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 61,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE860A01027",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213958572",
+      "order_request_id": "UDAPI-f86804e9-f76a-49b7-8b42-afba354d2b87",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "HCLTECH",
+      "trading_symbol": "HCLTECH",
+      "order_timestamp": "2026-08-15 21:39:58",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 61,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE860A01027",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213958572",
+      "order_request_id": "UDAPI-f86804e9-f76a-49b7-8b42-afba354d2b87",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "HCLTECH",
+      "trading_symbol": "HCLTECH",
+      "order_timestamp": "2026-08-15 21:39:58",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [4] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:58 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 5631f3a8-e3c1-4f6d-b4cc-302844b91bf4
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 5631f3a8-e3c1-4f6d-b4cc-302844b91bf4
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  cf-cache-status: DYNAMIC
+  Server: cloudflare
+  CF-RAY: a2b9777e499d7258-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [5] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 10, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE361B01024", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:58 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 5cca75fc-0abd-4316-9fa6-c570010edb57
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: de60d635-78f3-4a8a-9f9c-05e1dc3793f3
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9777f1c91ff60-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815213958917"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [6] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: a38319ac-1c52-461a-84bd-dffc24413da9
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 3145d30c-4242-43ff-be4f-eebe0927014c
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9777f790fd7fb-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 10,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE361B01024",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213958917",
+      "order_request_id": "UDAPI-de60d635-78f3-4a8a-9f9c-05e1dc3793f3",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "DIVISLAB",
+      "trading_symbol": "DIVISLAB",
+      "order_timestamp": "2026-08-15 21:39:58",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 10,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE361B01024",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213958917",
+      "order_request_id": "UDAPI-de60d635-78f3-4a8a-9f9c-05e1dc3793f3",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "DIVISLAB",
+      "trading_symbol": "DIVISLAB",
+      "order_timestamp": "2026-08-15 21:39:58",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 10,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE361B01024",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213958917",
+      "order_request_id": "UDAPI-de60d635-78f3-4a8a-9f9c-05e1dc3793f3",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "DIVISLAB",
+      "trading_symbol": "DIVISLAB",
+      "order_timestamp": "2026-08-15 21:39:58",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [7] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 0c5ee50f-b47e-417d-885f-b42679f626c5
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 0c5ee50f-b47e-417d-885f-b42679f626c5
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  cf-cache-status: DYNAMIC
+  Server: cloudflare
+  CF-RAY: a2b977801e9d6145-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [8] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 50, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE669C01036", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 43fbc6ea-0c7e-450f-ba44-cff2dc44da2d
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 8b7aa064-afd4-4753-9668-7239a50a4a35
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b97780e87d205b-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815213959206"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [9] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 0309ef60-f9e1-49ae-9914-add53c6b6f7b
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 02d45b42-72b0-4250-aad9-329b4ba648ad
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b977815fd0ffa6-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 50,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE669C01036",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959206",
+      "order_request_id": "UDAPI-8b7aa064-afd4-4753-9668-7239a50a4a35",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "TECHM",
+      "trading_symbol": "TECHM",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 50,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE669C01036",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959206",
+      "order_request_id": "UDAPI-8b7aa064-afd4-4753-9668-7239a50a4a35",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "TECHM",
+      "trading_symbol": "TECHM",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 50,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE669C01036",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959206",
+      "order_request_id": "UDAPI-8b7aa064-afd4-4753-9668-7239a50a4a35",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "TECHM",
+      "trading_symbol": "TECHM",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [10] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 971f359a-2538-44a8-a5f0-2a5b6e713adb
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 971f359a-2538-44a8-a5f0-2a5b6e713adb
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  cf-cache-status: DYNAMIC
+  Server: cloudflare
+  CF-RAY: a2b97781dda0fa1c-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [11] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 7, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE917I01010", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: a2b1a655-af30-4d53-ab9d-4c9c9c64e17f
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: bcb51caf-9370-4e63-b5c1-c0366faed439
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b977825abd8af7-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815213959491"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [12] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 4363bc47-c606-4f9e-a494-6c49b2876bc5
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: fe3d05ee-1a0d-464c-9ca1-f673bca23525
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b977833e2aafda-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 7,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE917I01010",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959491",
+      "order_request_id": "UDAPI-bcb51caf-9370-4e63-b5c1-c0366faed439",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "BAJAJ-AUTO",
+      "trading_symbol": "BAJAJ-AUTO",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 7,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE917I01010",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959491",
+      "order_request_id": "UDAPI-bcb51caf-9370-4e63-b5c1-c0366faed439",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "BAJAJ-AUTO",
+      "trading_symbol": "BAJAJ-AUTO",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 7,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE917I01010",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959491",
+      "order_request_id": "UDAPI-bcb51caf-9370-4e63-b5c1-c0366faed439",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "BAJAJ-AUTO",
+      "trading_symbol": "BAJAJ-AUTO",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [13] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 62cf08eb-b6ba-46b1-a695-12fd5e9f7342
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 62cf08eb-b6ba-46b1-a695-12fd5e9f7342
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  cf-cache-status: DYNAMIC
+  Server: cloudflare
+  CF-RAY: a2b97783a91f8827-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [14] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 35, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE467B01029", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 8856e277-7ae2-4759-8c49-497098321279
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 3c44f8a6-4050-4b28-9e90-3e3a6a8fd6ef
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b97783fe02c161-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815213959699"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [15] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: c9f3e903-9a55-48d6-bdee-ee8d910b4164
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 8800cf76-74d2-4d54-a093-416201476084
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b97784686a80af-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 35,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE467B01029",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959699",
+      "order_request_id": "UDAPI-3c44f8a6-4050-4b28-9e90-3e3a6a8fd6ef",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "TCS",
+      "trading_symbol": "TCS",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 35,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE467B01029",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959699",
+      "order_request_id": "UDAPI-3c44f8a6-4050-4b28-9e90-3e3a6a8fd6ef",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "TCS",
+      "trading_symbol": "TCS",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 35,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE467B01029",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959699",
+      "order_request_id": "UDAPI-3c44f8a6-4050-4b28-9e90-3e3a6a8fd6ef",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "TCS",
+      "trading_symbol": "TCS",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [16] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 24a5f834-3c9f-4921-9166-080d0b325bad
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 24a5f834-3c9f-4921-9166-080d0b325bad
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  cf-cache-status: DYNAMIC
+  Server: cloudflare
+  CF-RAY: a2b97784f89278c7-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [17] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 15, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE158A01026", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 089ed286-b35c-4298-b3c9-9f5f210edcd1
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: c6a0970d-952c-4f90-8e7b-e8b890e76bf0
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b977855d0ed5f0-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815213959919"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [18] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:09:59 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 1e7ba308-153e-409a-a771-6df350e422e1
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 0b256bf6-ab3f-4a02-b247-c05204a89d14
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b97785ba0d1daf-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 15,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE158A01026",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959919",
+      "order_request_id": "UDAPI-c6a0970d-952c-4f90-8e7b-e8b890e76bf0",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "HEROMOTOCO",
+      "trading_symbol": "HEROMOTOCO",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 15,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE158A01026",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959919",
+      "order_request_id": "UDAPI-c6a0970d-952c-4f90-8e7b-e8b890e76bf0",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "HEROMOTOCO",
+      "trading_symbol": "HEROMOTOCO",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 15,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE158A01026",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815213959919",
+      "order_request_id": "UDAPI-c6a0970d-952c-4f90-8e7b-e8b890e76bf0",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "HEROMOTOCO",
+      "trading_symbol": "HEROMOTOCO",
+      "order_timestamp": "2026-08-15 21:39:59",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [19] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: f0d3be84-b1dd-4021-a8e6-ca031e02b96b
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: f0d3be84-b1dd-4021-a8e6-ca031e02b96b
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  cf-cache-status: DYNAMIC
+  Server: cloudflare
+  CF-RAY: a2b977863ee1c766-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [20] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 73, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE296A01032", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: d41bcd5c-f1b6-4bd5-b959-1cb5cac421cb
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 4e7feb9d-7264-461e-a885-eb45e0081ca5
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b97786cd1cdb85-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815214000171"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [21] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 2e143022-de20-409b-b686-34fcea7a744d
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 80e9dba9-b6d4-476b-b492-8955fc5b81b1
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b977879eba89fc-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 73,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE296A01032",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000171",
+      "order_request_id": "UDAPI-4e7feb9d-7264-461e-a885-eb45e0081ca5",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "BAJFINANCE",
+      "trading_symbol": "BAJFINANCE",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 73,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE296A01032",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000171",
+      "order_request_id": "UDAPI-4e7feb9d-7264-461e-a885-eb45e0081ca5",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "BAJFINANCE",
+      "trading_symbol": "BAJFINANCE",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 73,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE296A01032",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000171",
+      "order_request_id": "UDAPI-4e7feb9d-7264-461e-a885-eb45e0081ca5",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "BAJFINANCE",
+      "trading_symbol": "BAJFINANCE",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [22] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: ac91ed79-8900-43ae-9d32-66df681644ab
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: ac91ed79-8900-43ae-9d32-66df681644ab
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  cf-cache-status: DYNAMIC
+  Server: cloudflare
+  CF-RAY: a2b9778839587258-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [23] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 41, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE918I01026", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 08715cd3-76a5-453a-b71c-b61f35e8e4a3
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 51cb8bd4-8b5b-4fdc-b5ed-ef5dfd8aa988
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b977889ade8b03-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815214000446"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [24] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: c0ae85cd-3cf8-4128-94b5-ce1bf79d8d8b
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: a67527e0-c6f9-4272-93c5-08a2819104e2
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b977890c7560b0-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 41,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE918I01026",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000446",
+      "order_request_id": "UDAPI-51cb8bd4-8b5b-4fdc-b5ed-ef5dfd8aa988",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "BAJAJFINSV",
+      "trading_symbol": "BAJAJFINSV",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 41,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE918I01026",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000446",
+      "order_request_id": "UDAPI-51cb8bd4-8b5b-4fdc-b5ed-ef5dfd8aa988",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "BAJAJFINSV",
+      "trading_symbol": "BAJAJFINSV",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 41,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE918I01026",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000446",
+      "order_request_id": "UDAPI-51cb8bd4-8b5b-4fdc-b5ed-ef5dfd8aa988",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "BAJAJFINSV",
+      "trading_symbol": "BAJAJFINSV",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [25] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 2bbc7f02-96e5-4dc7-90c7-40f5986a6d86
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 2bbc7f02-96e5-4dc7-90c7-40f5986a6d86
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  Server: cloudflare
+  CF-RAY: a2b977897ed5cf40-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [26] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 10, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE066A01021", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 06812ed1-c368-4220-bc5b-b92952347c8f
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 62bea940-456d-4955-8996-7a5ff5afd359
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9778a294fa11b-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815214000696"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [27] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: c2800cfe-139b-4c08-83b1-de5da7c43002
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 26eda833-e138-4515-93d6-07daa32a35a3
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9778abd52db85-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 10,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE066A01021",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000696",
+      "order_request_id": "UDAPI-62bea940-456d-4955-8996-7a5ff5afd359",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "EICHERMOT",
+      "trading_symbol": "EICHERMOT",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 10,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE066A01021",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000696",
+      "order_request_id": "UDAPI-62bea940-456d-4955-8996-7a5ff5afd359",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "EICHERMOT",
+      "trading_symbol": "EICHERMOT",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 10,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE066A01021",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000696",
+      "order_request_id": "UDAPI-62bea940-456d-4955-8996-7a5ff5afd359",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "EICHERMOT",
+      "trading_symbol": "EICHERMOT",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [28] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 73aee1dc-0262-442b-a6bd-0af6a0765ea1
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 73aee1dc-0262-442b-a6bd-0af6a0765ea1
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  cf-cache-status: DYNAMIC
+  Server: cloudflare
+  CF-RAY: a2b9778b3faf1d31-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [29] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 17, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE280A01028", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:00 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 3caf1753-8edc-4c35-b113-da93148a2508
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 71a543a8-d565-47d7-803c-0ea60f2e58ce
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9778bbc78fa1c-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815214000932"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [30] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:01 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 87e05eda-b7c4-4dca-8353-88c9c5f24c7b
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: f940aeda-d569-4956-8e55-6a55a584d42f
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9778c2d6e414e-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 17,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE280A01028",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000932",
+      "order_request_id": "UDAPI-71a543a8-d565-47d7-803c-0ea60f2e58ce",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "TITAN",
+      "trading_symbol": "TITAN",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 17,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE280A01028",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000932",
+      "order_request_id": "UDAPI-71a543a8-d565-47d7-803c-0ea60f2e58ce",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "TITAN",
+      "trading_symbol": "TITAN",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 17,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE280A01028",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214000932",
+      "order_request_id": "UDAPI-71a543a8-d565-47d7-803c-0ea60f2e58ce",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "TITAN",
+      "trading_symbol": "TITAN",
+      "order_timestamp": "2026-08-15 21:40:00",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [31] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:01 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 27f908da-fcb0-4954-b273-daa622420b7e
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 27f908da-fcb0-4954-b273-daa622420b7e
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  cf-cache-status: DYNAMIC
+  Server: cloudflare
+  CF-RAY: a2b9778cfcd98a1a-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [32] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 73, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE009A01021", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:01 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 4aa7c1ef-2082-453b-90f4-5feca43cb73d
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: ccfa10a1-8323-4532-8b98-8a898aa5b7e7
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9778da9221d31-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815214001240"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [33] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:01 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: bd99f691-4c0f-4239-b9cf-8594155f9c22
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: d4fc932a-3a43-4e82-80e9-51ee7b8d7f10
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9778e3ccb8827-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 73,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE009A01021",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214001240",
+      "order_request_id": "UDAPI-ccfa10a1-8323-4532-8b98-8a898aa5b7e7",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "INFY",
+      "trading_symbol": "INFY",
+      "order_timestamp": "2026-08-15 21:40:01",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 73,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE009A01021",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214001240",
+      "order_request_id": "UDAPI-ccfa10a1-8323-4532-8b98-8a898aa5b7e7",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "INFY",
+      "trading_symbol": "INFY",
+      "order_timestamp": "2026-08-15 21:40:01",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 73,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE009A01021",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214001240",
+      "order_request_id": "UDAPI-ccfa10a1-8323-4532-8b98-8a898aa5b7e7",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "INFY",
+      "trading_symbol": "INFY",
+      "order_timestamp": "2026-08-15 21:40:01",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [34] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:01 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: e680b57b-47cd-409d-8381-3e7b9f67ed56
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: e680b57b-47cd-409d-8381-3e7b9f67ed56
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  Server: cloudflare
+  CF-RAY: a2b9778ea922c6bc-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [35] POST https://api-sandbox.upstox.com/v2/order/place =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: {"quantity": 24, "product": "D", "validity": "DAY", "price": 0.0, "tag": "alphacore-basket-2026-07-31", "instrument_token": "NSE_EQ|INE101A01026", "order_type": "MARKET", "transaction_type": "BUY", "disclosed_quantity": 0, "trigger_price": 0.0, "is_amo": false, "market_protection": -1}
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:01 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: fee5e545-26d2-4a43-8583-ecffeed1a37c
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: 92f9e8cf-f8e0-4e52-a6fe-a2e971bba83f
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9778f1fe4117e-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": {
+    "order_id": "260815214001486"
+  }
+}
+==============================================================================
+
+==============================================================================
+===== [36] GET https://api-sandbox.upstox.com/v2/order/history =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 200
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:01 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 81dce37a-76a8-48e3-bb6a-9f2996bad1d3
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  requestid: b00d4bff-f7cb-4db6-a142-2e18b9d9a5fd
+  x-content-type-options: nosniff
+  x-xss-protection: 0
+  Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+  pragma: no-cache
+  expires: 0
+  strict-transport-security: max-age=0; includeSubDomains
+  x-frame-options: DENY
+  set-cookie: <REDACTED>
+  cf-cache-status: DYNAMIC
+  Content-Encoding: gzip
+  Server: cloudflare
+  CF-RAY: a2b9778fa97b1d31-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "success",
+  "data": [
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 24,
+      "status": "put order req received",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE101A01026",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214001486",
+      "order_request_id": "UDAPI-92f9e8cf-f8e0-4e52-a6fe-a2e971bba83f",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "M&M",
+      "trading_symbol": "M&M",
+      "order_timestamp": "2026-08-15 21:40:01",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 24,
+      "status": "validation pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE101A01026",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214001486",
+      "order_request_id": "UDAPI-92f9e8cf-f8e0-4e52-a6fe-a2e971bba83f",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "M&M",
+      "trading_symbol": "M&M",
+      "order_timestamp": "2026-08-15 21:40:01",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    },
+    {
+      "exchange": "NSE",
+      "price": 0.0,
+      "product": "D",
+      "quantity": 24,
+      "status": "open pending",
+      "tag": "alphacore-basket-2026-07-31",
+      "validity": "DAY",
+      "average_price": 0.0,
+      "disclosed_quantity": 0,
+      "exchange_order_id": null,
+      "exchange_timestamp": null,
+      "instrument_token": "NSE_EQ|INE101A01026",
+      "is_amo": false,
+      "status_message": null,
+      "order_id": "260815214001486",
+      "order_request_id": "UDAPI-92f9e8cf-f8e0-4e52-a6fe-a2e971bba83f",
+      "order_type": "MARKET",
+      "parent_order_id": "NA",
+      "tradingsymbol": "M&M",
+      "trading_symbol": "M&M",
+      "order_timestamp": "2026-08-15 21:40:01",
+      "filled_quantity": 0,
+      "transaction_type": "BUY",
+      "trigger_price": 0.0,
+      "placed_by": null,
+      "variety": null
+    }
+  ]
+}
+==============================================================================
+
+==============================================================================
+===== [37] GET https://api-sandbox.upstox.com/v2/order/trades =====
+REQUEST HEADERS:
+  Authorization: Bearer <REDACTED>
+REQUEST BODY: <none>
+RESPONSE STATUS: 500
+RESPONSE HEADERS:
+  Date: Sat, 15 Aug 2026 16:10:01 GMT
+  Content-Type: application/json
+  Transfer-Encoding: chunked
+  Connection: keep-alive
+  reqid: 424b9d32-b6bd-4e49-bd2f-4a83c8118e60
+  vary: Origin, Access-Control-Request-Method, Access-Control-Request-Headers
+  message: request failed
+  requestid: 424b9d32-b6bd-4e49-bd2f-4a83c8118e60
+  cf-cache-status: DYNAMIC
+  set-cookie: <REDACTED>
+  Strict-Transport-Security: max-age=0; includeSubDomains
+  Server: cloudflare
+  CF-RAY: a2b977904dad34ca-BOM
+  alt-svc: h3=":443"; ma=86400
+RESPONSE BODY:
+{
+  "status": "error",
+  "errors": [
+    {
+      "errorCode": "UDAPI100500",
+      "message": "Something went wrong... please contact us",
+      "propertyPath": null,
+      "invalidValue": null,
+      "error_code": "UDAPI100500",
+      "property_path": null,
+      "invalid_value": null
+    }
+  ]
+}
+==============================================================================
