@@ -9,7 +9,7 @@
 AlphaCore is a solo research project on NSE equities with three parts:
 
 1. **A C++20 matching engine**: flat-array price map, lock-free MPSC queue, primary–backup replication and a pybind11 bridge to Python.
-2. **Formal verification**: bounded TLA+ models of the queue, replication, matching and order-book logic, checked with TLC.
+2. **Model checking**: bounded TLA+ models of the queue, replication, matching and order-book logic, checked with TLC.
 3. **A signal research program**: nine experiments on NIFTY 50 daily data with pre-committed protocols and stationary-bootstrap confidence intervals. **Frozen-data v2 reruns do not establish a statistically significant, cost-surviving edge.**
 
 A Python backend (FastAPI, order-book detectors, backtester, paper-trading harness) and a React/Vite dashboard sit around these parts.
@@ -49,25 +49,30 @@ Those earlier-run figures are historical, not the measurements in this table.
 
 **Tests:** `engine_test`, `replication_test`, `gateway_test`, `fault_test`, `ha_chaos_test`, `deterministic_replay_test`, plus `mpsc_tsan_test` built under ThreadSanitizer. Linux CI passes these Release tests and the TSan test; the macOS gateway test uses a stub.
 
-## Formal verification (TLA+)
+## Model checking (TLA+)
 
 All results are from **bounded / reduced models**: small constants, checked exhaustively by TLC. They are not proofs about the unbounded system.
 
-Specs in `specs/tla/`, checked in CI with tla2tools v1.7.4 (source: [`research/ALPHACORE_CPP_UPGRADE_REPORT.md`](research/ALPHACORE_CPP_UPGRADE_REPORT.md), Part 3):
+Every model, configuration and state count below is generated from tracked
+records (CI log extract [`report/data/ci_tlc.json`](report/data/ci_tlc.json),
+the [specs README](specs/README.md), the [counterexample trace](specs/tla_engine_models/history/SinglePrimaryPerEpoch.txt)),
+checked with tla2tools v1.7.4. Rows labelled *earlier run* quote
+[`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md) and are not what CI runs now.
 
-| Spec | Model | States generated | Distinct states | Invariants |
-|---|---|---:|---:|---|
-| `MpscQueue.tla` | 2 producers, 1 consumer, Capacity=4 | 1,243,889 | 327,308 | NoTornRead, ItemsInOutAreFromEnqueue, NoDuplicates, FullQueueBackpressure |
-| `PrimaryBackup.tla` | 2 nodes, epoch fencing, network faults | 280,331 | 29,500 | AtMostOneLeader, ActiveEpochUnique, NoSplitBrain, EpochFencing, PromotionOnlyOnTimeout, CommittedDataSafe |
-
-Models in `specs/tla_engine_models/` (source: [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md), "TLA+ Formal Verification"):
-
-| Spec | Model | States generated | Distinct states | Invariants |
-|---|---|---:|---:|---|
-| `MpscQueue.tla` | bounded | 421 | 289 | TypeInv, NeverOverflow, Linearizability, NoDataLoss |
-| `MatchingEngine.tla` | reduced model | 24,445 | 22,177 | PriceTimePriority, NoCrossTrading, NoOrderLoss |
-| `OrderBook.tla` | reduced model (3 prices, 3 order IDs, 2 quantities) | 2,901,043 | 1,786,483 | NoGhostOrders, QuantityConservation |
-| `PrimaryBackup.tla` | fenced 2-node replication, partitions/loss/restart, N=6, HeartbeatLoss=2, MaxMsgs=3 (local run 2026-11-13) | 526,142,487 | 65,620,528 | TypeInv, SinglePrimaryPerEpoch, NoStaleApply, CommittedDataSafe |
+<!-- BEGIN generated:tla (scripts/report/build_assets.py --update-readme; do not edit) -->
+| Spec | Config | States generated | Distinct states | Invariants checked | Result | Where run |
+|---|---|---:|---:|---|---|---|
+| `tla/MpscQueue.tla` | `MpscQueue.cfg` | 1,243,889 | 327,308 | NoTornRead, ItemsInOutAreFromEnqueue, NoDuplicates | no error | [CI](report/data/ci_tlc.json) |
+| `tla/PrimaryBackup.tla` | `PrimaryBackup.cfg` | 280,331 | 29,500 | AtMostOneLeader, ActiveEpochUnique, NoSplitBrain, PromotionOnlyOnTimeout (property), CommittedDataSafe (property), EpochFencing (property) | no error | [CI](report/data/ci_tlc.json) |
+| `tla_engine_models/MpscQueue.tla` | `ModelMpsc_tiny.cfg` | 8 | 7 | TypeInv, NeverOverflow, Linearizability, NoDataLoss | no error | [CI](report/data/ci_tlc.json) |
+| `tla_engine_models/MatchingEngine.tla` | `ModelMatching_small2.cfg` | 901 | 901 | PriceTimePriority, NoCrossTrading, NoOrderLoss | no error | [CI](report/data/ci_tlc.json) |
+| `tla_engine_models/OrderBook.tla` | `ModelOrderBook_small3.cfg` | 1,045 | 709 | NoGhostOrders, QuantityConservation | no error | [CI](report/data/ci_tlc.json) |
+| `tla_engine_models/PrimaryBackup.tla` | `ModelPrimaryBackup.cfg` | 526,142,487 | 65,620,528 | TypeInv, SinglePrimaryPerEpoch, NoStaleApply, CommittedDataSafe | no error | [CI](report/data/ci_tlc.json); local (specs/README.md) |
+| `tla_engine_models/MpscQueue.tla` | not recorded | 421 | 289 | TypeInv, NeverOverflow, Linearizability, NoDataLoss | no error (earlier run) | earlier run (ALPHACORE_STATUS_REPORT.md) |
+| `tla_engine_models/MatchingEngine.tla` | not recorded | 24,445 | 22,177 | PriceTimePriority, NoCrossTrading, NoOrderLoss | no error (earlier run) | earlier run (ALPHACORE_STATUS_REPORT.md) |
+| `tla_engine_models/OrderBook.tla` | not recorded | 2,901,043 | 1,786,483 | NoGhostOrders, QuantityConservation | no error (earlier run) | earlier run (ALPHACORE_STATUS_REPORT.md) |
+| `tla_engine_models/history/PrimaryBackup.tla` | `ModelPrimaryBackup.cfg` | 71 | 47 | TypeInv, SinglePrimaryPerEpoch, PromotionRequiresMissedHeartbeats, StaleEpochFenced | SinglePrimaryPerEpoch violated | local (history/SinglePrimaryPerEpoch.txt) |
+<!-- END generated:tla -->
 
 ## Signal research
 

@@ -57,7 +57,7 @@ def tla_table(macros: dict[str, str]) -> str:
 
 
 def regions(macros: dict[str, str]) -> dict[str, str]:
-    return {"headline": HEADLINE.format(**macros)}
+    return {"headline": HEADLINE.format(**macros), "tla": tla_table(macros)}
 
 
 def replace_region(text: str, name: str, body: str) -> str:
