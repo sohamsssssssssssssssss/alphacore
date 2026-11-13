@@ -27,9 +27,10 @@ def write_text(asset: Asset, content: str) -> None:
     out.write_text(content)
 
 
+import report_figures  # noqa: E402
 import report_tables  # noqa: E402
 
-GENERATORS: list = [*report_tables.GENERATORS]  # (path under report/, function(asset) -> str | None)
+GENERATORS: list = [*report_tables.GENERATORS, *report_figures.GENERATORS]  # (path under report/, function(asset) -> str | None)
 
 
 def generate() -> list[Asset]:
