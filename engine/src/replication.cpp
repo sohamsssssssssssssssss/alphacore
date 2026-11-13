@@ -5,6 +5,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <poll.h>
+#include <sys/time.h>
+
+#include <cerrno>
 #include <chrono>
 #include <cstring>
 #include <fstream>
@@ -210,16 +214,16 @@ void BackupReceiver::stop() {
     running_.store(false, std::memory_order_release);
     listening_ready_.store(false, std::memory_order_release);
 
-    // exchange: the receiver thread reads these fds concurrently; close each once.
-    for (auto* slot : {&conn_fd_, &listen_fd_}) {
-        const int fd = slot->exchange(-1);
-        if (fd >= 0) {
-            ::shutdown(fd, SHUT_RDWR);
-            ::close(fd);
-        }
-    }
+    // Only the receiver thread uses the fds; it wakes every 100 ms to see
+    // running_ == false, so join first and close afterwards (no cross-thread close).
     if (thread_.joinable()) {
         thread_.join();
+    }
+    for (int* fd : {&conn_fd_, &listen_fd_}) {
+        if (*fd >= 0) {
+            ::close(*fd);
+            *fd = -1;
+        }
     }
 }
 
@@ -235,6 +239,9 @@ bool BackupReceiver::recv_exact(int fd, std::uint8_t* out, std::size_t len) {
     std::size_t off = 0;
     while (off < len && running_.load(std::memory_order_acquire)) {
         const ssize_t n = ::recv(fd, out + off, len - off, 0);
+        if (n < 0 && (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR)) {
+            continue;  // receive timeout: re-check running_
+        }
         if (n <= 0) {
             return false;
         }
@@ -271,25 +278,27 @@ void BackupReceiver::run(std::uint16_t port) {
 
     if (::bind(listen_fd_, reinterpret_cast<sockaddr*>(&addr), sizeof(addr)) != 0 ||
         ::listen(listen_fd_, 1) != 0) {
-        const int fd = listen_fd_.exchange(-1);
-        if (fd >= 0) {
-            ::close(fd);
-        }
+        ::close(listen_fd_);
+        listen_fd_ = -1;
         running_.store(false, std::memory_order_release);
         return;
     }
     listening_ready_.store(true, std::memory_order_release);
 
     while (running_.load(std::memory_order_acquire)) {
+        pollfd pfd{listen_fd_, POLLIN, 0};
+        if (::poll(&pfd, 1, 100) <= 0) {
+            continue;  // timeout: re-check running_
+        }
         sockaddr_in caddr{};
         socklen_t clen = sizeof(caddr);
         conn_fd_ = ::accept(listen_fd_, reinterpret_cast<sockaddr*>(&caddr), &clen);
         if (conn_fd_ < 0) {
-            if (!running_.load(std::memory_order_acquire)) {
-                break;
-            }
             continue;
         }
+        timeval tv{};
+        tv.tv_usec = 100 * 1000;
+        ::setsockopt(conn_fd_, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
 
         while (running_.load(std::memory_order_acquire)) {
             std::uint8_t header[kFrameHeaderBytes];
@@ -312,9 +321,7 @@ void BackupReceiver::run(std::uint16_t port) {
             apply_entry(entry);
         }
 
-        const int fd = conn_fd_.exchange(-1);
-        if (fd >= 0) {
-            ::close(fd);
-        }
+        ::close(conn_fd_);
+        conn_fd_ = -1;
     }
 }

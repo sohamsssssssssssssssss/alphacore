@@ -79,6 +79,6 @@ private:
     std::thread thread_;
     std::function<void(const std::vector<std::uint8_t>&)> apply_handler_;
     std::mutex apply_mu_;
-    std::atomic<int> listen_fd_;
-    std::atomic<int> conn_fd_;
+    int listen_fd_;  // used only by the receiver thread until stop() has joined it
+    int conn_fd_;
 };
