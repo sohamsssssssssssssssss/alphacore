@@ -88,10 +88,14 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--check", action="store_true", help="run check_report.py after generating")
     ap.add_argument("--pdf", action="store_true", help="build report/main.pdf after generating")
+    ap.add_argument("--update-readme", action="store_true", help="rewrite README.md generated regions from the macros")
     args = ap.parse_args()
     GENERATED.mkdir(exist_ok=True)
     FIGURES.mkdir(exist_ok=True)
     write_sources(generate())
+    if args.update_readme:
+        import report_readme
+        report_readme.update_readme()
     if args.check:
         import check_report
         if check_report.main() != 0:

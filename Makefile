@@ -8,6 +8,6 @@ engine-build engine-test engine-bench tla py-test fetch-data experiments all:
 # only the PDF step fails.
 .PHONY: report report-assets
 report-assets:
-	$(PYTHON) scripts/report/build_assets.py
+	$(PYTHON) scripts/report/build_assets.py --check
 report:
-	$(PYTHON) scripts/report/build_assets.py --pdf
+	$(PYTHON) scripts/report/build_assets.py --check --pdf
