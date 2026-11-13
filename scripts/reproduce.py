@@ -214,13 +214,14 @@ def tla():
     if not jar.exists():
         run(["curl", "-sfL", "https://github.com/tlaplus/tlaplus/releases/download/v1.7.4/tla2tools.jar", "-o", jar])
     checks = [("tla", "MpscQueue", "MpscQueue"), ("tla", "PrimaryBackup", "PrimaryBackup")]
-    # The known replication failure is isolated in advisory CI: specs/REPLICATION_FINDING.md.
-    checks += [("tla_engine_models", spec, cfg) for spec, cfg in MODELS if spec != "PrimaryBackup"]
+    checks += [("tla_engine_models", spec, cfg) for spec, cfg in MODELS]
     failed = False
     for directory, spec, cfg in checks:
         meta = Path(tempfile.mkdtemp(prefix=spec + "-", dir=scratch))
         try:
-            run([os.environ.get("JAVA", "java"), "-Xmx2g", "-cp", jar, "tlc2.TLC", ROOT / "specs" / directory / (spec + ".tla"), "-config", ROOT / "specs" / directory / (cfg + ".cfg"), "-deadlock", "-metadir", meta], timeout=300)
+            # The fenced engine PrimaryBackup model is ~65.6M distinct states (4 min on 10 workers).
+            big = (directory, spec) == ("tla_engine_models", "PrimaryBackup")
+            run([os.environ.get("JAVA", "java"), "-Xmx8g" if big else "-Xmx2g", "-cp", jar, "tlc2.TLC", ROOT / "specs" / directory / (spec + ".tla"), "-config", ROOT / "specs" / directory / (cfg + ".cfg"), "-deadlock", "-workers", "auto", "-metadir", meta], timeout=2400 if big else 300)
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as exc:
             print(f"FAILED {directory}/{spec}: {exc}", flush=True)
             failed = True

@@ -67,6 +67,7 @@ Models in `specs/tla_engine_models/` (source: [`ALPHACORE_STATUS_REPORT.md`](ALP
 | `MpscQueue.tla` | bounded | 421 | 289 | TypeInv, NeverOverflow, Linearizability, NoDataLoss |
 | `MatchingEngine.tla` | reduced model | 24,445 | 22,177 | PriceTimePriority, NoCrossTrading, NoOrderLoss |
 | `OrderBook.tla` | reduced model (3 prices, 3 order IDs, 2 quantities) | 2,901,043 | 1,786,483 | NoGhostOrders, QuantityConservation |
+| `PrimaryBackup.tla` | fenced 2-node replication, partitions/loss/restart, N=6, HeartbeatLoss=2, MaxMsgs=3 (local run 2026-11-13) | 526,142,487 | 65,620,528 | TypeInv, SinglePrimaryPerEpoch, NoStaleApply, CommittedDataSafe |
 
 ## Signal research
 
@@ -126,7 +127,7 @@ From [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md):
 - **RL:** the "multi-agent" PPO code is single-agent (independent copies, no interaction) and runs on synthetic data only.
 - **NSGA-II:** an earlier Sharpe 1.70 / Calmar 3.33 figure was **not reproduced**; its origin is unclear.
 - **Fault injection:** only 2 of the 10 fault types in `engine/src/fault_injector.hpp` (`POOL_EXHAUSTION`, `QUEUE_FULL`) are wired into production code.
-- **Replication:** verdict B — stale-local-epoch promotion can leave two live primaries in one epoch; the C++ hole is diagnosed, not fixed. See [REPLICATION_FINDING.md](specs/REPLICATION_FINDING.md).
+- **Verification found and fixed a replication fencing bug:** TLC showed stale-local-epoch promotion could leave two primaries in one epoch, and a C++ regression reproduced it. Promotion is now fenced with node-owned epochs and stale-epoch rejection, checked by TLC and C++ tests. Two nodes have no quorum: both can still be primary across a partition (in different epochs), and the epoch is not persisted across restarts. See [REPLICATION_FINDING.md](specs/REPLICATION_FINDING.md).
 - **ITCH gateway:** Linux-only (`epoll`/`sendmsg`). On macOS, `gateway_test` runs a stub.
 - **Benchmarks:** `benchmarks/results.md` is a **legacy HTTP-layer load test run on Python 3.14**. It measures the FastAPI layer, not the engine, and is not used for any claim here.
 
@@ -147,9 +148,8 @@ SIGABRT; those parser cases are not validated. The throughput benchmark keeps
 its original threshold and is excluded with `-m "not benchmark"`.
 
 Repository-root collection before the final basket-summary self-check succeeded: **1028 tests collected**, with five
-optional bridge modules skipped. C++ Release and TSan tests pass;
-the unchanged engine PrimaryBackup model still violates SinglePrimaryPerEpoch.
-Its separate `tla-known-counterexample` job is advisory; see [the finding](specs/REPLICATION_FINDING.md).
+optional bridge modules skipped. C++ Release and TSan tests pass,
+including `split_brain_counterexample` and `fencing_test`; see [the finding](specs/REPLICATION_FINDING.md).
 
 ## Setup
 
@@ -167,16 +167,20 @@ cmake -S engine -B engine/build -DCMAKE_BUILD_TYPE=Release
 cmake --build engine/build -j8
 (cd engine/build && ./engine_test && ./replication_test && ./gateway_test \
   && ./ha_chaos_test && ./deterministic_replay_test \
+  && ./split_brain_counterexample && ./fencing_test \
   && OB_FAULT_POOL_EXHAUSTION=1 OB_FAULT_QUEUE_FULL=1 ./fault_test)
 
 # ThreadSanitizer build
 cmake -S engine -B engine/build_tsan -DALPHACORE_TSAN=ON
-cmake --build engine/build_tsan --target mpsc_tsan_test && ./engine/build_tsan/mpsc_tsan_test
+cmake --build engine/build_tsan --target mpsc_tsan_test fencing_tsan_test
+./engine/build_tsan/mpsc_tsan_test && ./engine/build_tsan/fencing_tsan_test
 
 # TLA+ (tla2tools v1.7.4)
 cd specs/tla
 java -cp /path/to/tla2tools.jar tlc2.TLC MpscQueue.tla -config MpscQueue.cfg -deadlock
 java -cp /path/to/tla2tools.jar tlc2.TLC PrimaryBackup.tla -config PrimaryBackup.cfg -deadlock
+cd ../tla_engine_models
+java -Xmx8g -cp /path/to/tla2tools.jar tlc2.TLC PrimaryBackup.tla -config ModelPrimaryBackup.cfg -deadlock -workers auto
 cd ../..
 
 # Dashboard
@@ -223,7 +227,8 @@ measurements append to `engine/benchmarks/RESULTS.md`. The v1 scratch-comparison
 helper remains in `scripts/reproduce.py` for historical audit, while the
 standard experiments target runs v2.
 
-The known failing replication model and expected-failing C++ regression are
-kept separate from passing checks; neither is claimed fixed. See
+The original failing replication model and its trace are kept, not run, under
+`specs/tla_engine_models/history/`; the fenced model and the former C++
+counterexample now run with the passing checks. See
 [REPLICATION_FINDING.md](specs/REPLICATION_FINDING.md). Other large TLA model
 configurations are not claimed checked.

@@ -19,26 +19,29 @@ Each execution had a 300-second timeout.
 | MpscQueue | ModelMpsc_tiny.cfg | 0.89 | pass |
 | MatchingEngine | ModelMatching_small2.cfg | 1.04 | pass |
 | OrderBook | ModelOrderBook_small3.cfg | 0.94 | pass |
-| PrimaryBackup | ModelPrimaryBackup.cfg | 0.89 | invariant failure, exit 12 |
+| PrimaryBackup (unfenced, now `history/`) | ModelPrimaryBackup.cfg | 0.89 | invariant failure, exit 12 |
 
-All four completed under five minutes, so CI runs all four with a per-model
-300-second timeout. These small configurations are bounded checks, not proofs
-of larger configurations or the implementation. Other supplied configurations
-remain available locally and were not timed in this pass.
+These small configurations are bounded checks, not proofs of larger
+configurations or the implementation. Other supplied configurations remain
+available locally and were not timed in this pass.
 
-### Known counterexample (kept visible in CI)
+### Replication: counterexample found, then fixed
 
-PrimaryBackup violates `SinglePrimaryPerEpoch`: the initial primary is alive
-at epoch 1; the backup misses two heartbeats and promotes from backupEpoch=0
-to backupEpoch=1 while the original primary remains alive at epoch 1. The
-unchanged model therefore has two primaries in the same epoch. The four-state
-counterexample is reproducible with:
+The original PrimaryBackup model violated `SinglePrimaryPerEpoch`: the initial
+primary is alive at epoch 1; the backup misses two heartbeats and promotes from
+backupEpoch=0 to backupEpoch=1 while the original primary remains alive at
+epoch 1. That model, its config and the four-state trace are kept unchanged in
+`tla_engine_models/history/` as the record; they are not run in CI:
 
 ```sh
-java -cp .reproduce/tla/tla2tools.jar tlc2.TLC \
-  specs/tla_engine_models/PrimaryBackup.tla \
-  -config specs/tla_engine_models/ModelPrimaryBackup.cfg -deadlock
+cd specs/tla_engine_models/history
+java -cp ../../../.reproduce/tla/tla2tools.jar tlc2.TLC PrimaryBackup.tla \
+  -config ModelPrimaryBackup.cfg -deadlock
 ```
 
-This failure is not skipped, made non-fatal, or addressed by removing an
-invariant. Fixing spec logic is outside this phase's authorization.
+`tla_engine_models/PrimaryBackup.tla` now specifies the fenced protocol and
+passes with the same constants (N=6, HeartbeatLoss=2, MaxMsgs=3): 526,142,487
+states generated, 65,620,528 distinct, 4 min 12 s on 10 workers (macOS arm64,
+8 GiB heap, 2026-11-13). It is too large for the 300-second per-model budget
+above, so CI runs it as a separate step with a 2400-second timeout. See
+[REPLICATION_FINDING.md](REPLICATION_FINDING.md).
