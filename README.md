@@ -10,7 +10,7 @@ AlphaCore is a solo research project on NSE equities with three parts:
 
 1. **A C++20 matching engine**: flat-array price map, lock-free MPSC queue, primary–backup replication and a pybind11 bridge to Python.
 2. **Formal verification**: bounded TLA+ models of the queue, replication, matching and order-book logic, checked with TLC.
-3. **A signal research program**: nine experiments on NIFTY 50 daily data with pre-committed protocols and stationary-bootstrap confidence intervals. **The result is negative: no configuration produced a cost-surviving edge.**
+3. **A signal research program**: nine experiments on NIFTY 50 daily data with pre-committed protocols and stationary-bootstrap confidence intervals. **Frozen-data v2 reruns do not establish a statistically significant, cost-surviving edge.**
 
 A Python backend (FastAPI, order-book detectors, backtester, paper-trading harness) and a React/Vite dashboard sit around these parts.
 
@@ -65,25 +65,40 @@ Models in `specs/tla_engine_models/` (source: [`ALPHACORE_STATUS_REPORT.md`](ALP
 
 ## Signal research
 
-Nine experiments on NIFTY 50 data. Each was run against a protocol (or selection rule) committed before the test period was evaluated. Confidence intervals come from a stationary bootstrap (Politis–Romano). The cost model is in `backend/engines/cost_model.py`.
+Experiments 3–8 and the exploratory K=12 basket have been rerun on a
+[hash-frozen snapshot](data_snapshots/2026-11/MANIFEST.json). Both the point
+Sharpe and its stationary-bootstrap CI now use annual risk-free rate 0.065.
+The [metrics erratum](research/METRICS_ERRATUM.md) identifies inconsistent v1
+pairs and the already-consistent exceptions. No strategy, cost model, seed or
+locked configuration was tuned or reselected.
 
-**Result: no configuration produced a cost-surviving, statistically significant edge.** The least-bad configuration was 49 symbols, K=1 (one long and one short), a 21-trading-day rebalance, daily bars: **Sharpe −1.57, 95% CI [−3.14, +0.05]**. Sources: [`UNIVERSE_EXPANSION_EXPERIMENT_REPORT.md`](research/UNIVERSE_EXPANSION_EXPERIMENT_REPORT.md), [`K_EXPANSION_EXPERIMENT_REPORT.md`](research/K_EXPANSION_EXPERIMENT_REPORT.md).
+**Result: no tested configuration establishes a statistically significant,
+cost-surviving edge in the v2 reruns.** Long/short K=1 on the expanded universe
+has Sharpe **-3.7785951031419356**, CI **[-5.172710614919728, -2.2318427709874316]**
+([raw result](research/v2/experiment_7_universe_49.json)). The long-only K=12
+basket has Sharpe **0.6575848803769175**, CI **[-0.2336407666642999, 1.3619463317249594]**
+([raw result](research/v2/k12_basket.json)). Its CI includes zero, and its final-63-session
+ADV cost lookahead remains. Its Sharpe is not comparable to the long/short
+experiments. See the [complete v2 table and limitations](research/v2/SUMMARY.md).
+V1 reports/results below are historical and remain unchanged. Experiment 9 is
+**not reproducible: source data no longer obtainable** under Yahoo's hourly
+retention limit; no substitute window was used.
 
 The list follows [`INTRADAY_SIGNAL_EXPERIMENT_PROTOCOL.md`](research/INTRADAY_SIGNAL_EXPERIMENT_PROTOCOL.md):
 
-| # | Experiment | Protocol | Report |
-|---|---|---|---|
-| 1 | Single-symbol momentum / mean-reversion / OFI | selection rule in `backend/experiments/run_real_backtest.py` | [report](research/ALPHACORE_BACKTEST_REPORT.md) |
-| 2 | NSGA-II vs equal signal weights | [synthetic](research/EXPERIMENT_PROTOCOL.md), [real data](research/REAL_DATA_EXPERIMENT_PROTOCOL.md) | [synthetic](research/SIGNAL_WEIGHT_EXPERIMENT_REPORT.md), [real data](research/REAL_DATA_EXPERIMENT_REPORT.md) |
-| 3 | Cross-sectional relative strength, 5-day rebalance | [protocol](research/CROSS_SECTIONAL_EXPERIMENT_PROTOCOL.md) | [report](research/CROSS_SECTIONAL_EXPERIMENT_REPORT.md) |
-| 4 | Cross-sectional relative strength, monthly rebalance | [protocol](research/CROSS_SECTIONAL_MONTHLY_PROTOCOL.md) | [report](research/CROSS_SECTIONAL_MONTHLY_REPORT.md) |
-| 5–6 | Overnight gap reversal; post-earnings drift (PEAD) | [protocol](research/OVERNIGHT_GAP_EXPERIMENT_PROTOCOL.md) | [report](research/OVERNIGHT_GAP_EXPERIMENT_REPORT.md) |
-| 7 | Universe expansion, 5 → 49 symbols | [protocol](research/UNIVERSE_EXPANSION_EXPERIMENT_PROTOCOL.md) | [report](research/UNIVERSE_EXPANSION_EXPERIMENT_REPORT.md) |
-| 8 | Position-count expansion, K = 1 / 5 / 10 | [protocol](research/K_EXPANSION_EXPERIMENT_PROTOCOL.md) | [report](research/K_EXPANSION_EXPERIMENT_REPORT.md) |
-| 9 | Same signal on 60-minute bars | [protocol](research/INTRADAY_SIGNAL_EXPERIMENT_PROTOCOL.md) | [report](research/INTRADAY_SIGNAL_EXPERIMENT_REPORT.md) |
-| 10 | K=12 monthly top-quartile basket, lookback 21 | [exploratory, not pre-registered](research/K12_BASKET_HYPOTHESIS.md) | [provenance audit; raw result missing, selection bias](research/K12_BASKET_PROVENANCE.md) |
+| # | Experiment | Protocol | v1 report (historical) | v2 |
+|---|---|---|---|---|
+| 1 | Single-symbol momentum / mean-reversion / OFI | selection rule in `backend/experiments/run_real_backtest.py` | [report](research/ALPHACORE_BACKTEST_REPORT.md) | not rerun (would reselect weights) |
+| 2 | NSGA-II vs equal signal weights | [synthetic](research/EXPERIMENT_PROTOCOL.md), [real data](research/REAL_DATA_EXPERIMENT_PROTOCOL.md) | [synthetic](research/SIGNAL_WEIGHT_EXPERIMENT_REPORT.md), [real data](research/REAL_DATA_EXPERIMENT_REPORT.md) | not rerun (legacy selection drivers) |
+| 3 | Cross-sectional relative strength, 5-day rebalance | [protocol](research/CROSS_SECTIONAL_EXPERIMENT_PROTOCOL.md) | [report](research/CROSS_SECTIONAL_EXPERIMENT_REPORT.md) | [result](research/v2/experiment_3_cross_sectional.json) |
+| 4 | Cross-sectional relative strength, monthly rebalance | [protocol](research/CROSS_SECTIONAL_MONTHLY_PROTOCOL.md) | [report](research/CROSS_SECTIONAL_MONTHLY_REPORT.md) | [result](research/v2/experiment_4_monthly.json) |
+| 5–6 | Overnight gap reversal; post-earnings drift (PEAD) | [protocol](research/OVERNIGHT_GAP_EXPERIMENT_PROTOCOL.md) | [report](research/OVERNIGHT_GAP_EXPERIMENT_REPORT.md) | [gap](research/v2/experiment_5_overnight_gap.json), [PEAD](research/v2/experiment_6_pead.json) |
+| 7 | Universe expansion, 5 → 49 symbols | [protocol](research/UNIVERSE_EXPANSION_EXPERIMENT_PROTOCOL.md) | [report](research/UNIVERSE_EXPANSION_EXPERIMENT_REPORT.md) | [5](research/v2/experiment_7_universe_5.json), [49](research/v2/experiment_7_universe_49.json) |
+| 8 | Position-count expansion, K = 1 / 5 / 10 | [protocol](research/K_EXPANSION_EXPERIMENT_PROTOCOL.md) | [report](research/K_EXPANSION_EXPERIMENT_REPORT.md) | [K1](research/v2/experiment_8_k1.json), [K5](research/v2/experiment_8_k5.json), [K10](research/v2/experiment_8_k10.json) |
+| 9 | Same signal on 60-minute bars | [protocol](research/INTRADAY_SIGNAL_EXPERIMENT_PROTOCOL.md) | [report](research/INTRADAY_SIGNAL_EXPERIMENT_REPORT.md) | [unavailable](research/v2/experiment_9_hourly.json) |
+| 10 | K=12 monthly top-quartile basket, lookback 21 | [exploratory, not pre-registered](research/K12_BASKET_HYPOTHESIS.md) | [provenance audit; raw result missing, selection bias](research/K12_BASKET_PROVENANCE.md) | [result](research/v2/k12_basket.json) |
 
-Result JSONs sit next to the reports in `research/`.
+V1 JSONs remain alongside historical reports; new outputs and raw returns are confined to `research/v2/`.
 
 ## Data
 
@@ -112,7 +127,7 @@ From [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md):
 
 ## Tests
 
-Python 3.11 non-benchmark results observed on 2026-11-13:
+Phase 2 baseline counts, before the Phase 2B metrics/snapshot changes (2026-11-13):
 
 | Environment | Passed | Skipped | Deselected |
 |---|---:|---:|---:|
@@ -128,8 +143,8 @@ its original threshold and is excluded with `-m "not benchmark"`.
 
 Repository-root collection before the final basket-summary self-check succeeded: **1028 tests collected**, with five
 optional bridge modules skipped. C++ Release and TSan tests pass, but overall
-Phase 2 CI is **failing**: the newly exercised, unchanged engine PrimaryBackup
-TLA model violates SinglePrimaryPerEpoch (see [specs/README.md](specs/README.md)).
+the unchanged engine PrimaryBackup model still violates SinglePrimaryPerEpoch.
+Its separate `tla-known-counterexample` job is advisory; see [the finding](specs/REPLICATION_FINDING.md).
 
 ## Setup
 
@@ -169,49 +184,41 @@ MIT
 
 ## Reproduction
 
-Use Python 3.11 and the backend dependencies; install `pybind11==3.0.1` for
-the C++ bridge, and `pytest pytest-asyncio httpx hypothesis` for tests.
-CMake, a C++20 compiler, Java and curl are also required. From the repo root:
+Use Python 3.11, backend dependencies, `pybind11==3.0.1`, and
+`pytest pytest-asyncio httpx hypothesis`; CMake, a C++20 compiler, Java and curl
+are required for engine/model checks.
 
 ```sh
-make all
+make fetch-data     # first recovery, or hash verification of existing frozen files
+make experiments    # locked experiments 3–8 and K12 -> research/v2/
+make all            # builds/tests/benchmarks/passing TLA models, snapshot verification, v2 runs
 ```
 
-Individual targets are `engine-build`, `engine-test`, `engine-bench`, `tla`,
-`py-test`, `fetch-data`, and `experiments`; override the interpreter with
-`make PYTHON=/path/to/python3.11 ...` and Java with the `JAVA` environment
-variable. Build artifacts and experiment outputs go under ignored
-`.reproduce/`. Engine tests/benchmarks require `engine-build` first. The
-benchmark target appends actual measurements to `engine/benchmarks/RESULTS.md`.
+The committed [manifest](data_snapshots/2026-11/MANIFEST.json) records per-file
+hashes, rows, date bounds, timestamps and provider version. All snapshot CSVs
+stay gitignored. Existing payloads are never refetched; missing payloads are
+accepted only if recovered bytes match the committed hash. If Yahoo revisions
+prevent recovery, the command fails rather than changing the manifest.
+The stock/index window is 2020-08-14 through 2026-08-13; each experiment uses
+its original documented sub-window and calendar holdout. The original v1
+CSV snapshot is still missing. Hourly experiment 9 is not substituted.
 
-`fetch-data` uses the original daily downloader's fixed dates, then attempts
-the committed hourly period (2024-08-01 through 2026-07-30). It preserves
-tracked metadata and never substitutes a more recent interval. On 2026-11-13,
-49 daily symbols were recovered; the K12 fetch uses its separate documented window and universe. Yahoo refused the hourly range because
-it lies outside its 730-day retention window. Original CSV snapshots are
-absent, so exact historical input recovery is not established. The fetched
-RELIANCE and TCS CSVs each have 1235 rows ending 2026-07-29; the committed
-five-symbol metadata records 1239 rows ending 2026-07-30. These are not
-identical inputs, and the window/count mismatch does not establish a cause
-for every metric difference.
+`make experiments` verifies the snapshot, uses the original backtester classes
+and locked v1 parameters, and writes raw returns, consistent point/CI metrics
+and the [summary](research/v2/SUMMARY.md). No N search or NSGA-II driver runs.
+All v1 research files are checked unchanged. K12 benchmarks are descriptive
+buy-and-hold at the same observation dates; the known cost lookahead and the
+original PEAD return-basis limitation remain documented.
 
-`experiments` runs the unchanged research scripts in a disposable copy,
-compares nested Sharpe/CI/net-PnL/trade metrics exactly against committed
-JSONs, and prints `experiment | committed | reproduced | match`. The legacy
-real-data validation baseline remains `backend/real_data_results.json`.
-The scratch directory retains stdout logs, comparison.json, source/data
-hashes and package versions. Source research files are checked unchanged.
-Missing outputs, mismatches and blocked runs produce a nonzero exit status.
-The two original NSGA-II drivers are blocked because they reselect weights;
-the K12 script uses its documented 2026-08-13 cutoff and unchanged monthly defaults on a fresh cache, but has no original JSON baseline. A fresh run cannot verify the missing original return series.
-The existing seeded synthetic weight-comparison run stays labelled synthetic.
-No new parameter search is performed. Differences are not called data
-revisions without evidence from an original input snapshot or hash.
+Individual targets remain `engine-build`, `engine-test`, `engine-bench`,
+`tla`, `py-test`, `fetch-data` and `experiments`. Use `PYTHON=/path/to/python3.11`
+and `JAVA=/path/to/java` where needed. Engine tests and benchmarks require
+`engine-build` first. Build artifacts stay under `.reproduce/`; benchmark
+measurements append to `engine/benchmarks/RESULTS.md`. The v1 scratch-comparison
+helper remains in `scripts/reproduce.py` for historical audit, while the
+standard experiments target runs v2.
 
-`all` attempts every target and reports failure if any target fails.
-Complete reproduction is currently **not green**: hourly inputs and K12 raw
-returns are missing, fetched-data daily metrics differ from the historical
-JSONs, and the unchanged engine PrimaryBackup model violates
-SinglePrimaryPerEpoch. [specs/README.md](specs/README.md) records the exact
-configurations, timing measurements and counterexample; its CI failure is
-kept visible. Other engine-model configurations are not claimed checked.
+The known failing replication model and expected-failing C++ regression are
+kept separate from passing checks; neither is claimed fixed. See
+[REPLICATION_FINDING.md](specs/REPLICATION_FINDING.md). Other large TLA model
+configurations are not claimed checked.
