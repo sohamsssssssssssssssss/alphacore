@@ -106,6 +106,7 @@ From [`ALPHACORE_STATUS_REPORT.md`](ALPHACORE_STATUS_REPORT.md):
 - **RL:** the "multi-agent" PPO code is single-agent (independent copies, no interaction) and runs on synthetic data only.
 - **NSGA-II:** an earlier Sharpe 1.70 / Calmar 3.33 figure was **not reproduced**; its origin is unclear.
 - **Fault injection:** only 2 of the 10 fault types in `engine/src/fault_injector.hpp` (`POOL_EXHAUSTION`, `QUEUE_FULL`) are wired into production code.
+- **Replication:** verdict B — stale-local-epoch promotion can leave two live primaries in one epoch; the C++ hole is diagnosed, not fixed. See [REPLICATION_FINDING.md](specs/REPLICATION_FINDING.md).
 - **ITCH gateway:** Linux-only (`epoll`/`sendmsg`). On macOS, `gateway_test` runs a stub.
 - **Benchmarks:** `benchmarks/results.md` is a **legacy HTTP-layer load test run on Python 3.14**. It measures the FastAPI layer, not the engine, and is not used for any claim here.
 

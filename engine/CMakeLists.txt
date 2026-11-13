@@ -111,3 +111,10 @@ if(ALPHACORE_TSAN)
     target_include_directories(mpsc_tsan_test PRIVATE src/)
     target_link_options(mpsc_tsan_test PRIVATE -fsanitize=thread)
 endif()
+
+# Known failing regression; excluded from default/CI builds: ../specs/REPLICATION_FINDING.md.
+add_executable(split_brain_counterexample EXCLUDE_FROM_ALL tests/split_brain_counterexample.cpp src/heartbeat.cpp)
+target_include_directories(split_brain_counterexample PRIVATE src/)
+enable_testing()
+add_test(NAME split_brain_counterexample COMMAND split_brain_counterexample)
+set_tests_properties(split_brain_counterexample PROPERTIES LABELS "known-counterexample")
