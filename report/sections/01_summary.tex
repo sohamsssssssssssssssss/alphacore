@@ -1,2 +1,10 @@
 \section{Summary}
-Placeholder: what was built, what was model-checked, and the two findings.
+AlphaCore is a solo project with two halves. The engineering half is a limit-order matching engine in C++ with a two-node primary--backup replication layer, plus TLA+ models of its queue, order book, matching rules and replication protocol. The research half is a set of backtests of momentum-style trading signals on NSE-listed equities, re-run on a frozen data snapshot.
+
+The report has two findings.
+
+\textbf{A replication bug, found and fixed by model checking.} The model checker TLC found a short trace in which the backup promotes itself into the epoch the live primary already holds, so two nodes lead in the same epoch. The C++ code had the same hole. The first fix I tried was rejected by the checker. The final fix passes the same configuration across \TlaEnginePrimaryBackupDistinct{} distinct states (Section~\ref{sec:model-checking}).
+
+\textbf{No trading edge.} On the frozen snapshot, \NumSigNegConfigs{} distinct long/short and gap configurations have a Sharpe interval entirely below zero after modelled costs, \NumInconclusiveConfigs{} is inconclusive, and the \NumExploratoryConfigs{} positive-looking result, a long-only basket, has an interval that includes zero and does not beat equal-weight buy-and-hold (Section~\ref{sec:results}).
+
+The report also lists the errors I found in my own earlier work (Section~\ref{sec:errors}), because several earlier claims in this repository did not survive re-checking. ``Model-checked'' in this report means an exhaustive search of small, hand-written models. It is not a proof about the C++ code.

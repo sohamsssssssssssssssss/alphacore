@@ -1,2 +1,14 @@
-\section{Errors found in our own work}
-Placeholder: the metric-definition erratum, unfrozen data, and the unsupported K-basket figure. The erratum table is in the appendix.
+\section{Errors found in our own work}\label{sec:errors}
+These are mistakes in earlier versions of this project, found while preparing the re-run. They are separate from the limitations of the setup in Section~\ref{sec:limitations}.
+
+\textbf{The Sharpe ratio and its interval used different definitions.} The point estimate subtracted the risk-free rate; the bootstrap interval did not. Several earlier reports therefore quoted a point that lay outside its own interval. The bootstrap now takes the risk-free rate as an input and every pair in this report uses one convention. The appendix lists each affected figure and the definitions it used (Table~\ref{tab:erratum}).
+
+\textbf{The data was not frozen.} The original runs fetched prices live and did not save them. Yahoo revises its history, so the original numbers cannot be reproduced exactly; the frozen-data values in this report differ from the originals. All results now read the checksummed snapshot.
+
+\textbf{A headline figure had nothing behind it.} The repository quoted a Sharpe ratio for the K$=$\BasketK{} basket whose raw result file and return series could not be found. A fresh run with unchanged parameters gives a nearby but different number. The quoted figure is treated as unverified and is not used. The audit also found that the basket was selected after the other configurations had failed, on overlapping data, with no untouched hold-out.
+
+\textbf{The basket's costs looked into the future.} Its cost model computed one average daily volume from the final sessions of the whole window and applied it to every historical rebalance. The trading signal itself uses only past prices, but the cost of each historical trade depended on later liquidity. This is not fixed in the re-run; it is one reason the basket is labelled exploratory.
+
+\textbf{A passing replication model assumed the hard part.} The repository's first replication model passes because promotion demotes the other node in the same atomic step, which no real two-node system can do. It was the basis for describing replication as checked. The model that mirrors the code failed (Section~\ref{sec:model-checking}).
+
+\textbf{Tests and CI overstated the project's health.} The test count included placeholder and duplicated assertions, and the CI configuration let failing steps pass. Both were removed before the counts in Table~\ref{tab:tests} were recorded.

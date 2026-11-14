@@ -1,6 +1,47 @@
-\section{Model checking and the replication bug}
-Placeholder: what each TLA+ model checks and at what size; the split-brain trace; the rejected and final fixes; what is not shown.
+\section{Model checking and the replication bug}\label{sec:model-checking}
+
+\subsection{What was checked}
+Each TLA+ model is a small, hand-written description of one part of the system. TLC explores every state the model can reach within fixed bounds and stops if an invariant fails. Table~\ref{tab:tla-models} lists every model, its bounds, its invariants and its state counts.
+
+The queue, order-book and matching models that run in CI are small: the matching model reaches \TlaEngineMatchingEngineDistinct{} distinct states and the order-book model \TlaEngineOrderBookDistinct{}. They check the rules (price--time priority, no crossed trades, no lost or ghost orders, conserved quantity) on a handful of orders. The large check is the replication model, and the rest of this section is about it.
 
 \input{generated/tla_models}
+
+\subsection{The bug}
+Two nodes replicate a log. Each holds an \emph{epoch}, a counter that says which term of leadership it is in. The safety rule is \texttt{SinglePrimaryPerEpoch}: two nodes must never be primary in the same epoch, because the backup uses the epoch to tell current entries from stale ones.
+
+TLC found the counterexample in Figure~\ref{fig:split-brain} after \TlaUnfencedDistinct{} distinct states. The primary is alive at epoch one and the backup is at epoch zero. A network fault drops heartbeats. The backup misses the allowed number, promotes itself, and picks its new epoch as its own old epoch plus one, which is one. The primary is still running at epoch one. Two primaries now share an epoch.
+
+The cause is that the backup chose its epoch from stale local knowledge and nothing made the old primary stop. The C++ code had the same class of hole: promotion incremented only the local lease, the step-down check used a strict comparison and had no production caller, the primary never read epoch notifications, and the log accepted appends and entries without an epoch check. A regression test built on the real heartbeat and lease code reproduced the collision and failed.
+
 \input{generated/fig_split_brain}
+
+\subsection{A fix that failed}
+The obvious fix is for each node to remember the highest epoch it has seen and promote to that plus one. TLC rejected it after \TlaFirstFixDistinct{} distinct states (Table~\ref{tab:replication}). A node cut off by a partition never sees its peer's newer epoch, so both sides can compute the same ``highest seen plus one''. With two nodes and no third party to break the tie, no rule based only on what a node has seen can avoid this.
+
+\subsection{The fix that passed}
+The final protocol has four rules.
+\begin{enumerate}
+\item \textbf{Owned epochs.} A node may only promote to an epoch whose parity matches its node id, and it picks the smallest such epoch above the highest it has seen. Two different nodes can therefore never choose the same number, whatever they have or have not seen.
+\item \textbf{Epochs on the wire.} Heartbeats and log entries carry the sender's epoch.
+\item \textbf{Stale-entry rejection.} A receiver rejects any entry whose epoch is below the highest it has seen.
+\item \textbf{Step-down.} A primary that sees an epoch equal to or above its own steps down, and \texttt{append} refuses to write unless the lease is current.
+\end{enumerate}
+
+With the same constants as the failing run, TLC explored \TlaEnginePrimaryBackupGenerated{} states, \TlaEnginePrimaryBackupDistinct{} of them distinct, and found no violation of \texttt{SinglePrimaryPerEpoch}, \texttt{NoStaleApply} or \texttt{CommittedDataSafe}. The model includes partition and heal, message loss and reordering, and restart. As a check that the invariants can fail at all, removing the stale-entry rule makes TLC report a \texttt{NoStaleApply} violation after \TlaNoRuleDDistinct{} distinct states.
+
+In C++, the same regression test now passes with only one change to the test itself: the two nodes are given distinct ids. A new fencing test covers a stale entry after promotion, step-down after the partition heals, an equal-epoch tie, and a restart with a stale epoch.
+
 \input{generated/replication_before_after}
+
+\subsection{A race the model could not see}
+The fencing change exposed a second bug that has nothing to do with the protocol. On shutdown, the backup's receiver closed its socket while its reader thread could still be using it. ThreadSanitizer reported the race on the Linux CI runner; the same build on macOS reported nothing. The receiver now polls at a short fixed interval and the reader thread is joined before the socket closes. The model checker could not have found this: the TLA+ model has no sockets or threads.
+
+\subsection{What this does not show}
+\begin{itemize}
+\item The models are abstractions written by hand. TLC checks the model, within its bounds, and says nothing directly about the C++.
+\item There is no quorum. During a partition both nodes can be primary at once, in different epochs. Fencing does not prevent that; it makes stale entries rejectable and makes the stale primary step down after the partition heals. Writes the stale primary accepted in the meantime are not reconciled.
+\item The model keeps the epoch across a restart. The C++ keeps it in memory only, so a restarted node can reuse one of its own earlier epochs.
+\item Only the two-node case is modelled and implemented.
+\item Only safety was checked. Nothing here shows that the system eventually makes progress.
+\end{itemize}

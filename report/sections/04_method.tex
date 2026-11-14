@@ -1,4 +1,17 @@
-\section{Research method}
-Placeholder: cost model, stationary-bootstrap intervals, frozen snapshot, Sharpe conventions, pre-registration per experiment.
+\section{Research method}\label{sec:method}
+
+\textbf{Data.} All re-runs read one frozen snapshot of daily prices from Yahoo Finance: \SnapshotDailyFiles{} daily files, \SnapshotDailyRows{} rows, from \SnapshotFirstDate{} to \SnapshotLastDate{}. Each file's checksum is recorded in a tracked manifest, so a re-run can confirm it is reading the same bytes. The snapshot was fetched for this report; it is not the data the original runs used, which was never saved.
+
+\textbf{Costs.} Every simulated trade pays four modelled costs: half the quoted spread, a market-impact term that grows with the square root of order size relative to average daily volume, a flat brokerage fee per trade, and securities transaction tax on sells. Short-borrow and margin financing costs are not modelled.
+
+\textbf{Sharpe ratio and intervals.} Results are annualised Sharpe ratios with \CILevel\% confidence intervals from a stationary block bootstrap, which resamples blocks of consecutive returns so that serial correlation is kept. The daily long/short experiments use \NBootstrap{} resamples, a mean block length of \MeanBlockLength{} and a fixed seed; each result file records its own settings.
+
+\textbf{Two conventions.} A Sharpe ratio can be computed on raw returns (zero risk-free rate) or on returns above a risk-free rate, here \RiskFreeAnnual{} a year. The long/short, gap and earnings experiments put only a small part of equity at work and leave the rest as cash that earns nothing in the backtest, so subtracting a risk-free rate from the whole account would charge them for cash they never used; their primary convention is zero-rf. The long-only basket is fully invested, so its fair alternative is cash or the index; its primary convention is excess return. Every point is paired with an interval from the same convention, and the appendix gives both conventions for every row.
+
+\textbf{Pre-registration.} Table~\ref{tab:preregistration} states, per experiment, whether a protocol file exists. A file in the repository does not show when it was written, so I claim only that the file exists. The K$=$\BasketK{} basket was not pre-registered: its hypothesis file already contains results.
 
 \input{generated/preregistration}
+
+\textbf{What the re-run did not change.} Strategy parameters and cost settings are those of the original runs. Nothing was re-tuned on the frozen data.
+
+\textbf{Use of AI tools.} Code and models were written with AI coding agents under my direction; I reviewed and am responsible for every result.
