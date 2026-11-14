@@ -368,6 +368,190 @@ def _beats_market_rate(basket_rets: list[float], universe_rets: list[float]) -> 
 
 
 # ---------------------------------------------------------------------------
+# Corrected simulator (Amendment 1): equal weight of current equity
+# ---------------------------------------------------------------------------
+
+CASH_TARGET_FRACTION = 0.005  # cash after fills is aimed at the middle of the allowed [0, 1%] band
+MIN_TRADE_FRACTION = 1e-9  # trades below this share of equity are not executed (no brokerage on dust)
+
+
+def _open_px(opens: pd.DataFrame | None, sym: str, day: date) -> float | None:
+    """Open on `day` for one symbol, or None. No fallback to close: a missing open is not tradeable."""
+    if opens is None or sym not in opens.columns or pd.Timestamp(day) not in opens.index:
+        return None
+    val = float(opens.at[pd.Timestamp(day), sym])
+    return val if math.isfinite(val) and val > 0 else None
+
+
+def _carry_px(closes: pd.DataFrame, opens: pd.DataFrame | None, sym: str, day: date) -> float:
+    """Valuation price: open on `day`, else the last close on/before `day` (carry)."""
+    px = _open_px(opens, sym, day)
+    if px is None:
+        px = _last_price(closes[sym], day)
+    if px is None:
+        raise ValueError(f"no price at all for held {sym} on {day}")
+    return px
+
+
+def _rebalance_step(state: dict, basket: list[str], adv_now: dict[str, float], closes: pd.DataFrame,
+                    opens: pd.DataFrame, day: date, cost_model, spread_bps: float) -> tuple[dict, dict] | None:
+    """
+    One rebalance at `day`'s open. E = cash + holdings at `day` (carried where no open).
+    Each tradeable basket name is set to an equal share of E; trades are the differences
+    only; sells remove held names that left the basket. Cash after fills and costs is
+    aimed at CASH_TARGET_FRACTION*E and must land in [0, 1%] of E. Returns None when no
+    basket name can be traded on `day`.
+    """
+    cash0 = float(state["cash"])
+    holdings = dict(state["holdings"])
+    carry = {s: _carry_px(closes, opens, s, day) for s in holdings}
+    E0 = cash0 + sum(q * carry[s] for s, q in holdings.items())
+
+    tradeable = [s for s in basket if _open_px(opens, s, day) is not None]
+    skipped_buys = [s for s in basket if s not in tradeable]
+    if not tradeable:
+        return None
+    held_open = [s for s in holdings if _open_px(opens, s, day) is not None]
+    carried = sorted(s for s in holdings if s not in held_open)  # no open: carried, not traded
+    carried_value = sum(holdings[s] * carry[s] for s in carried)
+    sells = sorted(s for s in held_open if s not in basket)
+    n = len(tradeable)
+
+    def plan(frac: float):
+        each = (frac * E0 - carried_value) / n
+        legs = []  # (sym, side, price, notional, new_qty)
+        for s in tradeable:
+            px = _open_px(opens, s, day)
+            cur = holdings.get(s, 0.0) * px
+            diff = each - cur
+            if abs(diff) > MIN_TRADE_FRACTION * E0:
+                legs.append((s, "BUY" if diff > 0 else "SELL", px, abs(diff), each / px))
+        for s in sells:
+            px = _open_px(opens, s, day)
+            notional = holdings[s] * px
+            if notional > MIN_TRADE_FRACTION * E0:
+                legs.append((s, "SELL", px, notional, 0.0))
+        costs = 0.0
+        for s, side, px, notional, _ in legs:
+            if s not in adv_now:
+                raise ValueError(f"no point-in-time ADV for {s} at {day}; refusing to substitute")
+            costs += cost_model.total_cost(price=px, qty=notional / px, adv=adv_now[s],
+                                           spread_bps=spread_bps, side=side)
+        return legs, costs
+
+    frac = 1.0 - CASH_TARGET_FRACTION
+    for _ in range(200):  # fixed point: costs depend on the trade sizes, which depend on frac
+        _, costs = plan(frac)
+        new_frac = 1.0 - (costs + CASH_TARGET_FRACTION * E0) / E0
+        if abs(new_frac - frac) < 1e-15:
+            break
+        frac = new_frac
+    legs, costs = plan(frac)
+
+    cash = cash0
+    traded = 0.0
+    for s, side, px, notional, new_qty in legs:
+        cash += notional if side == "SELL" else -notional
+        traded += notional
+        if s in sells:
+            holdings.pop(s, None)
+        else:
+            holdings[s] = new_qty
+    cash -= costs
+    if not (-1e-9 * E0 <= cash <= 0.01 * E0):
+        raise RuntimeError(f"cash after fills {cash:.2f} outside [0, 1%] of equity {E0:.2f} at {day}")
+    new_state = {"cash": cash, "holdings": {s: q for s, q in holdings.items() if q > 0}}
+    info = {"equity_pre": E0, "traded_notional": traded, "costs": costs,
+            "carried": carried, "skipped_buys": skipped_buys, "n_trades": len(legs)}
+    return new_state, info
+
+
+def simulate_rebalanced(
+    closes: pd.DataFrame,
+    opens: pd.DataFrame,
+    adv_by_date: dict[date, dict[str, float]],
+    rebalance_dates_list: list[date],
+    *,
+    cost_model,
+    budget: float = DEFAULT_BUDGET_INR,
+    spread_bps: float = ASSUMED_SPREAD_BPS,
+    k: int | None = None,
+    lookback: int = LOOKBACK_TRADING_DAYS,
+    trace: list | None = None,
+) -> dict:
+    """
+    Amendment 1 simulator. Same signal, eligibility (point-in-time ADV, full 63-session
+    window), schedule and next-open execution as the registered path. Sizing is equal
+    weight of current equity at every rebalance, with fractional shares. `cost_model` is
+    passed in so the caller sets brokerage. Period return = equity after fills at t /
+    equity after fills at t-1 - 1, with equity valued at each execution-day open.
+    """
+    state = {"cash": float(budget), "holdings": {}}
+    prev_equity: float | None = None
+    period_rets: list[float] = []
+    baskets: list[tuple[date, list[str], int]] = []
+    skipped: list[date] = []
+    total_costs = 0.0
+    rows: list[dict] = []
+    carried_log: list[dict] = []
+    skipped_buy_log: list[dict] = []
+
+    for rb in rebalance_dates_list:
+        eligible = set(adv_by_date.get(rb, {}))
+        basket = top_quartile(closes, rb, k=k, lookback=lookback, eligible=eligible)
+        exec_day = execution_day(closes, rb)
+        if not basket or exec_day is None:
+            skipped.append(rb)
+            continue
+        step = _rebalance_step(state, basket, adv_by_date[rb], closes, opens, exec_day, cost_model, spread_bps)
+        if step is None:
+            skipped.append(rb)
+            continue
+        state, info = step
+        holdings_value = 0.0
+        position_values: dict[str, float] = {}
+        for s, q in state["holdings"].items():
+            v = q * _carry_px(closes, opens, s, exec_day)
+            position_values[s] = v
+            holdings_value += v
+        equity = state["cash"] + holdings_value
+        total_costs += info["costs"]
+        for s in info["carried"]:
+            carried_log.append({"rebalance": rb.isoformat(), "symbol": s})
+        for s in info["skipped_buys"]:
+            skipped_buy_log.append({"rebalance": rb.isoformat(), "symbol": s})
+        if prev_equity is not None:
+            period_rets.append(equity / prev_equity - 1.0)
+        prev_equity = equity
+        row = {"rebalance": rb.isoformat(), "exec_day": exec_day.isoformat(), "equity": equity,
+               "cash": state["cash"], "holdings_value": holdings_value,
+               "invested_fraction": holdings_value / equity, "n_positions": len(position_values),
+               "traded_notional": info["traded_notional"], "costs": info["costs"],
+               "turnover": info["traded_notional"] / info["equity_pre"], "position_values": position_values}
+        rows.append(row)
+        if trace is not None:
+            trace.append(row)
+        baskets.append((rb, basket, len(basket)))
+
+    if prev_equity is None:
+        raise RuntimeError("no rebalance was actionable — no price data?")
+    turns = [r["turnover"] for r in rows[1:]]
+    return {
+        "k_used": len(baskets[0][1]) if baskets else 0,
+        "n_rebalances": len(baskets),
+        "period_returns": period_rets,
+        "baskets": baskets,
+        "skipped_rebalances": [d.isoformat() for d in skipped],
+        "trace": rows,
+        "total_costs": total_costs,
+        "avg_turnover_after_entry": float(sum(turns) / len(turns)) if turns else 0.0,
+        "carried": carried_log,
+        "skipped_buys": skipped_buy_log,
+        "final_equity": prev_equity,
+    }
+
+
+# ---------------------------------------------------------------------------
 # Metrics (repo canonical functions)
 # ---------------------------------------------------------------------------
 

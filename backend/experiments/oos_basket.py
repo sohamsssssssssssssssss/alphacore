@@ -34,8 +34,10 @@ REPO_ROOT = _BACKEND.parent
 sys.path.insert(0, str(_BACKEND))  # engines.*
 sys.path.insert(0, str(_BACKEND / "experiments"))  # basket_backtest (also wires sandbox/)
 
-from basket_backtest import ASSUMED_SPREAD_BPS, DEFAULT_BUDGET_INR, monthly_rebalance_dates, simulate  # noqa: E402
+from basket_backtest import (ASSUMED_SPREAD_BPS, DEFAULT_BUDGET_INR, monthly_rebalance_dates,  # noqa: E402
+                             simulate, simulate_rebalanced)
 from engines.backtest_metrics import stationary_bootstrap_sharpe_ci  # noqa: E402
+from engines.cost_model import CostModel  # noqa: E402
 from prices import ADV_WINDOW_TRADING_DAYS, point_in_time_adv  # noqa: E402
 from rs_signal import LOOKBACK_TRADING_DAYS  # noqa: E402
 
@@ -187,6 +189,118 @@ def run_arm(closes: pd.DataFrame, opens: pd.DataFrame, volumes: pd.DataFrame, *,
     }
 
 
+AMENDMENT_PATH = "research/OOS_BASKET_AMENDMENT_1.md"
+CORRECTED_BROKERAGE = 0.0  # Amendment 1: flat per-trade brokerage set to 0 for the US run
+
+
+def amendment_outcome(lo: float, hi: float) -> str:
+    """Amendment 1 wording table. The corrected analysis cannot produce a pass."""
+    if hi < 0:
+        return "not supported, also after correction"
+    if lo > 0:
+        return "candidate only"
+    return "no evidence of an edge"
+
+
+def _exposure(trace: list[dict]) -> dict:
+    inv = [r["invested_fraction"] for r in trace]
+    return {"first": inv[0], "last": inv[-1], "min": min(inv), "mean": sum(inv) / len(inv), "max": max(inv),
+            "n_rebalances": len(inv)}
+
+
+def run_corrected_arm(closes: pd.DataFrame, opens: pd.DataFrame, volumes: pd.DataFrame, *,
+                      basket_k: int | None = None) -> dict:
+    """
+    Amendment 1 analysis: same schedule, eligibility, window and metric as run_arm; the
+    corrected equal-weight simulator for basket and benchmark; brokerage 0 on the US run.
+    basket_k is for tests only (production leaves it None = n//4).
+    """
+    first, end = closes.index.min().date(), closes.index.max().date()
+    months_back = (end.year - first.year) * 12 + (end.month - first.month) + 1
+    sched = monthly_rebalance_dates(closes, end, months_back=months_back)
+    assert (sched[0].year, sched[0].month) == (first.year, first.month), f"first rebalance {sched[0]}"
+    assert (sched[-1].year, sched[-1].month) == (end.year, end.month), f"last rebalance {sched[-1]}"
+    assert len(sched) == months_back, f"{len(sched)} month-ends for {months_back} months"
+
+    adv_by_date = point_in_time_adv(closes, volumes, sched, window=ADV_WINDOW_TRADING_DAYS)
+    kw = dict(cost_model=CostModel(brokerage_per_trade=CORRECTED_BROKERAGE), budget=BUDGET,
+              spread_bps=SPREAD_BPS, lookback=LOOKBACK)
+    bt_trace, bm_trace = [], []
+    basket = simulate_rebalanced(closes, opens, adv_by_date, sched, k=basket_k, trace=bt_trace, **kw)
+    bench = simulate_rebalanced(closes, opens, adv_by_date, sched, k=len(closes.columns), trace=bm_trace, **kw)
+
+    b_dates = [d for d, _, _ in basket["baskets"]]
+    if b_dates != [d for d, _, _ in bench["baskets"]]:
+        raise RuntimeError("basket and benchmark actionable rebalances differ")
+    period_dates = b_dates[1:]
+    assert len(period_dates) == len(basket["period_returns"]) == len(bench["period_returns"])
+
+    b_ret = np.asarray(basket["period_returns"], dtype=float)
+    m_ret = np.asarray(bench["period_returns"], dtype=float)
+    active = b_ret - m_ret
+    ir = _ir(active)
+    ci = stationary_bootstrap_sharpe_ci(active.tolist(), n_bootstrap=N_BOOTSTRAP, confidence=CONFIDENCE,
+                                        mean_block_length=MEAN_BLOCK, periods_per_year=PERIODS_PER_YEAR,
+                                        seed=SEED, risk_free=0.0)
+    if abs(ci["sharpe"] - ir) > 1e-12:
+        raise RuntimeError(f"bootstrap point {ci['sharpe']} != IR {ir}")
+    lo, hi = ci["ci_lower"], ci["ci_upper"]
+    monthly = [{"rebalance_date": d.isoformat(), "basket_net": float(b), "benchmark_net": float(m),
+                "active": float(b - m)} for d, b, m in zip(period_dates, b_ret, m_ret)]
+    return {
+        "params": {
+            "lookback_sessions": LOOKBACK,
+            "k_rule": "basket n_ranked // 4; benchmark all eligible names",
+            "sizing": "equal weight of current equity at each rebalance, fractional shares, cash 0-1% after fills",
+            "schedule": "last trading session of each month; trade at next session open",
+            "adv": f"point-in-time mean(close*volume) over {ADV_WINDOW_TRADING_DAYS} sessions ending on rebalance day",
+            "eligibility": "rankable only with a full point-in-time ADV window",
+            "budget": BUDGET,
+            "spread_bps": SPREAD_BPS,
+            "cost_model": f"engines.cost_model.CostModel(brokerage_per_trade={CORRECTED_BROKERAGE}), other defaults",
+            "bootstrap": {"type": "stationary", "n_bootstrap": N_BOOTSTRAP, "mean_block": MEAN_BLOCK,
+                          "seed": SEED, "confidence": CONFIDENCE, "periods_per_year": PERIODS_PER_YEAR,
+                          "risk_free": 0.0},
+        },
+        "n_months": len(monthly),
+        "scheduled_month_ends": len(sched),
+        "scheduled_first": sched[0].isoformat(),
+        "scheduled_last": sched[-1].isoformat(),
+        "actionable_first": b_dates[0].isoformat(),
+        "actionable_last": b_dates[-1].isoformat(),
+        "monthly": monthly,
+        "ir": ir,
+        "ci_lower": float(lo),
+        "ci_upper": float(hi),
+        "outcome": amendment_outcome(lo, hi),
+        "basket_ir_point": float(basket_ir(b_ret)),
+        "benchmark_ir_point": float(basket_ir(m_ret)),
+        "costs": {
+            "basket_total_costs": float(basket["total_costs"]),
+            "benchmark_total_costs": float(bench["total_costs"]),
+        },
+        "turnover": {
+            "basket_avg_turnover_after_entry": basket["avg_turnover_after_entry"],
+            "benchmark_avg_turnover_after_entry": bench["avg_turnover_after_entry"],
+        },
+        "exposure": {
+            "basket": _exposure(bt_trace),
+            "benchmark": _exposure(bm_trace),
+            "basket_carried": len(basket["carried"]), "benchmark_carried": len(bench["carried"]),
+            "basket_skipped_buys": len(basket["skipped_buys"]), "benchmark_skipped_buys": len(bench["skipped_buys"]),
+            "basket_rebalances": [{k: r[k] for k in ("rebalance", "equity", "cash", "holdings_value",
+                                                     "invested_fraction", "n_positions", "turnover")}
+                                  for r in bt_trace],
+            "benchmark_rebalances": [{k: r[k] for k in ("rebalance", "equity", "cash", "holdings_value",
+                                                        "invested_fraction", "n_positions", "turnover")}
+                                     for r in bm_trace],
+        },
+        "basket_sizes": [[d.isoformat(), n] for d, _, n in basket["baskets"]],
+        "eligible_counts": {d.isoformat(): len(v) for d, v in adv_by_date.items()},
+        "skipped_rebalances": {"basket": basket["skipped_rebalances"], "benchmark": bench["skipped_rebalances"]},
+    }
+
+
 def basket_ir(period: np.ndarray) -> float:
     return _ir(np.asarray(period, dtype=float))
 
@@ -199,22 +313,28 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="OOS Arm A: top-quartile basket vs benchmark (run once)")
     p.add_argument("--snapshot", type=Path, default=REPO_ROOT / "data_snapshots" / "us-2026-11")
     p.add_argument("--universe", type=Path, default=None, help="default: <snapshot>/universe.txt")
-    p.add_argument("--out", type=Path, default=REPO_ROOT / "research" / "oos" / "arm_a.json")
+    p.add_argument("--mode", choices=["registered", "corrected"], default="registered",
+                   help="registered: protocol as written (arm_a.json); corrected: Amendment 1 (arm_a_corrected.json)")
+    p.add_argument("--out", type=Path, default=None)
     args = p.parse_args(argv)
+    corrected = args.mode == "corrected"
+    out_path = args.out or (REPO_ROOT / "research" / "oos" / ("arm_a_corrected.json" if corrected else "arm_a.json"))
 
-    if args.out.exists():
-        print(f"[REFUSED] {args.out} exists; Arm A runs once", file=sys.stderr)
+    if out_path.exists():
+        print(f"[REFUSED] {out_path} exists; Arm A runs once", file=sys.stderr)
         return 2
 
     universe_path = args.universe or args.snapshot / "universe.txt"
     header, tickers = read_universe(universe_path)
     closes, opens, volumes, unavailable = load_snapshot(args.snapshot, tickers)
-    res = run_arm(closes, opens, volumes)
+    res = run_corrected_arm(closes, opens, volumes) if corrected else run_arm(closes, opens, volumes)
 
     out = {
-        "arm": "A",
+        "arm": "A-corrected" if corrected else "A",
         "protocol": PROTOCOL_PATH,
         "protocol_commit": _git("log", "-1", "--format=%H", "--", PROTOCOL_PATH),
+        **({"amendment": AMENDMENT_PATH, "amendment_commit": _git("log", "-1", "--format=%H", "--", AMENDMENT_PATH)}
+           if corrected else {}),
         "code_commit": _git("rev-parse", "HEAD"),
         "code_dirty_tracked_files": bool(_git("status", "--porcelain", "--untracked-files=no")),
         "run_timestamp_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -228,11 +348,12 @@ def main(argv: list[str] | None = None) -> int:
         "unavailable": unavailable,
         **res,
     }
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(out, indent=2) + "\n", encoding="utf-8")
-    print(f"[ARM A] months={out['n_months']} IR={out['ir']:.4f} "
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(out_path, "x", encoding="utf-8") as fh:  # mode "x": never overwrite a run
+        fh.write(json.dumps(out, indent=2) + "\n")
+    print(f"[{out['arm']}] months={out['n_months']} IR={out['ir']:.4f} "
           f"CI95=[{out['ci_lower']:.4f}, {out['ci_upper']:.4f}] outcome={out['outcome']}")
-    print(f"[ARM A] wrote {args.out}")
+    print(f"[{out['arm']}] wrote {out_path}")
     return 0
 
 

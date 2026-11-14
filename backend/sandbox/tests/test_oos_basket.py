@@ -89,3 +89,28 @@ def test_loader_refuses_hash_mismatch(tmp_path: Path):
     tampered.to_csv(tmp_path / "W00.csv")
     with pytest.raises(RuntimeError, match="hash mismatch"):
         oos_basket.load_snapshot(tmp_path, ["W00", "L01"])
+
+
+def test_corrected_identical_basket_and_benchmark_give_zero_active_returns():
+    closes, opens, volumes = _panel(winners=10)
+    res = oos_basket.run_corrected_arm(closes, opens, volumes, basket_k=len(closes.columns))
+    assert res["n_months"] > 20
+    assert all(m["active"] == 0.0 for m in res["monthly"])
+    assert res["ir"] == 0.0
+    assert res["outcome"] == "no evidence of an edge"
+
+
+def test_corrected_run_is_deterministic_and_fully_invested():
+    closes, opens, volumes = _panel(winners=10)
+    a = oos_basket.run_corrected_arm(closes, opens, volumes)
+    b = oos_basket.run_corrected_arm(closes, opens, volumes)
+    assert json.dumps(a, sort_keys=True) == json.dumps(b, sort_keys=True)
+    for side in ("basket", "benchmark"):
+        for row in a["exposure"][f"{side}_rebalances"]:
+            assert 0.99 <= row["invested_fraction"] <= 1.0
+
+
+def test_amendment_outcome_wording_never_says_pass():
+    assert oos_basket.amendment_outcome(-1.0, -0.1) == "not supported, also after correction"
+    assert oos_basket.amendment_outcome(-0.5, 0.5) == "no evidence of an edge"
+    assert oos_basket.amendment_outcome(0.1, 1.0) == "candidate only"
