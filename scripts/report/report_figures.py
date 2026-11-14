@@ -78,8 +78,7 @@ def fig_forest(a) -> str:
     save(fig, "forest.pdf")
     return fragment("forest.pdf",
                     r"Primary-convention Sharpe ratio with \CILevel\% stationary-bootstrap interval for each distinct "
-                    r"re-run configuration, grouped by category. For the K$=$\BasketK{} basket the hollow markers are "
-                    r"buy-and-hold benchmarks in the same convention, gross of costs.", "fig:forest")
+                    r"re-run configuration, grouped by category.", "fig:forest")
 
 
 # ── b) split-brain trace ───────────────────────────────────────────────

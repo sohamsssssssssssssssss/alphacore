@@ -7,7 +7,11 @@ These are mistakes in earlier versions of this project, found while preparing th
 
 \textbf{A headline figure had nothing behind it.} The repository quoted a Sharpe ratio for the K$=$\BasketK{} basket whose raw result file and return series could not be found. A fresh run with unchanged parameters gives a nearby but different number. The quoted figure is treated as unverified and is not used. The audit also found that the basket was selected after the other configurations had failed, on overlapping data, with no untouched hold-out.
 
-\textbf{The basket's costs looked into the future.} Its cost model computed one average daily volume from the final sessions of the whole window and applied it to every historical rebalance. The trading signal itself uses only past prices, but the cost of each historical trade depended on later liquidity. This is not fixed in the re-run; it is one reason the basket is labelled exploratory.
+\textbf{The basket's costs looked into the future.} Its cost model computed one average daily volume from the final sessions of the whole window and applied it to every historical rebalance. The trading signal itself uses only past prices, but the cost of each historical trade depended on later liquidity. The restated basket figures in Section~\ref{sec:results} use only liquidity known on each trade date.
+
+\textbf{The basket simulator drifted into cash.} Positions were sized from the starting budget and never topped up. By the end of the NSE run the basket was \LegacyBasketInvestedEnd\% invested, and its earlier Sharpe of \LegacyBasketSharpeExcess{} was compared with fully invested benchmarks. I found this only because the registered out-of-sample run produced a basket half as volatile as its own universe. The earlier basket figures are withdrawn and replaced by the restated ones.
+
+\textbf{The registered test did not match its protocol.} The protocol said the benchmark would be rebalanced on the same dates as the basket. I told the coding agent to reuse the existing simulator unchanged without reading how it sized positions, and it did not rebalance. The registered result is kept, and the correction is labelled post hoc.
 
 \textbf{A passing replication model assumed the hard part.} The repository's first replication model passes because promotion demotes the other node in the same atomic step, which no real two-node system can do. It was the basis for describing replication as checked. The model that mirrors the code failed (Section~\ref{sec:model-checking}).
 
