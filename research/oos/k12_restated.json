@@ -1,0 +1,124 @@
+{
+  "label": "in-sample, descriptive",
+  "amendment": "research/OOS_BASKET_AMENDMENT_1.md",
+  "code_commit": "45880998f6dd8dbd7b13bf8973cdf95be72dc4fd",
+  "data_window": [
+    "2020-08-14",
+    "2026-08-13"
+  ],
+  "symbols_used": 48,
+  "dropped_no_csv": [
+    "TATAMOTORS"
+  ],
+  "scheduled_month_ends": 73,
+  "actionable_first": "2020-11-27",
+  "actionable_last": "2026-07-31",
+  "n_periods": 68,
+  "params": {
+    "lookback": 21,
+    "k": "n_ranked // 4 (basket); all eligible (benchmark)",
+    "budget": 1000000.0,
+    "spread_bps": 10.0,
+    "cost_model": "CostModel() defaults",
+    "sizing": "equal weight of equity"
+  },
+  "basket": {
+    "sharpe_zero_rf": {
+      "sharpe": 1.0522030718885056,
+      "ci_lower": 0.25798657592442015,
+      "ci_upper": 1.9084129711497484,
+      "risk_free_annual": 0.0,
+      "bootstrap": {
+        "n": 1000,
+        "mean_block": 10,
+        "seed": 42,
+        "confidence": 0.95
+      }
+    },
+    "sharpe_rf_0_065": {
+      "sharpe": 0.5866802379559917,
+      "ci_lower": -0.2240123071189667,
+      "ci_upper": 1.4310289868451846,
+      "risk_free_annual": 0.065,
+      "bootstrap": {
+        "n": 1000,
+        "mean_block": 10,
+        "seed": 42,
+        "confidence": 0.95
+      }
+    },
+    "total_costs": 206616.9817457686,
+    "avg_turnover_after_entry": 1.4967920757022335,
+    "exposure": {
+      "first": 0.9949963096599006,
+      "last": 0.9949906553866773,
+      "min": 0.994988935627491,
+      "mean": 0.9949912821314758,
+      "max": 0.9949963096599006
+    },
+    "final_equity": 2121269.3577421387
+  },
+  "benchmark": {
+    "sharpe_zero_rf": {
+      "sharpe": 1.3876739436343164,
+      "ci_lower": 0.7259823404744251,
+      "ci_upper": 2.1852421411664023,
+      "risk_free_annual": 0.0,
+      "bootstrap": {
+        "n": 1000,
+        "mean_block": 10,
+        "seed": 42,
+        "confidence": 0.95
+      }
+    },
+    "sharpe_rf_0_065": {
+      "sharpe": 0.9232280107863892,
+      "ci_lower": 0.25799930216693184,
+      "ci_upper": 1.6880028864053758,
+      "risk_free_annual": 0.065,
+      "bootstrap": {
+        "n": 1000,
+        "mean_block": 10,
+        "seed": 42,
+        "confidence": 0.95
+      }
+    },
+    "total_costs": 73161.99460081641,
+    "avg_turnover_after_entry": 0.04874171347434434,
+    "exposure": {
+      "first": 0.9949927045336916,
+      "last": 0.9949979282259753,
+      "min": 0.9949927045336916,
+      "mean": 0.9949970576020671,
+      "max": 0.9949980719578401
+    },
+    "final_equity": 2741317.200439628
+  },
+  "active": {
+    "ir": -0.608842353532758,
+    "ci_lower": -1.3653744965392298,
+    "ci_upper": 0.1584609052920542,
+    "bootstrap": {
+      "n": 2000,
+      "mean_block": 3,
+      "seed": 2026,
+      "confidence": 0.95
+    }
+  },
+  "reference_registered_k12_file": {
+    "file": "research/v2/k12_basket.json (legacy simulator, not recomputed)",
+    "v1_sharpe_rf_0_065": 0.661,
+    "v2_sharpe_rf_0_065": 0.6575848803769175,
+    "v2_ci_rf_0_065": [
+      -0.2336407666642999,
+      1.3619463317249594
+    ],
+    "v2_sharpe_zero_rf": 1.2348124858145786,
+    "v2_ci_zero_rf": [
+      0.5708058892978265,
+      1.9477988180186856
+    ],
+    "nifty50_buy_hold_sharpe_zero_rf": 1.047285435316514,
+    "equal_weight_buy_hold_sharpe_zero_rf": 1.404694863918583
+  }
+}
