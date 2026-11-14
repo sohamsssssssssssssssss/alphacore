@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from datetime import date
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -77,14 +78,32 @@ def test_simulate_with_adv_by_date_uses_point_in_time_values_and_raises_on_missi
     assert all(traded not in basket for _, basket, _ in res2["baskets"])
 
 
+def _assert_close(got, want, path="out"):
+    if isinstance(want, dict):
+        assert isinstance(got, dict) and set(got) == set(want), path
+        for k in want:
+            _assert_close(got[k], want[k], f"{path}.{k}")
+    elif isinstance(want, list):
+        assert isinstance(got, list) and len(got) == len(want), path
+        for i, (g, w) in enumerate(zip(got, want)):
+            _assert_close(g, w, f"{path}[{i}]")
+    elif isinstance(want, float) and not isinstance(want, bool):
+        assert got == pytest.approx(want, rel=1e-9, abs=1e-12), path
+    else:
+        assert got == want, path
+
+
 def test_legacy_path_output_unchanged():
-    # Golden hash of simulate() on this synthetic set, recorded before the
-    # adv_by_date change. Legacy callers must still get identical output.
+    # Golden output of simulate() on this synthetic set, generated from the
+    # pre-change code on main (cdc5485). Compared field by field: integers,
+    # strings and basket membership must match exactly, floats to rel 1e-9.
+    # (An exact hash of the float JSON differed between macOS and Linux CI
+    # although the outputs agree to the last few bits.)
     closes, opens, _, syms = _synthetic()
     adv = {s: 5e6 + 1e5 * i for i, s in enumerate(syms)}
     sched = monthly_rebalance_dates(closes, closes.index.max().date(), months_back=24)
     out = {str(k): simulate(closes, adv, opens, sched, k=k) for k in (None, 3, len(syms))}
-    blob = json.dumps(out, default=str, sort_keys=True)
-    assert hashlib.sha256(blob.encode()).hexdigest() == \
-        "1698ccaa83b67152678d8d16e3df2bc08d4cd12ee09aa1f9d88c631890d15d50"
+    got = json.loads(json.dumps(out, default=str, sort_keys=True))
+    want = json.loads((Path(__file__).parent / "fixtures" / "legacy_simulate_golden.json").read_text())
+    _assert_close(got, want)
     assert all("total_costs" not in v for v in out.values())
