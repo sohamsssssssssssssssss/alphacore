@@ -1,2 +1,11 @@
-\section{Limitations of the setup}
-Placeholder: free Yahoo data, no real fills, detectors tested only on synthetic data, a single market and period.
+\section{Limitations of the setup}\label{sec:limitations}
+These are limits of the data and environment, not mistakes.
+
+\begin{itemize}
+\item \textbf{Free daily data.} Prices come from Yahoo Finance and are adjusted after the fact. The universe is today's index membership applied to the past, so stocks that left the index are missing. This usually flatters long-only results.
+\item \textbf{No real fills.} Costs are modelled, not observed. The broker sandbox used for paper trading accepts orders but does not simulate fills, so no order in this project has been executed, on paper or otherwise.
+\item \textbf{Shorting is idealised.} The long/short backtests assume every stock can be shorted for free over the holding period.
+\item \textbf{Detectors are untested on real order books.} The spoofing and iceberg detectors were built and scored on synthetic data only, and are not part of this report's results.
+\item \textbf{One market, one period.} All results are for large NSE stocks over one window of five to six years. The periods of the different experiments overlap, so they are not independent tests.
+\item \textbf{Benchmarks.} Engine timings are micro-benchmarks from a single machine.
+\end{itemize}
