@@ -86,7 +86,8 @@ _QUARTER_END_MONTHS = (3, 6, 9, 12)
 # ---------------------------------------------------------------------------
 
 def top_quartile(closes: pd.DataFrame, as_of: date, k: int | None = None,
-                 lookback: int = LOOKBACK_TRADING_DAYS) -> list[str]:
+                 lookback: int = LOOKBACK_TRADING_DAYS,
+                 eligible: set[str] | None = None) -> list[str]:
     """
     Top-quartile basket: the best-ranked n//4 symbols with data as of `as_of`.
 
@@ -94,9 +95,10 @@ def top_quartile(closes: pd.DataFrame, as_of: date, k: int | None = None,
     "~12 out of 49"). Pass `k` explicitly to override the basket size
     (Phase 2 sensitivity). Falls back to at least 1 name. Ranking is
     delegated to rs_signal.rank_table (lookback parameterized for Phase 2).
+    `eligible`, when given, restricts ranking to those symbols (None = all).
     """
     ranked = [s for s, row in rank_table(closes, as_of, lookback=lookback).iterrows()
-              if bool(row["has_data"])]
+              if bool(row["has_data"]) and (eligible is None or s in eligible)]
     k_eff = max(1, len(ranked) // 4) if k is None else k
     return ranked[:k_eff]
 
@@ -160,9 +162,17 @@ def simulate(
     spread_bps: float = ASSUMED_SPREAD_BPS,
     k: int | None = None,
     lookback: int = LOOKBACK_TRADING_DAYS,
+    adv_by_date: dict[date, dict[str, float]] | None = None,
 ) -> dict:
     """
     Run the equal-weighted-at-entry top-quartile basket backtest.
+
+    adv_by_date ({rebalance_date: {sym: adv}}), when given, supplies the ADV
+    used for impact costs at each rebalance and replaces the single `adv`
+    dict. Only symbols with an entry at a rebalance are rankable there, and a
+    traded symbol with no entry raises; nothing is substituted. With None, the
+    legacy single-ADV path runs unchanged. In that mode the result also
+    carries total_costs.
 
     Per rebalance: at the NEXT session's open after the rebalance close, trade
     only the DELTA of the basket — sell names leaving the basket, buy names
@@ -183,6 +193,16 @@ def simulate(
         raise RuntimeError("engines.cost_model / engines.backtest_metrics not importable — run from backend/")
 
     cm = CostModel()  # repo defaults: k_impact=0.0015, brokerage 20, STT 0.1% sell
+    total_costs = 0.0
+
+    def _adv_for(sym: str, rb: date) -> float | None:
+        if adv_by_date is None:
+            return adv.get(sym)  # legacy single ADV, unchanged
+        day_adv = adv_by_date.get(rb, {})
+        if sym not in day_adv:
+            raise ValueError(f"no point-in-time ADV for {sym} at {rb}; refusing to substitute")
+        return day_adv[sym]
+
     cash = float(budget)
     holdings: dict[str, float] = {}
     prev_equity: float | None = None
@@ -198,7 +218,10 @@ def simulate(
     skipped: list[date] = []
 
     for rb in rebalance_dates_list:
-        basket = top_quartile(closes, rb, k=k, lookback=lookback)
+        # ADV path: only names with a full point-in-time ADV window at rb are
+        # rankable, so nothing is traded on a substituted impact cost.
+        eligible = None if adv_by_date is None else set(adv_by_date.get(rb, {}))
+        basket = top_quartile(closes, rb, k=k, lookback=lookback, eligible=eligible)
         exec_day = execution_day(closes, rb)
         if not basket or exec_day is None:
             skipped.append(rb)
@@ -221,7 +244,7 @@ def simulate(
             qty = max(1, int(per_position // price))
             holdings[sym] = float(qty)
             buy_notional += float(qty) * price
-            buy_costs += cm.total_cost(price=price, qty=float(qty), adv=adv.get(sym),
+            buy_costs += cm.total_cost(price=price, qty=float(qty), adv=_adv_for(sym, rb),
                                        spread_bps=spread_bps, side="BUY")
 
         # Sells: names leaving the basket, valued at next-session open.
@@ -238,7 +261,7 @@ def simulate(
             if price is None or price <= 0:
                 continue
             sell_notional += float(qty) * price
-            sell_costs += cm.total_cost(price=price, qty=float(qty), adv=adv.get(sym),
+            sell_costs += cm.total_cost(price=price, qty=float(qty), adv=_adv_for(sym, rb),
                                         spread_bps=spread_bps, side="SELL")
 
         if not holdings:
@@ -255,6 +278,7 @@ def simulate(
                 continue
             holdings_value += float(qty) * price
         cash = cash + sell_notional - sell_costs - buy_notional - buy_costs
+        total_costs += buy_costs + sell_costs
         equity_after = cash + holdings_value
 
         if prev_equity is not None:
@@ -288,7 +312,7 @@ def simulate(
     # k from the first ACTIONABLE rebalance (the first scheduled date may
     # predate the 22-session lookback and rank no symbols).
     k_used = len(baskets[0][1]) if baskets else max(1, len(rebalance_dates_list))
-    return {
+    result = {
         "k_used": k_used,
         "n_rebalances": len(baskets),
         "n_period_returns": len(period_rets),
@@ -304,6 +328,9 @@ def simulate(
         "avg_turnover_fraction": float(sum(turnover_per_period) / len(turnover_per_period)) if turnover_per_period else 0.0,
         "final_equity": prev_equity,
     }
+    if adv_by_date is not None:
+        result["total_costs"] = total_costs
+    return result
 
 
 def _gross_forward_return(closes, opens, symbols: set[str], day_from: date, day_to: date) -> float | None:
