@@ -163,6 +163,7 @@ def simulate(
     k: int | None = None,
     lookback: int = LOOKBACK_TRADING_DAYS,
     adv_by_date: dict[date, dict[str, float]] | None = None,
+    trace: list | None = None,
 ) -> dict:
     """
     Run the equal-weighted-at-entry top-quartile basket backtest.
@@ -270,6 +271,7 @@ def simulate(
 
         # Equity just after today's fills.
         holdings_value = 0.0
+        position_values: dict[str, float] = {}
         for sym, qty in holdings.items():
             price = _last_price(opens[sym], exec_day) if opens is not None and sym in opens.columns else None
             if price is None or price <= 0:
@@ -277,9 +279,14 @@ def simulate(
             if price is None or price <= 0:
                 continue
             holdings_value += float(qty) * price
+            position_values[sym] = float(qty) * price
         cash = cash + sell_notional - sell_costs - buy_notional - buy_costs
         total_costs += buy_costs + sell_costs
         equity_after = cash + holdings_value
+        if trace is not None:  # diagnostics only; output unaffected
+            trace.append({"rebalance": rb.isoformat(), "exec_day": exec_day.isoformat(), "cash": cash,
+                          "holdings_value": holdings_value, "equity": equity_after,
+                          "n_positions": len(position_values), "position_values": position_values})
 
         if prev_equity is not None:
             period_rets.append(equity_after / prev_equity - 1.0)

@@ -69,3 +69,41 @@ These were made in T1-T2, before any US price was fetched (commit `07a74b7`).
 ## Consequence (protocol, "Consequences")
 
 Fail or Inconclusive: the basket is recorded as not supported and retired as a candidate. Arm B still runs as an engineering exercise.
+
+## Post-run finding (not pre-registered)
+
+Written after the Arm A run, as a diagnostic. It does not change the registered outcome above, and it computes no new performance statistic.
+
+**What the code does.** Both sides use fixed-notional sizing and never top up.
+
+- Each new position is sized at `budget / len(basket)`, with `budget` fixed at 1,000,000: `backend/experiments/basket_backtest.py:238` and `:245`.
+- Existing positions keep their share count between rebalances. There is no top-up step. The docstring states the convention at `:180`.
+- Sale proceeds stay in `cash` (`:283`) and earn nothing.
+- The benchmark is the same simulator with `k = all` (`backend/experiments/oos_basket.py:121`). It trades rarely (0.06 legs per rebalance), so it is buy-and-hold with drifting weights. The protocol specifies equal weight, rebalanced on the same dates (`research/OOS_BASKET_PROTOCOL.md:34-35`).
+
+**Numbers.** Source: `research/oos/arm_a_exposure.json`, produced by `backend/experiments/oos_exposure_diag.py`. Before reading any trace, the script asserted that the period returns equal `arm_a.json` exactly, for basket and benchmark.
+
+Invested fraction (holdings / equity):
+
+| | Basket | Benchmark |
+|---|---|---|
+| First rebalance, 2010-04-30 | 1.0007 | 1.0011 |
+| 2012-12-31 | 0.7629 | 1.0402 |
+| 2015-12-31 | 0.5041 | 1.0299 |
+| 2018-12-31 | 0.4005 | 1.0220 |
+| 2021-12-31 | 0.3025 | 1.0086 |
+| 2024-12-31 | 0.3025 | 1.0060 |
+| Last, 2026-09-30 | 0.2024 | 1.0045 |
+| Min / mean / max | 0.1996 / 0.4880 / 1.1003 | 1.0011 / 1.0186 / 1.0425 |
+
+The 2021-12 and 2024-12 basket values are close but not identical (0.302501 and 0.302494).
+
+Benchmark fractions above 1 come from costs and share rounding, paid from cash that goes slightly negative (cash is -689 at the first rebalance).
+
+Basket at the last rebalance (2026-09-30): equity 5,060,125; cash 4,035,810; holdings 1,024,316; 25 positions. Equity grew about fivefold while holdings stayed near 1.0M.
+
+Benchmark top five weights at the last rebalance (101 positions): NVDA 0.2505, TSLA 0.1006, AVGO 0.0957, MU 0.0451, LRCX 0.0379.
+
+**Same trace on K12** (`research/oos/k12_exposure.json`, produced by the same script). Inputs were rebuilt from `data_snapshots/2026-11` by the `fetch_daily_bars` logic, with no network. The script asserted equality with `research/v2/k12_basket.json` (70 period returns). The 48 symbols used exclude TATAMOTORS, which has no CSV in the snapshot. Invested fraction: first 0.9929, last 0.4718, min 0.4487, mean 0.5883, max 0.9965.
+
+**Verdict.** The mechanism the diagnostic checked is confirmed. The basket is largely uninvested, with proceeds in zero-interest cash. The benchmark is fully invested and drifts toward a few large names. The registered outcome stays Fail as run. Whether it reflects the signal is not established, because basket and benchmark had different exposure and the benchmark did not follow the protocol's rebalancing rule.
