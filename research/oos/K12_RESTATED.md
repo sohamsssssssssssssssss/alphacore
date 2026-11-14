@@ -6,7 +6,7 @@ The data were used to choose this basket. These figures are descriptive only and
 
 **Setup.** 21-session lookback, k = n_ranked // 4, monthly, next-session open. Point-in-time ADV, `CostModel()` defaults with brokerage kept (a real NSE fee), spread 10 bps, budget 1,000,000. The basket and an equal-weight benchmark (k = all eligible) both use `simulate_rebalanced`. Data are the frozen `data_snapshots/2026-11` CSVs through 2026-08-13. 48 of 49 symbols are used; TATAMOTORS has no CSV in the snapshot and is dropped, as in the original fetch.
 
-**Window.** 73 scheduled month-ends (2020-08-31 to 2026-07-31) with 68 monthly periods. The first actionable rebalance is 2020-11-27, because a full 63-session ADV window is needed. The legacy file has 70 periods.
+**Window.** 73 scheduled month-ends (2020-08-31 to 2026-08-13, the data cutoff) with 68 monthly periods. The first actionable rebalance is 2020-11-27, because a full 63-session ADV window is needed. The legacy file has 70 periods.
 
 ## Sharpe under both conventions
 
