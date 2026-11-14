@@ -37,6 +37,7 @@ def test_log_writes_basket_and_inputs_and_refuses_overwrite(tmp_path):
     assert path.name == f"{as_of:%Y-%m}.json"
     assert rec["k"] == len(rec["basket"]) == 20 // 4
     assert set(rec["basket"]) <= set(rec["benchmark_members"]) <= set(rec["adv"])
+    assert rec["params"]["sizing"].startswith("equal weight of current equity")
     for key in ("universe_sha256", "bars_sha256", "code_commit", "protocol_commit"):
         assert rec["inputs"][key]
     with pytest.raises(FileExistsError):
@@ -65,17 +66,30 @@ def test_mark_needs_the_next_month_logged(tmp_path):
         forward_log.mark_month(f"{me[4]:%Y-%m}", bars, forward_dir=tmp_path)
 
 
-def test_flat_prices_with_unchanged_basket_mark_to_zero_return(tmp_path):
+def test_flat_prices_mark_to_small_negative_return_from_rebalancing_costs(tmp_path):
     bars = _bars(flat=True)
     me = _month_ends(bars[0])
     forward_log.log_month(me[4], bars, forward_dir=tmp_path)
     forward_log.log_month(me[5], bars, forward_dir=tmp_path)
     out = forward_log.mark_month(f"{me[4]:%Y-%m}", bars, forward_dir=tmp_path)
     rec = json.loads(out.read_text())
-    assert rec["net_return"] == 0.0
-    assert rec["costs_at_period_end"] == 0.0  # same basket, so no trades at the next rebalance
+    assert -1e-3 < rec["net_return"] <= 0.0  # no price moves: only costs of the next rebalance
+    assert rec["costs_at_period_end"] > 0.0
     with pytest.raises(FileExistsError):
         forward_log.mark_month(f"{me[4]:%Y-%m}", bars, forward_dir=tmp_path)
+
+
+def test_zero_cost_flat_world_marks_to_exactly_zero(tmp_path, monkeypatch):
+    from engines.cost_model import CostModel
+    monkeypatch.setattr(forward_log, "CostModel", lambda: CostModel(k_impact=0.0, brokerage_per_trade=0.0,
+                                                                    stt_rate=0.0))
+    monkeypatch.setattr(forward_log, "ASSUMED_SPREAD_BPS", 0.0)
+    bars = _bars(flat=True)
+    me = _month_ends(bars[0])
+    forward_log.log_month(me[4], bars, forward_dir=tmp_path)
+    forward_log.log_month(me[5], bars, forward_dir=tmp_path)
+    rec = json.loads(forward_log.mark_month(f"{me[4]:%Y-%m}", bars, forward_dir=tmp_path).read_text())
+    assert abs(rec["net_return"]) < 1e-12
 
 
 def test_marks_chain_and_second_mark_requires_the_first(tmp_path):
@@ -91,14 +105,18 @@ def test_marks_chain_and_second_mark_requires_the_first(tmp_path):
         (tmp_path / f"{me[4]:%Y-%m}.marked.json").read_text())["period_start_exec"]
 
 
-def test_missing_open_on_execution_day_raises_no_fallback(tmp_path):
+def test_held_name_without_open_at_next_rebalance_is_carried_and_logged(tmp_path):
     closes, opens, volumes = _bars()
     me = _month_ends(closes)
-    forward_log.log_month(me[4], (closes, opens, volumes), forward_dir=tmp_path)
-    forward_log.log_month(me[5], (closes, opens, volumes), forward_dir=tmp_path)
-    exec_day = closes.index[closes.index > pd.Timestamp(me[4])][0]
-    rec = json.loads((tmp_path / f"{me[4]:%Y-%m}.json").read_text())
-    opens = opens.copy()
-    opens.loc[exec_day, rec["basket"][0]] = np.nan
-    with pytest.raises(ValueError, match="refusing to fall back to close"):
-        forward_log.mark_month(f"{me[4]:%Y-%m}", (closes, opens, volumes), forward_dir=tmp_path)
+    bars = (closes, opens, volumes)
+    forward_log.log_month(me[4], bars, forward_dir=tmp_path)
+    forward_log.log_month(me[5], bars, forward_dir=tmp_path)
+    cur = json.loads((tmp_path / f"{me[4]:%Y-%m}.json").read_text())
+    held = cur["basket"][0]
+    exec_nxt = closes.index[closes.index > pd.Timestamp(me[5])][0]
+    opens2 = opens.copy()
+    opens2.loc[exec_nxt, held] = np.nan
+    rec = json.loads(forward_log.mark_month(f"{me[4]:%Y-%m}", (closes, opens2, volumes),
+                                            forward_dir=tmp_path).read_text())
+    assert held in rec["carried_at_period_end"]
+    assert held in rec["state_at_period_end"]["holdings"]

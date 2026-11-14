@@ -6,13 +6,14 @@ log  --as-of DATE    writes research/forward/YYYY-MM.json for the rebalance on D
                      basket, point-in-time ADV, benchmark members, input hashes.
                      Refuses to overwrite an existing month.
 mark --month YYYY-MM marks that month to market once the NEXT month is logged.
-                     Fills use next-session opens, with CostModel costs and the
-                     same delta-trading rules as basket_backtest.simulate.
+                     Fills use next-session opens, equal weight of current equity, with
+                     CostModel() defaults. The step is basket_backtest._rebalance_step, the
+                     same one simulate_rebalanced uses (Amendment 1 mechanics).
                      Writes research/forward/YYYY-MM.marked.json. Refuses to overwrite.
 
-Fills mirror simulate(). The differences are deliberate: a missing open raises
-(no fallback to close), and an ADV gap raises (no substitute). Marks chain,
-so each month starts from the portfolio state the previous mark ended with.
+No close fallback: a held name with no open is carried at last price and logged, not
+traded. An ADV gap raises (no substitute). Marks chain, so each month starts from the
+portfolio state the previous mark ended with.
 
 Nothing here runs on import. Real month entries are generated only by running
 the log command.
@@ -41,7 +42,8 @@ PROTOCOL_PATH = "research/OOS_BASKET_PROTOCOL.md"
 sys.path.insert(0, str(_BACKEND))  # engines.*
 sys.path.insert(0, str(_BACKEND / "experiments"))  # basket_backtest (wires sandbox/)
 
-from basket_backtest import ASSUMED_SPREAD_BPS, DEFAULT_BUDGET_INR, top_quartile  # noqa: E402
+from basket_backtest import (ASSUMED_SPREAD_BPS, DEFAULT_BUDGET_INR, _carry_px, _rebalance_step,  # noqa: E402
+                             top_quartile)
 from engines.cost_model import CostModel  # noqa: E402
 from prices import ADV_WINDOW_TRADING_DAYS, _download_one, point_in_time_adv  # noqa: E402
 from rs_signal import LOOKBACK_TRADING_DAYS, rank_table  # noqa: E402
@@ -54,6 +56,7 @@ PARAMS = {
     "spread_bps": ASSUMED_SPREAD_BPS,
     "adv_window_sessions": ADV_WINDOW_TRADING_DAYS,
     "eligibility": "full point-in-time ADV window at the rebalance",
+    "sizing": "equal weight of current equity, fractional shares (Amendment 1, simulate_rebalanced step)",
     "cost_model": "engines.cost_model.CostModel() defaults",
 }
 
@@ -149,46 +152,16 @@ def log_month(as_of: date, bars, forward_dir: Path = FORWARD_DIR) -> Path:
     return path
 
 
-def _open(opens: pd.DataFrame, sym: str, day: date) -> float:
-    price = opens.at[pd.Timestamp(day), sym] if sym in opens.columns else float("nan")
-    if not price or price != price or price <= 0:  # NaN or non-positive
-        raise ValueError(f"no open price for {sym} on {day}; refusing to fall back to close")
-    return float(price)
+def _fill(state: dict, rec: dict, closes: pd.DataFrame, opens: pd.DataFrame, day: date, cm: CostModel) -> tuple[dict, dict]:
+    """Equal-weight rebalance at `day`'s open: the same step as basket_backtest.simulate_rebalanced."""
+    step = _rebalance_step(state, rec["basket"], rec["adv"], closes, opens, day, cm, ASSUMED_SPREAD_BPS)
+    if step is None:
+        raise RuntimeError(f"no basket name has an open on {day}; nothing to trade")
+    return step
 
 
-def _adv(rec: dict, sym: str) -> float:
-    if sym not in rec["adv"]:
-        raise ValueError(f"no point-in-time ADV for {sym} at {rec['as_of']}; refusing to substitute")
-    return rec["adv"][sym]
-
-
-def _fill(state: dict, rec: dict, opens: pd.DataFrame, day: date, cm: CostModel) -> tuple[dict, float]:
-    """Delta fills at `day`'s open, mirroring simulate(). Returns (new state, costs paid)."""
-    holdings = dict(state["holdings"])
-    cash = float(state["cash"])
-    prev = set(state["basket"])
-    new = set(rec["basket"])
-    per_position = DEFAULT_BUDGET_INR / max(len(rec["basket"]), 1)
-    buy_n = buy_c = sell_n = sell_c = 0.0
-    for sym in sorted(new - prev):
-        price = _open(opens, sym, day)
-        qty = max(1, int(per_position // price))
-        holdings[sym] = float(qty)
-        buy_n += qty * price
-        buy_c += cm.total_cost(price=price, qty=float(qty), adv=_adv(rec, sym), spread_bps=ASSUMED_SPREAD_BPS, side="BUY")
-    for sym in sorted(prev - new):
-        qty = holdings.pop(sym, 0.0)
-        if qty <= 0:
-            continue
-        price = _open(opens, sym, day)
-        sell_n += qty * price
-        sell_c += cm.total_cost(price=price, qty=qty, adv=_adv(rec, sym), spread_bps=ASSUMED_SPREAD_BPS, side="SELL")
-    cash = cash + sell_n - sell_c - buy_n - buy_c
-    return {"holdings": holdings, "cash": cash, "basket": sorted(new)}, buy_c + sell_c
-
-
-def _value(state: dict, opens: pd.DataFrame, day: date) -> float:
-    return state["cash"] + sum(qty * _open(opens, sym, day) for sym, qty in state["holdings"].items())
+def _value(state: dict, closes: pd.DataFrame, opens: pd.DataFrame, day: date) -> float:
+    return state["cash"] + sum(qty * _carry_px(closes, opens, sym, day) for sym, qty in state["holdings"].items())
 
 
 def mark_month(month: str, bars, forward_dir: Path = FORWARD_DIR) -> Path:
@@ -205,17 +178,19 @@ def mark_month(month: str, bars, forward_dir: Path = FORWARD_DIR) -> Path:
         raise RuntimeError(f"next-session opens for {month} are not in the data yet")
 
     cm = CostModel()
-    prev_marked = forward_dir / f"{_prev_month(month)}.marked.json"
-    if (forward_dir / f"{_prev_month(month)}.json").exists():
+    prev_log = forward_dir / f"{_prev_month(month)}.json"
+    if prev_log.exists():
+        prev_marked = forward_dir / f"{_prev_month(month)}.marked.json"
         if not prev_marked.exists():
             raise FileNotFoundError(f"mark {_prev_month(month)} first; marks chain")
-        base = _load(prev_marked)["state_at_period_end"]  # already holds this month's entry fills
-        costs_in = _load(prev_marked)["costs_at_period_end"]
+        prev = _load(prev_marked)
+        base, costs_in = prev["state_at_period_end"], prev["costs_at_period_end"]  # holds this month's entry fills
     else:
-        base, costs_in = _fill({"holdings": {}, "cash": DEFAULT_BUDGET_INR, "basket": []}, cur, opens, exec_cur, cm)
-    eq_start = _value(base, opens, exec_cur)
-    state_end, costs_out = _fill(base, nxt, opens, exec_nxt, cm)
-    eq_end = _value(state_end, opens, exec_nxt)
+        base, info_in = _fill({"cash": DEFAULT_BUDGET_INR, "holdings": {}}, cur, closes, opens, exec_cur, cm)
+        costs_in = info_in["costs"]
+    eq_start = _value(base, closes, opens, exec_cur)
+    state_end, info_out = _fill(base, nxt, closes, opens, exec_nxt, cm)
+    eq_end = _value(state_end, closes, opens, exec_nxt)
 
     record = {
         "month": month,
@@ -224,7 +199,9 @@ def mark_month(month: str, bars, forward_dir: Path = FORWARD_DIR) -> Path:
         "period_end_exec": exec_nxt.isoformat(),
         "next_month": _next_month(month),
         "costs_at_start": costs_in,
-        "costs_at_period_end": costs_out,
+        "costs_at_period_end": info_out["costs"],
+        "carried_at_period_end": info_out["carried"],
+        "skipped_buys_at_period_end": info_out["skipped_buys"],
         "equity_at_start": eq_start,
         "equity_at_period_end": eq_end,
         "net_return": eq_end / eq_start - 1.0,
