@@ -478,6 +478,7 @@ def simulate_rebalanced(
     k: int | None = None,
     lookback: int = LOOKBACK_TRADING_DAYS,
     trace: list | None = None,
+    select=None,
 ) -> dict:
     """
     Amendment 1 simulator. Same signal, eligibility (point-in-time ADV, full 63-session
@@ -485,6 +486,9 @@ def simulate_rebalanced(
     weight of current equity at every rebalance, with fractional shares. `cost_model` is
     passed in so the caller sets brokerage. Period return = equity after fills at t /
     equity after fills at t-1 - 1, with equity valued at each execution-day open.
+
+    select(closes, rebalance_date, eligible) -> ordered basket. None (default) uses the
+    top-quartile selection by lookback return, unchanged.
     """
     state = {"cash": float(budget), "holdings": {}}
     prev_equity: float | None = None
@@ -498,7 +502,12 @@ def simulate_rebalanced(
 
     for rb in rebalance_dates_list:
         eligible = set(adv_by_date.get(rb, {}))
-        basket = top_quartile(closes, rb, k=k, lookback=lookback, eligible=eligible)
+        if select is None:
+            basket = top_quartile(closes, rb, k=k, lookback=lookback, eligible=eligible)
+        else:
+            basket = list(select(closes, rb, eligible))
+            if not set(basket) <= eligible:
+                raise ValueError(f"select returned names without point-in-time ADV at {rb}")
         exec_day = execution_day(closes, rb)
         if not basket or exec_day is None:
             skipped.append(rb)
