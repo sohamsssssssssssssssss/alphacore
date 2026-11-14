@@ -157,5 +157,27 @@ def fetch_daily_bars(symbols: list[str], as_of: date, months_back: int = 18,
     return closes, adv
 
 
+def point_in_time_adv(closes: pd.DataFrame, volumes: pd.DataFrame, rebalance_dates: list[date],
+                      window: int = ADV_WINDOW_TRADING_DAYS) -> dict[date, dict[str, float]]:
+    """
+    ADV per rebalance date: mean(close * volume) over the `window` sessions
+    ending on that date (inclusive), per symbol. Uses only rows <= the date.
+
+    A symbol gets no entry for a date unless every session in the window has
+    a finite close and volume. Partial windows are not filled or averaged.
+    """
+    traded = closes * volumes
+    out: dict[date, dict[str, float]] = {}
+    for rb in rebalance_dates:
+        win = traded[traded.index <= pd.Timestamp(rb)].tail(window)
+        if len(win) < window:
+            out[rb] = {}
+            continue
+        means = win.mean()
+        full = win.notna().all()
+        out[rb] = {str(s): float(means[s]) for s in win.columns if bool(full[s])}
+    return out
+
+
 def now_utc_iso() -> str:
     return datetime.now().astimezone().isoformat(timespec="seconds")

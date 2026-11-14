@@ -1,0 +1,651 @@
+{
+  "source": "research/v2/k12_basket.json (period returns asserted equal)",
+  "stats": {
+    "first": 0.9929411831567805,
+    "last": 0.47175870801904224,
+    "min": 0.44872425685667283,
+    "mean": 0.5883422546030542,
+    "max": 0.996536628607049
+  },
+  "rebalances": [
+    {
+      "rebalance": "2020-09-30",
+      "exec_day": "2020-10-01",
+      "equity": 999263.6492824254,
+      "cash": 7053.619078371745,
+      "holdings_value": 992210.0302040536,
+      "invested_fraction": 0.9929411831567805,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2020-10-30",
+      "exec_day": "2020-11-02",
+      "equity": 1017548.8213506424,
+      "cash": 3524.149478796911,
+      "holdings_value": 1014024.6718718455,
+      "invested_fraction": 0.996536628607049,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2020-11-27",
+      "exec_day": "2020-12-01",
+      "equity": 1202738.831236822,
+      "cash": 75106.94574109373,
+      "holdings_value": 1127631.8854957283,
+      "invested_fraction": 0.9375534041219419,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2020-12-31",
+      "exec_day": "2021-01-01",
+      "equity": 1266583.863068118,
+      "cash": 237050.84839344752,
+      "holdings_value": 1029533.0146746704,
+      "invested_fraction": 0.8128423586423833,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-01-29",
+      "exec_day": "2021-02-01",
+      "equity": 1254093.3443866102,
+      "cash": 252425.34806356253,
+      "holdings_value": 1001667.9963230477,
+      "invested_fraction": 0.7987188519950034,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-02-26",
+      "exec_day": "2021-03-01",
+      "equity": 1359016.7040071972,
+      "cash": 255872.38499050692,
+      "holdings_value": 1103144.3190166904,
+      "invested_fraction": 0.8117224135391115,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-03-31",
+      "exec_day": "2021-04-01",
+      "equity": 1371283.2727860091,
+      "cash": 271680.9311554724,
+      "holdings_value": 1099602.3416305368,
+      "invested_fraction": 0.8018783306504546,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-04-30",
+      "exec_day": "2021-05-03",
+      "equity": 1419281.8435468737,
+      "cash": 228511.43816966098,
+      "holdings_value": 1190770.4053772127,
+      "invested_fraction": 0.8389950246960134,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-05-31",
+      "exec_day": "2021-06-01",
+      "equity": 1491583.0033742124,
+      "cash": 296827.7017339115,
+      "holdings_value": 1194755.3016403008,
+      "invested_fraction": 0.8009982005276024,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-06-30",
+      "exec_day": "2021-07-01",
+      "equity": 1530866.5475578532,
+      "cash": 310807.6353258627,
+      "holdings_value": 1220058.9122319904,
+      "invested_fraction": 0.7969727434297358,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-07-30",
+      "exec_day": "2021-08-02",
+      "equity": 1556693.4642979405,
+      "cash": 459452.1162644937,
+      "holdings_value": 1097241.3480334468,
+      "invested_fraction": 0.7048538284499679,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-08-31",
+      "exec_day": "2021-09-01",
+      "equity": 1635545.0957209745,
+      "cash": 570097.8431030416,
+      "holdings_value": 1065447.2526179329,
+      "invested_fraction": 0.6514325134815476,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-09-30",
+      "exec_day": "2021-10-01",
+      "equity": 1625879.0834628535,
+      "cash": 616216.2911836889,
+      "holdings_value": 1009662.7922791647,
+      "invested_fraction": 0.620995006669715,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-10-29",
+      "exec_day": "2021-11-01",
+      "equity": 1625013.5008248137,
+      "cash": 608924.391384708,
+      "holdings_value": 1016089.1094401056,
+      "invested_fraction": 0.625280410854658,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-11-30",
+      "exec_day": "2021-12-01",
+      "equity": 1586444.144948246,
+      "cash": 574303.0343845239,
+      "holdings_value": 1012141.1105637221,
+      "invested_fraction": 0.6379935365431607,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2021-12-31",
+      "exec_day": "2022-01-03",
+      "equity": 1613902.432835782,
+      "cash": 562558.4936333097,
+      "holdings_value": 1051343.9392024723,
+      "invested_fraction": 0.6514296761763719,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-01-31",
+      "exec_day": "2022-02-01",
+      "equity": 1550298.376505956,
+      "cash": 550306.5649845017,
+      "holdings_value": 999991.8115214542,
+      "invested_fraction": 0.6450318381776441,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-02-28",
+      "exec_day": "2022-03-02",
+      "equity": 1515977.6317389915,
+      "cash": 498017.53200400755,
+      "holdings_value": 1017960.099734984,
+      "invested_fraction": 0.671487546005064,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-03-31",
+      "exec_day": "2022-04-01",
+      "equity": 1548345.6578345853,
+      "cash": 533370.952330305,
+      "holdings_value": 1014974.7055042803,
+      "invested_fraction": 0.6555220408108079,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-04-29",
+      "exec_day": "2022-05-02",
+      "equity": 1560658.637245659,
+      "cash": 547385.205880455,
+      "holdings_value": 1013273.431365204,
+      "invested_fraction": 0.6492601310645919,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-05-31",
+      "exec_day": "2022-06-01",
+      "equity": 1536767.1322377285,
+      "cash": 520080.8035826996,
+      "holdings_value": 1016686.3286550288,
+      "invested_fraction": 0.6615747482669051,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-06-30",
+      "exec_day": "2022-07-01",
+      "equity": 1513439.471647061,
+      "cash": 512749.4281656849,
+      "holdings_value": 1000690.043481376,
+      "invested_fraction": 0.6612025536722226,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-07-29",
+      "exec_day": "2022-08-01",
+      "equity": 1589982.7586020166,
+      "cash": 583150.5977422614,
+      "holdings_value": 1006832.1608597551,
+      "invested_fraction": 0.6332346406982468,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-08-30",
+      "exec_day": "2022-09-01",
+      "equity": 1643056.7732654912,
+      "cash": 590879.2326351701,
+      "holdings_value": 1052177.540630321,
+      "invested_fraction": 0.6403780792913029,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-09-30",
+      "exec_day": "2022-10-03",
+      "equity": 1662110.6699458573,
+      "cash": 590925.1932112679,
+      "holdings_value": 1071185.4767345893,
+      "invested_fraction": 0.644473016209855,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-10-31",
+      "exec_day": "2022-11-01",
+      "equity": 1671985.9058631128,
+      "cash": 669772.3265897542,
+      "holdings_value": 1002213.5792733585,
+      "invested_fraction": 0.5994150882246795,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-11-30",
+      "exec_day": "2022-12-01",
+      "equity": 1714055.3540783238,
+      "cash": 688703.7304410686,
+      "holdings_value": 1025351.6236372552,
+      "invested_fraction": 0.5982021649403522,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2022-12-30",
+      "exec_day": "2023-01-02",
+      "equity": 1694033.0316428926,
+      "cash": 671349.3092539652,
+      "holdings_value": 1022683.7223889275,
+      "invested_fraction": 0.6036976276649795,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-01-31",
+      "exec_day": "2023-02-01",
+      "equity": 1673258.350871572,
+      "cash": 676151.0718407683,
+      "holdings_value": 997107.2790308037,
+      "invested_fraction": 0.5959075468001862,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-02-28",
+      "exec_day": "2023-03-01",
+      "equity": 1624025.0263473769,
+      "cash": 635602.0788129648,
+      "holdings_value": 988422.9475344121,
+      "invested_fraction": 0.6086254408021602,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-03-31",
+      "exec_day": "2023-04-03",
+      "equity": 1633793.1254773766,
+      "cash": 636779.3869915911,
+      "holdings_value": 997013.7384857856,
+      "invested_fraction": 0.6102447873836346,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-04-28",
+      "exec_day": "2023-05-02",
+      "equity": 1688789.9593419782,
+      "cash": 673753.0172487943,
+      "holdings_value": 1015036.942093184,
+      "invested_fraction": 0.6010439228858774,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-05-31",
+      "exec_day": "2023-06-01",
+      "equity": 1732869.3725812424,
+      "cash": 702482.6728534112,
+      "holdings_value": 1030386.6997278312,
+      "invested_fraction": 0.5946130250966297,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-06-30",
+      "exec_day": "2023-07-03",
+      "equity": 1755421.8641104298,
+      "cash": 750419.9104768233,
+      "holdings_value": 1005001.9536336064,
+      "invested_fraction": 0.5725130660503064,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-07-31",
+      "exec_day": "2023-08-01",
+      "equity": 1795379.8355669463,
+      "cash": 768506.4292112091,
+      "holdings_value": 1026873.4063557371,
+      "invested_fraction": 0.5719532914501462,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-08-31",
+      "exec_day": "2023-09-01",
+      "equity": 1777035.9710781393,
+      "cash": 777517.3992758944,
+      "holdings_value": 999518.5718022449,
+      "invested_fraction": 0.5624638938489414,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-09-29",
+      "exec_day": "2023-10-03",
+      "equity": 1803002.8941835666,
+      "cash": 798172.4344922621,
+      "holdings_value": 1004830.4596913045,
+      "invested_fraction": 0.557309399187798,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-10-31",
+      "exec_day": "2023-11-01",
+      "equity": 1792312.4793287455,
+      "cash": 792723.5294726096,
+      "holdings_value": 999588.9498561359,
+      "invested_fraction": 0.5577090833125821,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-11-30",
+      "exec_day": "2023-12-01",
+      "equity": 1888375.389263189,
+      "cash": 817178.9199990641,
+      "holdings_value": 1071196.4692641248,
+      "invested_fraction": 0.5672582238439821,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2023-12-29",
+      "exec_day": "2024-01-01",
+      "equity": 1988690.6054191156,
+      "cash": 922435.5934934663,
+      "holdings_value": 1066255.0119256494,
+      "invested_fraction": 0.5361593246431295,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-01-31",
+      "exec_day": "2024-02-01",
+      "equity": 2041052.2632096983,
+      "cash": 951432.6710384083,
+      "holdings_value": 1089619.59217129,
+      "invested_fraction": 0.5338518820962411,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-02-29",
+      "exec_day": "2024-03-01",
+      "equity": 2111078.3955381694,
+      "cash": 1009471.5236771501,
+      "holdings_value": 1101606.8718610194,
+      "invested_fraction": 0.5218218680032443,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-03-28",
+      "exec_day": "2024-04-01",
+      "equity": 2112270.331900805,
+      "cash": 1119738.368902789,
+      "holdings_value": 992531.9629980157,
+      "invested_fraction": 0.4698887012747317,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-04-30",
+      "exec_day": "2024-05-02",
+      "equity": 2103267.2164681074,
+      "cash": 1098332.936842807,
+      "holdings_value": 1004934.2796253004,
+      "invested_fraction": 0.4777967686449406,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-05-31",
+      "exec_day": "2024-06-03",
+      "equity": 2166955.2590513104,
+      "cash": 1131494.0014045024,
+      "holdings_value": 1035461.2576468079,
+      "invested_fraction": 0.47784154902216636,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-06-28",
+      "exec_day": "2024-07-01",
+      "equity": 2172033.1663576695,
+      "cash": 1157512.7814755926,
+      "holdings_value": 1014520.384882077,
+      "invested_fraction": 0.4670832842683285,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-07-31",
+      "exec_day": "2024-08-01",
+      "equity": 2193787.362822864,
+      "cash": 1187854.7000135349,
+      "holdings_value": 1005932.6628093296,
+      "invested_fraction": 0.45853699399332026,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-08-30",
+      "exec_day": "2024-09-02",
+      "equity": 2210356.829859643,
+      "cash": 1216228.5948687566,
+      "holdings_value": 994128.2349908863,
+      "invested_fraction": 0.44975916176123165,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-09-30",
+      "exec_day": "2024-10-01",
+      "equity": 2250773.6291769,
+      "cash": 1240796.905071899,
+      "holdings_value": 1009976.7241050008,
+      "invested_fraction": 0.44872425685667283,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-10-31",
+      "exec_day": "2024-11-01",
+      "equity": 2155655.1696249074,
+      "cash": 1166892.6137222596,
+      "holdings_value": 988762.5559026478,
+      "invested_fraction": 0.4586830815221232,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-11-29",
+      "exec_day": "2024-12-02",
+      "equity": 2167859.4545801384,
+      "cash": 1156870.1223607718,
+      "holdings_value": 1010989.3322193667,
+      "invested_fraction": 0.466353725138132,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2024-12-31",
+      "exec_day": "2025-01-01",
+      "equity": 2147652.991088221,
+      "cash": 1156622.042541662,
+      "holdings_value": 991030.9485465587,
+      "invested_fraction": 0.4614483590500349,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-01-31",
+      "exec_day": "2025-02-01",
+      "equity": 2116287.5246756603,
+      "cash": 1110108.6034037624,
+      "holdings_value": 1006178.9212718979,
+      "invested_fraction": 0.47544528309124895,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-02-28",
+      "exec_day": "2025-03-03",
+      "equity": 2075882.1322311414,
+      "cash": 1061636.8654120245,
+      "holdings_value": 1014245.2668191169,
+      "invested_fraction": 0.4885851903975946,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-03-28",
+      "exec_day": "2025-04-01",
+      "equity": 2110517.8169622817,
+      "cash": 1070250.0103514679,
+      "holdings_value": 1040267.806610814,
+      "invested_fraction": 0.4928969555481394,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-04-30",
+      "exec_day": "2025-05-02",
+      "equity": 2127536.0633715745,
+      "cash": 1112765.5624927687,
+      "holdings_value": 1014770.5008788058,
+      "invested_fraction": 0.47696982361401974,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-05-30",
+      "exec_day": "2025-06-02",
+      "equity": 2131378.145935001,
+      "cash": 1141023.304908661,
+      "holdings_value": 990354.8410263399,
+      "invested_fraction": 0.46465468500517415,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-06-30",
+      "exec_day": "2025-07-01",
+      "equity": 2149449.017128328,
+      "cash": 1161023.3388071666,
+      "holdings_value": 988425.6783211615,
+      "invested_fraction": 0.45985072008904965,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-07-31",
+      "exec_day": "2025-08-01",
+      "equity": 2100252.459604321,
+      "cash": 1108775.584705428,
+      "holdings_value": 991476.8748988933,
+      "invested_fraction": 0.4720750928608285,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-08-29",
+      "exec_day": "2025-09-01",
+      "equity": 2103745.25083125,
+      "cash": 1123820.4599254967,
+      "holdings_value": 979924.7909057536,
+      "invested_fraction": 0.4658001202942976,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-09-30",
+      "exec_day": "2025-10-01",
+      "equity": 2118830.3090512566,
+      "cash": 1112983.624710937,
+      "holdings_value": 1005846.6843403194,
+      "invested_fraction": 0.4747179045171885,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-10-31",
+      "exec_day": "2025-11-03",
+      "equity": 2171968.7202158417,
+      "cash": 1144367.116977952,
+      "holdings_value": 1027601.6032378896,
+      "invested_fraction": 0.4731198905736408,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-11-28",
+      "exec_day": "2025-12-01",
+      "equity": 2180431.101767361,
+      "cash": 1175921.7213450202,
+      "holdings_value": 1004509.3804223412,
+      "invested_fraction": 0.46069301598575174,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2025-12-31",
+      "exec_day": "2026-01-01",
+      "equity": 2177737.0557577144,
+      "cash": 1158636.7773298253,
+      "holdings_value": 1019100.2784278891,
+      "invested_fraction": 0.4679629598685902,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2026-01-30",
+      "exec_day": "2026-02-02",
+      "equity": 2142661.9721901165,
+      "cash": 1140420.864420637,
+      "holdings_value": 1002241.1077694796,
+      "invested_fraction": 0.46775511992917923,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2026-02-27",
+      "exec_day": "2026-03-02",
+      "equity": 2157339.5211680424,
+      "cash": 1160796.8980180665,
+      "holdings_value": 996542.6231499759,
+      "invested_fraction": 0.46193128776059345,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2026-03-30",
+      "exec_day": "2026-04-01",
+      "equity": 2075745.4013777697,
+      "cash": 1072515.2738757625,
+      "holdings_value": 1003230.1275020071,
+      "invested_fraction": 0.48331077926807214,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2026-04-30",
+      "exec_day": "2026-05-04",
+      "equity": 2096464.8587433675,
+      "cash": 1099506.7583571724,
+      "holdings_value": 996958.1003861951,
+      "invested_fraction": 0.47554248106203756,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2026-05-29",
+      "exec_day": "2026-06-01",
+      "equity": 2130365.809443888,
+      "cash": 1089020.7974234931,
+      "holdings_value": 1041345.0120203948,
+      "invested_fraction": 0.48881042279411546,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2026-06-30",
+      "exec_day": "2026-07-01",
+      "equity": 2104539.950043996,
+      "cash": 1098137.5548293486,
+      "holdings_value": 1006402.3952146473,
+      "invested_fraction": 0.47820541263358207,
+      "n_positions": 12
+    },
+    {
+      "rebalance": "2026-07-31",
+      "exec_day": "2026-08-03",
+      "equity": 2117171.006086506,
+      "cash": 1118377.14759976,
+      "holdings_value": 998793.8584867459,
+      "invested_fraction": 0.47175870801904224,
+      "n_positions": 12
+    }
+  ]
+}
