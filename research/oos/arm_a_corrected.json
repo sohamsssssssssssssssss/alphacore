@@ -1,0 +1,5853 @@
+{
+  "arm": "A-corrected",
+  "protocol": "research/OOS_BASKET_PROTOCOL.md",
+  "protocol_commit": "ec9679a22df7ca6738fdf6280a9e7b46982584a8",
+  "amendment": "research/OOS_BASKET_AMENDMENT_1.md",
+  "amendment_commit": "5f7e8ede469eb2d3ca727e4b29c18cb7827025d9",
+  "code_commit": "c5f5a07b5e15d3c3760fc3211038aa4909535d54",
+  "code_dirty_tracked_files": false,
+  "run_timestamp_utc": "2026-11-14T17:08:57+00:00",
+  "universe_file": "data_snapshots/us-2026-11/universe.txt",
+  "universe_sha256": "a9edcb70c6eafc8c1b14018cf12ca26525a05656aaff9d2ef9635b8c598264fc",
+  "universe_header": [
+    "# S&P 100 constituents, as listed on the Wikipedia page below",
+    "# source_url: https://en.wikipedia.org/wiki/S%26P_100",
+    "# retrieved_utc: 2026-11-14T16:50:55Z",
+    "# ticker form is the page's; Yahoo symbol = ticker with '.' replaced by '-' (oos_basket.yahoo_symbol)",
+    "# count: 101"
+  ],
+  "manifest_sha256": "92c4de2da39e6bb817de4fb34eee414344d077cd02cc19130395e0267308a802",
+  "data_window": [
+    "2010-01-04",
+    "2026-10-30"
+  ],
+  "tickers_requested": 101,
+  "symbols_loaded": 101,
+  "unavailable": {},
+  "params": {
+    "lookback_sessions": 21,
+    "k_rule": "basket n_ranked // 4; benchmark all eligible names",
+    "sizing": "equal weight of current equity at each rebalance, fractional shares, cash 0-1% after fills",
+    "schedule": "last trading session of each month; trade at next session open",
+    "adv": "point-in-time mean(close*volume) over 63 sessions ending on rebalance day",
+    "eligibility": "rankable only with a full point-in-time ADV window",
+    "budget": 1000000.0,
+    "spread_bps": 10.0,
+    "cost_model": "engines.cost_model.CostModel(brokerage_per_trade=0.0), other defaults",
+    "bootstrap": {
+      "type": "stationary",
+      "n_bootstrap": 2000,
+      "mean_block": 3,
+      "seed": 2026,
+      "confidence": 0.95,
+      "periods_per_year": 12,
+      "risk_free": 0.0
+    }
+  },
+  "n_months": 197,
+  "scheduled_month_ends": 202,
+  "scheduled_first": "2010-01-29",
+  "scheduled_last": "2026-10-30",
+  "actionable_first": "2010-04-30",
+  "actionable_last": "2026-09-30",
+  "monthly": [
+    {
+      "rebalance_date": "2010-05-28",
+      "basket_net": -0.06507037302186014,
+      "benchmark_net": -0.08292576053916245,
+      "active": 0.017855387517302312
+    },
+    {
+      "rebalance_date": "2010-06-30",
+      "basket_net": -0.012773974089692941,
+      "benchmark_net": -0.041795173529764695,
+      "active": 0.029021199440071754
+    },
+    {
+      "rebalance_date": "2010-07-30",
+      "basket_net": 0.07578542449401304,
+      "benchmark_net": 0.07854698957508055,
+      "active": -0.0027615650810675074
+    },
+    {
+      "rebalance_date": "2010-08-31",
+      "basket_net": -0.02106341609588369,
+      "benchmark_net": -0.03785340352248745,
+      "active": 0.01678998742660376
+    },
+    {
+      "rebalance_date": "2010-09-30",
+      "basket_net": 0.08886776162963272,
+      "benchmark_net": 0.09000295486017773,
+      "active": -0.0011351932305450063
+    },
+    {
+      "rebalance_date": "2010-10-29",
+      "basket_net": 0.04347360350738683,
+      "benchmark_net": 0.03709211523080236,
+      "active": 0.006381488276584468
+    },
+    {
+      "rebalance_date": "2010-11-30",
+      "basket_net": -0.00996384515058224,
+      "benchmark_net": 0.013652334121901033,
+      "active": -0.023616179272483273
+    },
+    {
+      "rebalance_date": "2010-12-31",
+      "basket_net": 0.020193331771024114,
+      "benchmark_net": 0.05361252927744453,
+      "active": -0.03341919750642042
+    },
+    {
+      "rebalance_date": "2011-01-31",
+      "basket_net": 0.04248480368516683,
+      "benchmark_net": 0.032153758467024174,
+      "active": 0.010331045218142654
+    },
+    {
+      "rebalance_date": "2011-02-28",
+      "basket_net": 0.02220916058109923,
+      "benchmark_net": 0.02985541173967987,
+      "active": -0.007646251158580641
+    },
+    {
+      "rebalance_date": "2011-03-31",
+      "basket_net": 0.0061604974310844884,
+      "benchmark_net": 0.009006200749144933,
+      "active": -0.002845703318060444
+    },
+    {
+      "rebalance_date": "2011-04-29",
+      "basket_net": 0.03412797146064017,
+      "benchmark_net": 0.02730262227304503,
+      "active": 0.006825349187595142
+    },
+    {
+      "rebalance_date": "2011-05-31",
+      "basket_net": 0.0002721699915766429,
+      "benchmark_net": -0.010637905010260629,
+      "active": 0.010910075001837272
+    },
+    {
+      "rebalance_date": "2011-06-30",
+      "basket_net": -0.019335346861720892,
+      "benchmark_net": -0.01840336212416005,
+      "active": -0.0009319847375608425
+    },
+    {
+      "rebalance_date": "2011-07-29",
+      "basket_net": -0.014491504386290321,
+      "benchmark_net": -0.012273582046554155,
+      "active": -0.002217922339736167
+    },
+    {
+      "rebalance_date": "2011-08-31",
+      "basket_net": -0.05522765642678207,
+      "benchmark_net": -0.061208185272523696,
+      "active": 0.005980528845741628
+    },
+    {
+      "rebalance_date": "2011-09-30",
+      "basket_net": -0.039012897865043805,
+      "benchmark_net": -0.07009123366134684,
+      "active": 0.031078335796303036
+    },
+    {
+      "rebalance_date": "2011-10-31",
+      "basket_net": 0.045941390957899175,
+      "benchmark_net": 0.0747888049355423,
+      "active": -0.02884741397764312
+    },
+    {
+      "rebalance_date": "2011-11-30",
+      "basket_net": 0.001414748273504518,
+      "benchmark_net": 0.02148993760119544,
+      "active": -0.020075189327690923
+    },
+    {
+      "rebalance_date": "2011-12-30",
+      "basket_net": 0.03631965588560515,
+      "benchmark_net": 0.033255372261883354,
+      "active": 0.0030642836237217974
+    },
+    {
+      "rebalance_date": "2012-01-31",
+      "basket_net": 0.03735729968037149,
+      "benchmark_net": 0.05472930407384147,
+      "active": -0.017372004393469975
+    },
+    {
+      "rebalance_date": "2012-02-29",
+      "basket_net": 0.055994108287412914,
+      "benchmark_net": 0.043177799338899536,
+      "active": 0.012816308948513377
+    },
+    {
+      "rebalance_date": "2012-03-30",
+      "basket_net": 0.04498258812337852,
+      "benchmark_net": 0.03721519051035771,
+      "active": 0.00776739761302081
+    },
+    {
+      "rebalance_date": "2012-04-30",
+      "basket_net": -0.012354693638512826,
+      "benchmark_net": -0.01679942996839301,
+      "active": 0.004444736329880183
+    },
+    {
+      "rebalance_date": "2012-05-31",
+      "basket_net": -0.053360418591942294,
+      "benchmark_net": -0.07760878898311419,
+      "active": 0.024248370391171892
+    },
+    {
+      "rebalance_date": "2012-06-29",
+      "basket_net": 0.059515058602685134,
+      "benchmark_net": 0.06538781626287915,
+      "active": -0.005872757660194017
+    },
+    {
+      "rebalance_date": "2012-07-31",
+      "basket_net": -0.00895922644106284,
+      "benchmark_net": 0.00442154891445079,
+      "active": -0.01338077535551363
+    },
+    {
+      "rebalance_date": "2012-08-31",
+      "basket_net": 0.011482651200697802,
+      "benchmark_net": 0.01684403183458838,
+      "active": -0.005361380633890578
+    },
+    {
+      "rebalance_date": "2012-09-28",
+      "basket_net": 0.04465050730639031,
+      "benchmark_net": 0.0320483541446519,
+      "active": 0.012602153161738405
+    },
+    {
+      "rebalance_date": "2012-10-31",
+      "basket_net": -0.010646150110599772,
+      "benchmark_net": -0.007908942630770133,
+      "active": -0.0027372074798296397
+    },
+    {
+      "rebalance_date": "2012-11-30",
+      "basket_net": 0.0024199024710931383,
+      "benchmark_net": 0.022189068982421123,
+      "active": -0.019769166511327985
+    },
+    {
+      "rebalance_date": "2012-12-31",
+      "basket_net": 0.02736565454144846,
+      "benchmark_net": 0.030708736541681603,
+      "active": -0.003343082000233144
+    },
+    {
+      "rebalance_date": "2013-01-31",
+      "basket_net": 0.08289067149373386,
+      "benchmark_net": 0.05210108499657462,
+      "active": 0.030789586497159238
+    },
+    {
+      "rebalance_date": "2013-02-28",
+      "basket_net": -0.012539127431057007,
+      "benchmark_net": 0.004840959649540011,
+      "active": -0.017380087080597018
+    },
+    {
+      "rebalance_date": "2013-03-28",
+      "basket_net": 0.046928820808620486,
+      "benchmark_net": 0.03981738944669155,
+      "active": 0.007111431361928933
+    },
+    {
+      "rebalance_date": "2013-04-30",
+      "basket_net": 0.02234191551727327,
+      "benchmark_net": 0.02463500804500418,
+      "active": -0.002293092527730911
+    },
+    {
+      "rebalance_date": "2013-05-31",
+      "basket_net": 0.08109025382847723,
+      "benchmark_net": 0.04984483677513807,
+      "active": 0.031245417053339164
+    },
+    {
+      "rebalance_date": "2013-06-28",
+      "basket_net": 0.007086272648888059,
+      "benchmark_net": -0.003198944489453348,
+      "active": 0.010285217138341407
+    },
+    {
+      "rebalance_date": "2013-07-31",
+      "basket_net": 0.07546107615252762,
+      "benchmark_net": 0.06191365626795031,
+      "active": 0.013547419884577305
+    },
+    {
+      "rebalance_date": "2013-08-30",
+      "basket_net": 0.009627801542016146,
+      "benchmark_net": -0.022111043928104923,
+      "active": 0.03173884547012107
+    },
+    {
+      "rebalance_date": "2013-09-30",
+      "basket_net": 0.058715997950293586,
+      "benchmark_net": 0.03729206526313256,
+      "active": 0.02142393268716103
+    },
+    {
+      "rebalance_date": "2013-10-31",
+      "basket_net": 0.03568860417400965,
+      "benchmark_net": 0.044316752832118445,
+      "active": -0.008628148658108792
+    },
+    {
+      "rebalance_date": "2013-11-29",
+      "basket_net": 0.021969772979802515,
+      "benchmark_net": 0.029139337951033406,
+      "active": -0.007169564971230891
+    },
+    {
+      "rebalance_date": "2013-12-31",
+      "basket_net": 0.02104032614372575,
+      "benchmark_net": 0.03393939405743995,
+      "active": -0.012899067913714202
+    },
+    {
+      "rebalance_date": "2014-01-31",
+      "basket_net": -0.007994803457514132,
+      "benchmark_net": -0.017596089906246726,
+      "active": 0.009601286448732593
+    },
+    {
+      "rebalance_date": "2014-02-28",
+      "basket_net": 0.05208388478321968,
+      "benchmark_net": 0.03724576483612352,
+      "active": 0.014838119947096162
+    },
+    {
+      "rebalance_date": "2014-03-31",
+      "basket_net": -0.020580070296122743,
+      "benchmark_net": 0.01866312591453312,
+      "active": -0.03924319621065586
+    },
+    {
+      "rebalance_date": "2014-04-30",
+      "basket_net": -0.006208393355197184,
+      "benchmark_net": -0.007606633227905557,
+      "active": 0.0013982398727083734
+    },
+    {
+      "rebalance_date": "2014-05-30",
+      "basket_net": 0.013798568668897948,
+      "benchmark_net": 0.030698636328405415,
+      "active": -0.016900067659507467
+    },
+    {
+      "rebalance_date": "2014-06-30",
+      "basket_net": 0.033729894238563984,
+      "benchmark_net": 0.029666221257914627,
+      "active": 0.004063672980649358
+    },
+    {
+      "rebalance_date": "2014-07-31",
+      "basket_net": -0.024163165042658585,
+      "benchmark_net": -0.017534820476148072,
+      "active": -0.006628344566510513
+    },
+    {
+      "rebalance_date": "2014-08-29",
+      "basket_net": 0.03723247856958389,
+      "benchmark_net": 0.046474129893278704,
+      "active": -0.00924165132369481
+    },
+    {
+      "rebalance_date": "2014-09-30",
+      "basket_net": -0.021771408445729334,
+      "benchmark_net": -0.007974085270677778,
+      "active": -0.013797323175051557
+    },
+    {
+      "rebalance_date": "2014-10-31",
+      "basket_net": 0.020906875681215853,
+      "benchmark_net": 0.028821032724443807,
+      "active": -0.007914157043227954
+    },
+    {
+      "rebalance_date": "2014-11-28",
+      "basket_net": 0.035513561976158625,
+      "benchmark_net": 0.027362728088590638,
+      "active": 0.008150833887567988
+    },
+    {
+      "rebalance_date": "2014-12-31",
+      "basket_net": -0.008080842567330104,
+      "benchmark_net": 0.0020637914760930354,
+      "active": -0.01014463404342314
+    },
+    {
+      "rebalance_date": "2015-01-30",
+      "basket_net": -0.05314132988369935,
+      "benchmark_net": -0.02838279493737339,
+      "active": -0.02475853494632596
+    },
+    {
+      "rebalance_date": "2015-02-27",
+      "basket_net": 0.04743058615328155,
+      "benchmark_net": 0.06251093446251343,
+      "active": -0.015080348309231884
+    },
+    {
+      "rebalance_date": "2015-03-31",
+      "basket_net": -0.02370519819962269,
+      "benchmark_net": -0.02450127445945416,
+      "active": 0.0007960762598314686
+    },
+    {
+      "rebalance_date": "2015-04-30",
+      "basket_net": -0.013420526024274126,
+      "benchmark_net": 0.01889040685542076,
+      "active": -0.03231093287969489
+    },
+    {
+      "rebalance_date": "2015-05-29",
+      "basket_net": 0.018136823914460587,
+      "benchmark_net": 0.02441536790127552,
+      "active": -0.006278543986814933
+    },
+    {
+      "rebalance_date": "2015-06-30",
+      "basket_net": 0.023203546854897228,
+      "benchmark_net": -0.011009788584227742,
+      "active": 0.03421333543912497
+    },
+    {
+      "rebalance_date": "2015-07-31",
+      "basket_net": 0.023089960035546975,
+      "benchmark_net": 0.021774845530112774,
+      "active": 0.0013151145054342006
+    },
+    {
+      "rebalance_date": "2015-08-31",
+      "basket_net": -0.07785527941186665,
+      "benchmark_net": -0.08440495785267521,
+      "active": 0.0065496784408085595
+    },
+    {
+      "rebalance_date": "2015-09-30",
+      "basket_net": 0.014420893265280288,
+      "benchmark_net": 0.0025047245071057045,
+      "active": 0.011916168758174583
+    },
+    {
+      "rebalance_date": "2015-10-30",
+      "basket_net": 0.08148409103775323,
+      "benchmark_net": 0.08717936149362382,
+      "active": -0.0056952704558705936
+    },
+    {
+      "rebalance_date": "2015-11-30",
+      "basket_net": 0.024206399158412495,
+      "benchmark_net": 0.016186102824041093,
+      "active": 0.008020296334371402
+    },
+    {
+      "rebalance_date": "2015-12-31",
+      "basket_net": -0.01626999690448583,
+      "benchmark_net": -0.027986338150738144,
+      "active": 0.011716341246252315
+    },
+    {
+      "rebalance_date": "2016-01-29",
+      "basket_net": -0.017220200319502554,
+      "benchmark_net": -0.05506743141352399,
+      "active": 0.03784723109402144
+    },
+    {
+      "rebalance_date": "2016-02-29",
+      "basket_net": 0.008657908608302733,
+      "benchmark_net": 0.0137489571836511,
+      "active": -0.005091048575348367
+    },
+    {
+      "rebalance_date": "2016-03-31",
+      "basket_net": 0.051634198016679456,
+      "benchmark_net": 0.06027868579727569,
+      "active": -0.008644487780596233
+    },
+    {
+      "rebalance_date": "2016-04-29",
+      "basket_net": 0.014019295230661033,
+      "benchmark_net": 0.0267076786422471,
+      "active": -0.012688383411586068
+    },
+    {
+      "rebalance_date": "2016-05-31",
+      "basket_net": 0.016790652439181653,
+      "benchmark_net": 0.0189646387665654,
+      "active": -0.002173986327383748
+    },
+    {
+      "rebalance_date": "2016-06-30",
+      "basket_net": -0.01721924451025425,
+      "benchmark_net": 0.0009531999809855307,
+      "active": -0.01817244449123978
+    },
+    {
+      "rebalance_date": "2016-07-29",
+      "basket_net": 0.03012008857725368,
+      "benchmark_net": 0.054847234382403576,
+      "active": -0.024727145805149897
+    },
+    {
+      "rebalance_date": "2016-08-31",
+      "basket_net": 0.021689107249675876,
+      "benchmark_net": 0.009649569021755733,
+      "active": 0.012039538227920143
+    },
+    {
+      "rebalance_date": "2016-09-30",
+      "basket_net": -0.003995176462887717,
+      "benchmark_net": 0.003495233117230656,
+      "active": -0.0074904095801183734
+    },
+    {
+      "rebalance_date": "2016-10-31",
+      "basket_net": -0.012504153624256165,
+      "benchmark_net": -0.0024746191669339224,
+      "active": -0.010029534457322242
+    },
+    {
+      "rebalance_date": "2016-11-30",
+      "basket_net": 0.08571139576789122,
+      "benchmark_net": 0.04163220343277696,
+      "active": 0.04407919233511426
+    },
+    {
+      "rebalance_date": "2016-12-30",
+      "basket_net": 0.04619436694012502,
+      "benchmark_net": 0.029903177900376665,
+      "active": 0.016291189039748355
+    },
+    {
+      "rebalance_date": "2017-01-31",
+      "basket_net": 0.02153842755875468,
+      "benchmark_net": 0.025191315152188087,
+      "active": -0.003652887593433407
+    },
+    {
+      "rebalance_date": "2017-02-28",
+      "basket_net": 0.0366941704334105,
+      "benchmark_net": 0.052782599091425464,
+      "active": -0.016088428658014964
+    },
+    {
+      "rebalance_date": "2017-03-31",
+      "basket_net": -0.0019905857362707557,
+      "benchmark_net": -0.0032273214297294794,
+      "active": 0.0012367356934587237
+    },
+    {
+      "rebalance_date": "2017-04-28",
+      "basket_net": 0.02727182257911842,
+      "benchmark_net": 0.01855545070483333,
+      "active": 0.00871637187428509
+    },
+    {
+      "rebalance_date": "2017-05-31",
+      "basket_net": 0.04634760673634464,
+      "benchmark_net": 0.026578957824644034,
+      "active": 0.019768648911700604
+    },
+    {
+      "rebalance_date": "2017-06-30",
+      "basket_net": -0.021598916956925063,
+      "benchmark_net": 0.00779537683920406,
+      "active": -0.029394293796129123
+    },
+    {
+      "rebalance_date": "2017-07-31",
+      "basket_net": 0.014564219146602886,
+      "benchmark_net": 0.021084749517896295,
+      "active": -0.006520530371293409
+    },
+    {
+      "rebalance_date": "2017-08-31",
+      "basket_net": 0.003550271850220943,
+      "benchmark_net": 0.012965653894084328,
+      "active": -0.009415382043863385
+    },
+    {
+      "rebalance_date": "2017-09-29",
+      "basket_net": 0.04264823453523259,
+      "benchmark_net": 0.02972455189145573,
+      "active": 0.012923682643776857
+    },
+    {
+      "rebalance_date": "2017-10-31",
+      "basket_net": 0.047315410821834325,
+      "benchmark_net": 0.033044823787505395,
+      "active": 0.01427058703432893
+    },
+    {
+      "rebalance_date": "2017-11-30",
+      "basket_net": 0.0021920707643412474,
+      "benchmark_net": 0.02403173022485472,
+      "active": -0.021839659460513472
+    },
+    {
+      "rebalance_date": "2017-12-29",
+      "basket_net": 0.019239743885829608,
+      "benchmark_net": 0.017569867649972037,
+      "active": 0.0016698762358575703
+    },
+    {
+      "rebalance_date": "2018-01-31",
+      "basket_net": 0.04725717587290279,
+      "benchmark_net": 0.05715579846853913,
+      "active": -0.009898622595636342
+    },
+    {
+      "rebalance_date": "2018-02-28",
+      "basket_net": -0.0020013094513836593,
+      "benchmark_net": -0.024343189908001328,
+      "active": 0.02234188045661767
+    },
+    {
+      "rebalance_date": "2018-03-29",
+      "basket_net": -0.021487013828059176,
+      "benchmark_net": -0.03211067923502542,
+      "active": 0.010623665406966243
+    },
+    {
+      "rebalance_date": "2018-04-30",
+      "basket_net": 0.012641214419083058,
+      "benchmark_net": 0.002354377215820991,
+      "active": 0.010286837203262067
+    },
+    {
+      "rebalance_date": "2018-05-31",
+      "basket_net": 0.03895043193665959,
+      "benchmark_net": 0.04034851613181001,
+      "active": -0.0013980841951504175
+    },
+    {
+      "rebalance_date": "2018-06-29",
+      "basket_net": -0.01921855762349356,
+      "benchmark_net": -0.011417780212673367,
+      "active": -0.007800777410820192
+    },
+    {
+      "rebalance_date": "2018-07-31",
+      "basket_net": 0.034226929668144335,
+      "benchmark_net": 0.048191813876171885,
+      "active": -0.01396488420802755
+    },
+    {
+      "rebalance_date": "2018-08-31",
+      "basket_net": 0.02227229725748736,
+      "benchmark_net": 0.02682708105666376,
+      "active": -0.004554783799176398
+    },
+    {
+      "rebalance_date": "2018-09-28",
+      "basket_net": 0.024601477239432068,
+      "benchmark_net": 0.018544188809759055,
+      "active": 0.006057288429673013
+    },
+    {
+      "rebalance_date": "2018-10-31",
+      "basket_net": -0.08410310034332469,
+      "benchmark_net": -0.06628854868148781,
+      "active": -0.017814551661836875
+    },
+    {
+      "rebalance_date": "2018-11-30",
+      "basket_net": 0.03234473559608175,
+      "benchmark_net": 0.045578876001463264,
+      "active": -0.013234140405381511
+    },
+    {
+      "rebalance_date": "2018-12-31",
+      "basket_net": -0.10956421075813771,
+      "benchmark_net": -0.1135085136832773,
+      "active": 0.003944302925139587
+    },
+    {
+      "rebalance_date": "2019-01-31",
+      "basket_net": 0.07126213279699511,
+      "benchmark_net": 0.10159709793257554,
+      "active": -0.030334965135580427
+    },
+    {
+      "rebalance_date": "2019-02-28",
+      "basket_net": 0.04089809042934389,
+      "benchmark_net": 0.04591178612491342,
+      "active": -0.005013695695569531
+    },
+    {
+      "rebalance_date": "2019-03-29",
+      "basket_net": 0.036384830521673184,
+      "benchmark_net": 0.0190440410844952,
+      "active": 0.017340789437177984
+    },
+    {
+      "rebalance_date": "2019-04-30",
+      "basket_net": 0.054649008626681095,
+      "benchmark_net": 0.034047105185073256,
+      "active": 0.02060190344160784
+    },
+    {
+      "rebalance_date": "2019-05-31",
+      "basket_net": -0.09012282190954635,
+      "benchmark_net": -0.0756103462684532,
+      "active": -0.014512475641093148
+    },
+    {
+      "rebalance_date": "2019-06-28",
+      "basket_net": 0.05927590706496222,
+      "benchmark_net": 0.08665092206004865,
+      "active": -0.027375014995086433
+    },
+    {
+      "rebalance_date": "2019-07-31",
+      "basket_net": 0.0033022456605140693,
+      "benchmark_net": 0.009442404605094934,
+      "active": -0.006140158944580865
+    },
+    {
+      "rebalance_date": "2019-08-30",
+      "basket_net": -0.05340653270548934,
+      "benchmark_net": -0.024834178805980045,
+      "active": -0.028572353899509295
+    },
+    {
+      "rebalance_date": "2019-09-30",
+      "basket_net": 0.0023079104289100982,
+      "benchmark_net": 0.027312156282433442,
+      "active": -0.025004245853523344
+    },
+    {
+      "rebalance_date": "2019-10-31",
+      "basket_net": 0.06230260091044837,
+      "benchmark_net": 0.03143707422551567,
+      "active": 0.030865526684932698
+    },
+    {
+      "rebalance_date": "2019-11-29",
+      "basket_net": 0.06292275350025722,
+      "benchmark_net": 0.03386766505320993,
+      "active": 0.029055088447047295
+    },
+    {
+      "rebalance_date": "2019-12-31",
+      "basket_net": 0.02680756670673179,
+      "benchmark_net": 0.03587189788568401,
+      "active": -0.009064331178952223
+    },
+    {
+      "rebalance_date": "2020-01-31",
+      "basket_net": 0.00483351030716439,
+      "benchmark_net": 0.004399603904253091,
+      "active": 0.00043390640291129934
+    },
+    {
+      "rebalance_date": "2020-02-28",
+      "basket_net": -0.06436956572745334,
+      "benchmark_net": -0.07466305671521944,
+      "active": 0.010293490987766107
+    },
+    {
+      "rebalance_date": "2020-03-31",
+      "basket_net": -0.13209557264116834,
+      "benchmark_net": -0.15819220194416206,
+      "active": 0.026096629302993724
+    },
+    {
+      "rebalance_date": "2020-04-30",
+      "basket_net": 0.11919113960307204,
+      "benchmark_net": 0.14094683249892492,
+      "active": -0.021755692895852885
+    },
+    {
+      "rebalance_date": "2020-05-29",
+      "basket_net": 0.07791439653059928,
+      "benchmark_net": 0.0638964742899637,
+      "active": 0.014017922240635583
+    },
+    {
+      "rebalance_date": "2020-06-30",
+      "basket_net": 0.030076607514020193,
+      "benchmark_net": 0.023448014532666317,
+      "active": 0.006628592981353876
+    },
+    {
+      "rebalance_date": "2020-07-31",
+      "basket_net": 0.08012393205983925,
+      "benchmark_net": 0.049899694382914195,
+      "active": 0.03022423767692506
+    },
+    {
+      "rebalance_date": "2020-08-31",
+      "basket_net": 0.0945705321933954,
+      "benchmark_net": 0.06646208573907608,
+      "active": 0.028108446454319314
+    },
+    {
+      "rebalance_date": "2020-09-30",
+      "basket_net": -0.018694214258155428,
+      "benchmark_net": -0.01734527320186785,
+      "active": -0.001348941056287578
+    },
+    {
+      "rebalance_date": "2020-10-30",
+      "basket_net": -0.007876346671659817,
+      "benchmark_net": -0.02108411105689978,
+      "active": 0.013207764385239962
+    },
+    {
+      "rebalance_date": "2020-11-30",
+      "basket_net": 0.1486248813776081,
+      "benchmark_net": 0.14644696659345824,
+      "active": 0.002177914784149859
+    },
+    {
+      "rebalance_date": "2020-12-31",
+      "basket_net": 0.06424231221032906,
+      "benchmark_net": 0.034113359645068675,
+      "active": 0.03012895256526038
+    },
+    {
+      "rebalance_date": "2021-01-29",
+      "basket_net": 0.003946481274412772,
+      "benchmark_net": 0.0020637239989167444,
+      "active": 0.0018827572754960276
+    },
+    {
+      "rebalance_date": "2021-02-26",
+      "basket_net": 0.010717739803820736,
+      "benchmark_net": 0.04501814879928445,
+      "active": -0.034300408995463716
+    },
+    {
+      "rebalance_date": "2021-03-31",
+      "basket_net": 0.028636308346333905,
+      "benchmark_net": 0.04785500353624439,
+      "active": -0.019218695189910484
+    },
+    {
+      "rebalance_date": "2021-04-30",
+      "basket_net": 0.028276785371598168,
+      "benchmark_net": 0.0425548297254259,
+      "active": -0.014278044353827735
+    },
+    {
+      "rebalance_date": "2021-05-28",
+      "basket_net": 0.019760833695548596,
+      "benchmark_net": 0.02015079451627333,
+      "active": -0.0003899608207247329
+    },
+    {
+      "rebalance_date": "2021-06-30",
+      "basket_net": -0.0009483957190140613,
+      "benchmark_net": 0.011389268037063305,
+      "active": -0.012337663756077366
+    },
+    {
+      "rebalance_date": "2021-07-30",
+      "basket_net": 0.04190776183483025,
+      "benchmark_net": 0.018662228451621354,
+      "active": 0.023245533383208894
+    },
+    {
+      "rebalance_date": "2021-08-31",
+      "basket_net": 0.040483644297974575,
+      "benchmark_net": 0.022100615800106693,
+      "active": 0.01838302849786788
+    },
+    {
+      "rebalance_date": "2021-09-30",
+      "basket_net": -0.04974210698937309,
+      "benchmark_net": -0.032136173754615416,
+      "active": -0.017605933234757676
+    },
+    {
+      "rebalance_date": "2021-10-29",
+      "basket_net": 0.0720136206643951,
+      "benchmark_net": 0.05585994013399298,
+      "active": 0.016153680530402115
+    },
+    {
+      "rebalance_date": "2021-11-30",
+      "basket_net": 0.02188491653966862,
+      "benchmark_net": -0.002627531879920264,
+      "active": 0.024512448419588884
+    },
+    {
+      "rebalance_date": "2021-12-31",
+      "basket_net": 0.020733354747257016,
+      "benchmark_net": 0.04397515869524393,
+      "active": -0.023241803947986917
+    },
+    {
+      "rebalance_date": "2022-01-31",
+      "basket_net": -0.035401915960200925,
+      "benchmark_net": -0.03534521158362958,
+      "active": -5.670437657134819e-05
+    },
+    {
+      "rebalance_date": "2022-02-28",
+      "basket_net": -0.0016072520149758018,
+      "benchmark_net": -0.03307965188542272,
+      "active": 0.03147239987044692
+    },
+    {
+      "rebalance_date": "2022-03-31",
+      "basket_net": 0.014271263128956324,
+      "benchmark_net": 0.03261529424372012,
+      "active": -0.018344031114763792
+    },
+    {
+      "rebalance_date": "2022-04-29",
+      "basket_net": -0.09741366474544544,
+      "benchmark_net": -0.0875885832086124,
+      "active": -0.009825081536833036
+    },
+    {
+      "rebalance_date": "2022-05-31",
+      "basket_net": 0.011907402313599436,
+      "benchmark_net": 0.022828585086860143,
+      "active": -0.010921182773260707
+    },
+    {
+      "rebalance_date": "2022-06-30",
+      "basket_net": -0.10633723258481087,
+      "benchmark_net": -0.08774967342719242,
+      "active": -0.01858755915761845
+    },
+    {
+      "rebalance_date": "2022-07-29",
+      "basket_net": 0.019807517730602964,
+      "benchmark_net": 0.07650607901079542,
+      "active": -0.05669856128019246
+    },
+    {
+      "rebalance_date": "2022-08-31",
+      "basket_net": -0.07540953145495821,
+      "benchmark_net": -0.03604273182865925,
+      "active": -0.039366799626298965
+    },
+    {
+      "rebalance_date": "2022-09-30",
+      "basket_net": -0.061713026381411296,
+      "benchmark_net": -0.07771979819906516,
+      "active": 0.016006771817653864
+    },
+    {
+      "rebalance_date": "2022-10-31",
+      "basket_net": 0.08422063453112094,
+      "benchmark_net": 0.10138996552061541,
+      "active": -0.01716933098949447
+    },
+    {
+      "rebalance_date": "2022-11-30",
+      "basket_net": 0.06335671113996821,
+      "benchmark_net": 0.0632747805419831,
+      "active": 8.19305979851137e-05
+    },
+    {
+      "rebalance_date": "2022-12-30",
+      "basket_net": -0.04723977088993847,
+      "benchmark_net": -0.050321979041808684,
+      "active": 0.003082208151870214
+    },
+    {
+      "rebalance_date": "2023-01-31",
+      "basket_net": -0.0009828704246120923,
+      "benchmark_net": 0.05983039323989159,
+      "active": -0.06081326366450368
+    },
+    {
+      "rebalance_date": "2023-02-28",
+      "basket_net": 0.007958899119671514,
+      "benchmark_net": -0.022224158199246613,
+      "active": 0.030183057318918127
+    },
+    {
+      "rebalance_date": "2023-03-31",
+      "basket_net": 0.01852846232415417,
+      "benchmark_net": 0.030773134009429493,
+      "active": -0.012244671685275321
+    },
+    {
+      "rebalance_date": "2023-04-28",
+      "basket_net": 0.01645239800220155,
+      "benchmark_net": 0.010198501778214464,
+      "active": 0.006253896223987088
+    },
+    {
+      "rebalance_date": "2023-05-31",
+      "basket_net": -0.018141492530059145,
+      "benchmark_net": 0.009968740425097877,
+      "active": -0.028110232955157022
+    },
+    {
+      "rebalance_date": "2023-06-30",
+      "basket_net": 0.07300173888207495,
+      "benchmark_net": 0.058610702431928896,
+      "active": 0.014391036450146055
+    },
+    {
+      "rebalance_date": "2023-07-31",
+      "basket_net": 0.037765958443912284,
+      "benchmark_net": 0.0438303463456704,
+      "active": -0.006064387901758117
+    },
+    {
+      "rebalance_date": "2023-08-31",
+      "basket_net": -0.028504017419597627,
+      "benchmark_net": -0.008701829515434412,
+      "active": -0.019802187904163215
+    },
+    {
+      "rebalance_date": "2023-09-29",
+      "basket_net": -0.050081155619036144,
+      "benchmark_net": -0.050267820135037944,
+      "active": 0.0001866645160017999
+    },
+    {
+      "rebalance_date": "2023-10-31",
+      "basket_net": -0.02448484120840777,
+      "benchmark_net": -0.01704714465967616,
+      "active": -0.007437696548731609
+    },
+    {
+      "rebalance_date": "2023-11-30",
+      "basket_net": 0.07711793549900925,
+      "benchmark_net": 0.0937787050104184,
+      "active": -0.016660769511409157
+    },
+    {
+      "rebalance_date": "2023-12-29",
+      "basket_net": 0.06488582665377507,
+      "benchmark_net": 0.05246711837294993,
+      "active": 0.012418708280825141
+    },
+    {
+      "rebalance_date": "2024-01-31",
+      "basket_net": 0.01574729135385522,
+      "benchmark_net": 0.026885338464944564,
+      "active": -0.011138047111089344
+    },
+    {
+      "rebalance_date": "2024-02-29",
+      "basket_net": 0.058937647144439165,
+      "benchmark_net": 0.046895705386999165,
+      "active": 0.01204194175744
+    },
+    {
+      "rebalance_date": "2024-03-28",
+      "basket_net": 0.02483312962144657,
+      "benchmark_net": 0.035314299702581486,
+      "active": -0.010481170081134916
+    },
+    {
+      "rebalance_date": "2024-04-30",
+      "basket_net": -0.009422207441995178,
+      "benchmark_net": -0.04318554315491541,
+      "active": 0.03376333571292023
+    },
+    {
+      "rebalance_date": "2024-05-31",
+      "basket_net": 0.0433100602217289,
+      "benchmark_net": 0.03969326953146601,
+      "active": 0.0036167906902628832
+    },
+    {
+      "rebalance_date": "2024-06-28",
+      "basket_net": 0.02446373409778424,
+      "benchmark_net": 0.029481567574843215,
+      "active": -0.005017833477058975
+    },
+    {
+      "rebalance_date": "2024-07-31",
+      "basket_net": -0.005065904457080994,
+      "benchmark_net": 0.027165649297409944,
+      "active": -0.03223155375449094
+    },
+    {
+      "rebalance_date": "2024-08-30",
+      "basket_net": 0.01863123267059863,
+      "benchmark_net": 0.020455665230211473,
+      "active": -0.001824432559612843
+    },
+    {
+      "rebalance_date": "2024-09-30",
+      "basket_net": 0.033021611917692706,
+      "benchmark_net": 0.03143755205987242,
+      "active": 0.0015840598578202858
+    },
+    {
+      "rebalance_date": "2024-10-31",
+      "basket_net": -0.0006910133503728044,
+      "benchmark_net": 0.0056920238992781425,
+      "active": -0.006383037249650947
+    },
+    {
+      "rebalance_date": "2024-11-29",
+      "basket_net": 0.11747807981544045,
+      "benchmark_net": 0.05639196902256094,
+      "active": 0.06108611079287951
+    },
+    {
+      "rebalance_date": "2024-12-31",
+      "basket_net": -0.03623895906011865,
+      "benchmark_net": -0.038009119958953064,
+      "active": 0.0017701608988344164
+    },
+    {
+      "rebalance_date": "2025-01-31",
+      "basket_net": 0.01937760324498794,
+      "benchmark_net": 0.026894444582027166,
+      "active": -0.007516841337039226
+    },
+    {
+      "rebalance_date": "2025-02-28",
+      "basket_net": 0.023132892759949453,
+      "benchmark_net": 0.027315384703961332,
+      "active": -0.004182491944011879
+    },
+    {
+      "rebalance_date": "2025-03-31",
+      "basket_net": -0.016032277886352864,
+      "benchmark_net": -0.050525549101110734,
+      "active": 0.03449327121475787
+    },
+    {
+      "rebalance_date": "2025-04-30",
+      "basket_net": -0.04685793216687273,
+      "benchmark_net": -0.0053074308010673255,
+      "active": -0.0415505013658054
+    },
+    {
+      "rebalance_date": "2025-05-30",
+      "basket_net": 0.06510378714856757,
+      "benchmark_net": 0.04765907734801722,
+      "active": 0.01744470980055035
+    },
+    {
+      "rebalance_date": "2025-06-30",
+      "basket_net": 0.1103860791394482,
+      "benchmark_net": 0.05504151787619782,
+      "active": 0.05534456126325038
+    },
+    {
+      "rebalance_date": "2025-07-31",
+      "basket_net": 0.007509492867670886,
+      "benchmark_net": -0.0013029026734793225,
+      "active": 0.008812395541150209
+    },
+    {
+      "rebalance_date": "2025-08-29",
+      "basket_net": 0.007602420953925826,
+      "benchmark_net": 0.03317785097604342,
+      "active": -0.025575430022117596
+    },
+    {
+      "rebalance_date": "2025-09-30",
+      "basket_net": 0.1315323313006227,
+      "benchmark_net": 0.05171741474768243,
+      "active": 0.07981491655294026
+    },
+    {
+      "rebalance_date": "2025-10-31",
+      "basket_net": 0.12532320859175683,
+      "benchmark_net": 0.040622362543160095,
+      "active": 0.08470084604859673
+    },
+    {
+      "rebalance_date": "2025-11-28",
+      "basket_net": -0.029237652054647567,
+      "benchmark_net": 0.0005296134205037273,
+      "active": -0.029767265475151294
+    },
+    {
+      "rebalance_date": "2025-12-31",
+      "basket_net": 0.009888309972138298,
+      "benchmark_net": 0.023384656637814638,
+      "active": -0.01349634666567634
+    },
+    {
+      "rebalance_date": "2026-01-30",
+      "basket_net": 0.08644973177261539,
+      "benchmark_net": 0.03965285798589213,
+      "active": 0.04679687378672326
+    },
+    {
+      "rebalance_date": "2026-02-27",
+      "basket_net": 0.06291724591503134,
+      "benchmark_net": 0.0032065206260358803,
+      "active": 0.05971072528899546
+    },
+    {
+      "rebalance_date": "2026-03-31",
+      "basket_net": -0.025565162181911072,
+      "benchmark_net": -0.029875961653650585,
+      "active": 0.004310799471739513
+    },
+    {
+      "rebalance_date": "2026-04-30",
+      "basket_net": 0.07648193358088462,
+      "benchmark_net": 0.08370446880331106,
+      "active": -0.0072225352224264405
+    },
+    {
+      "rebalance_date": "2026-05-29",
+      "basket_net": 0.17135944334219122,
+      "benchmark_net": 0.05121985044858213,
+      "active": 0.12013959289360909
+    },
+    {
+      "rebalance_date": "2026-06-30",
+      "basket_net": 0.012428347593893108,
+      "benchmark_net": 0.009730428399627566,
+      "active": 0.002697919194265541
+    },
+    {
+      "rebalance_date": "2026-07-31",
+      "basket_net": -0.07887847033515649,
+      "benchmark_net": 0.01905105848626465,
+      "active": -0.09792952882142114
+    },
+    {
+      "rebalance_date": "2026-08-31",
+      "basket_net": 0.05489850081719805,
+      "benchmark_net": 0.03522462241845803,
+      "active": 0.01967387839874002
+    },
+    {
+      "rebalance_date": "2026-09-30",
+      "basket_net": -0.006182712178095184,
+      "benchmark_net": -0.023967082348606228,
+      "active": 0.017784370170511044
+    }
+  ],
+  "ir": 0.16377427311482654,
+  "ci_lower": -0.3252716230440317,
+  "ci_upper": 0.6240071357810701,
+  "outcome": "no evidence of an edge",
+  "basket_ir_point": 1.2385810952273235,
+  "benchmark_ir_point": 1.2581177210249148,
+  "costs": {
+    "basket_total_costs": 1548769.8794814202,
+    "benchmark_total_costs": 61386.88601016053
+  },
+  "turnover": {
+    "basket_avg_turnover_after_entry": 1.446654062576325,
+    "benchmark_avg_turnover_after_entry": 0.05013724961638621
+  },
+  "exposure": {
+    "basket": {
+      "first": 0.9949974813858098,
+      "last": 0.9949936061041327,
+      "min": 0.9949899965131911,
+      "mean": 0.9949927436336198,
+      "max": 0.9949974813858098,
+      "n_rebalances": 198
+    },
+    "benchmark": {
+      "first": 0.9949974973938084,
+      "last": 0.9949996301128591,
+      "min": 0.9949974973938084,
+      "mean": 0.994999737436617,
+      "max": 0.9949998609373701,
+      "n_rebalances": 198
+    },
+    "basket_carried": 0,
+    "benchmark_carried": 0,
+    "basket_skipped_buys": 0,
+    "benchmark_skipped_buys": 0,
+    "basket_rebalances": [
+      {
+        "rebalance": "2010-04-30",
+        "equity": 999496.5307708211,
+        "cash": 4999.999999999558,
+        "holdings_value": 994496.5307708216,
+        "invested_fraction": 0.9949974813858098,
+        "n_positions": 22,
+        "turnover": 0.9944965307708216
+      },
+      {
+        "rebalance": "2010-05-28",
+        "equity": 934458.9186795087,
+        "cash": 4678.689583074239,
+        "holdings_value": 929780.2290964345,
+        "invested_fraction": 0.9949931564785259,
+        "n_positions": 22,
+        "turnover": 1.3559777749464792
+      },
+      {
+        "rebalance": "2010-06-30",
+        "equity": 922522.1646644142,
+        "cash": 4618.067522036708,
+        "holdings_value": 917904.0971423775,
+        "invested_fraction": 0.9949940850215597,
+        "n_positions": 22,
+        "turnover": 1.1756286191883942
+      },
+      {
+        "rebalance": "2010-07-30",
+        "equity": 992435.8985186426,
+        "cash": 4968.516325685457,
+        "holdings_value": 987467.3821929572,
+        "invested_fraction": 0.99499361486913,
+        "n_positions": 22,
+        "turnover": 1.2663684701630498
+      },
+      {
+        "rebalance": "2010-08-31",
+        "equity": 971531.8082396523,
+        "cash": 4864.74560371096,
+        "holdings_value": 966667.0626359413,
+        "invested_fraction": 0.9949927057843576,
+        "n_positions": 22,
+        "turnover": 1.4465039268681563
+      },
+      {
+        "rebalance": "2010-09-30",
+        "equity": 1057869.6653898999,
+        "cash": 5297.0631609469065,
+        "holdings_value": 1052572.602228953,
+        "invested_fraction": 0.9949927071980134,
+        "n_positions": 22,
+        "turnover": 1.4470187837385702
+      },
+      {
+        "rebalance": "2010-10-29",
+        "equity": 1103859.0717855524,
+        "cash": 5526.859085962547,
+        "holdings_value": 1098332.2126995898,
+        "invested_fraction": 0.9949931479232919,
+        "n_positions": 22,
+        "turnover": 1.3565284211160273
+      },
+      {
+        "rebalance": "2010-11-30",
+        "equity": 1092860.3909262158,
+        "cash": 5472.776278542426,
+        "holdings_value": 1087387.6146476734,
+        "invested_fraction": 0.9949922457397289,
+        "n_positions": 22,
+        "turnover": 1.5368332525289412
+      },
+      {
+        "rebalance": "2010-12-31",
+        "equity": 1114928.8833796,
+        "cash": 5584.8187840263245,
+        "holdings_value": 1109344.0645955736,
+        "invested_fraction": 0.9949908744250148,
+        "n_positions": 22,
+        "turnover": 1.8077006635039758
+      },
+      {
+        "rebalance": "2011-01-31",
+        "equity": 1162296.4181129045,
+        "cash": 5819.418820123928,
+        "holdings_value": 1156476.9992927806,
+        "invested_fraction": 0.9949931715099215,
+        "n_positions": 22,
+        "turnover": 1.3565238082134154
+      },
+      {
+        "rebalance": "2011-02-28",
+        "equity": 1188110.0459056105,
+        "cash": 5950.839344198275,
+        "holdings_value": 1182159.2065614122,
+        "invested_fraction": 0.9949913399312582,
+        "n_positions": 22,
+        "turnover": 1.7174893170649561
+      },
+      {
+        "rebalance": "2011-03-31",
+        "equity": 1195429.3947912578,
+        "cash": 5986.413783909729,
+        "holdings_value": 1189442.981007348,
+        "invested_fraction": 0.9949922481327682,
+        "n_positions": 22,
+        "turnover": 1.5369126361871905
+      },
+      {
+        "rebalance": "2011-04-29",
+        "equity": 1236226.9750599042,
+        "cash": 6190.160483068456,
+        "holdings_value": 1230036.8145768356,
+        "invested_fraction": 0.9949926990690616,
+        "n_positions": 22,
+        "turnover": 1.449278091452681
+      },
+      {
+        "rebalance": "2011-05-31",
+        "equity": 1236563.438945293,
+        "cash": 6191.2621465480215,
+        "holdings_value": 1230372.1767987448,
+        "invested_fraction": 0.9949931706279228,
+        "n_positions": 22,
+        "turnover": 1.3563230673840712
+      },
+      {
+        "rebalance": "2011-06-30",
+        "equity": 1212654.0559367633,
+        "cash": 6073.214787262137,
+        "holdings_value": 1206580.8411495013,
+        "invested_fraction": 0.9949917993862062,
+        "n_positions": 22,
+        "turnover": 1.6270426258358708
+      },
+      {
+        "rebalance": "2011-07-29",
+        "equity": 1195080.874366103,
+        "cash": 5984.10213711844,
+        "holdings_value": 1189096.7722289846,
+        "invested_fraction": 0.9949927220278775,
+        "n_positions": 22,
+        "turnover": 1.4465375972855856
+      },
+      {
+        "rebalance": "2011-08-31",
+        "equity": 1129079.3584343935,
+        "cash": 5654.644830223324,
+        "holdings_value": 1123424.7136041701,
+        "invested_fraction": 0.9949918092222816,
+        "n_positions": 22,
+        "turnover": 1.6268497448361325
+      },
+      {
+        "rebalance": "2011-09-30",
+        "equity": 1085030.7007422633,
+        "cash": 5431.581338657294,
+        "holdings_value": 1079599.119403606,
+        "invested_fraction": 0.9949940758957866,
+        "n_positions": 22,
+        "turnover": 1.1754885845080432
+      },
+      {
+        "rebalance": "2011-10-31",
+        "equity": 1134878.520366387,
+        "cash": 5684.216468985345,
+        "holdings_value": 1129194.3038974016,
+        "invested_fraction": 0.9949913436839475,
+        "n_positions": 22,
+        "turnover": 1.717601664300537
+      },
+      {
+        "rebalance": "2011-11-30",
+        "equity": 1136484.0877937127,
+        "cash": 5691.208740186059,
+        "holdings_value": 1130792.8790535268,
+        "invested_fraction": 0.9949922671145933,
+        "n_positions": 22,
+        "turnover": 1.5368911309326139
+      },
+      {
+        "rebalance": "2011-12-30",
+        "equity": 1177760.7987818462,
+        "cash": 5898.467918882504,
+        "holdings_value": 1171862.3308629636,
+        "invested_fraction": 0.9949917946623937,
+        "n_positions": 22,
+        "turnover": 1.627314902465035
+      },
+      {
+        "rebalance": "2012-01-31",
+        "equity": 1221758.7618937334,
+        "cash": 6119.369489944881,
+        "holdings_value": 1215639.3924037886,
+        "invested_fraction": 0.9949913438881668,
+        "n_positions": 22,
+        "turnover": 1.7175599625237192
+      },
+      {
+        "rebalance": "2012-02-29",
+        "equity": 1290170.0543083067,
+        "cash": 6458.499683057203,
+        "holdings_value": 1283711.5546252495,
+        "invested_fraction": 0.9949940710052213,
+        "n_positions": 22,
+        "turnover": 1.175956292099269
+      },
+      {
+        "rebalance": "2012-03-30",
+        "equity": 1348205.242470374,
+        "cash": 6749.01448724682,
+        "holdings_value": 1341456.2279831273,
+        "invested_fraction": 0.9949940748821892,
+        "n_positions": 22,
+        "turnover": 1.1759091146760705
+      },
+      {
+        "rebalance": "2012-04-30",
+        "equity": 1331548.5797378158,
+        "cash": 6667.450634983837,
+        "holdings_value": 1324881.129102832,
+        "invested_fraction": 0.9949927094388875,
+        "n_positions": 22,
+        "turnover": 1.4465497482914003
+      },
+      {
+        "rebalance": "2012-05-31",
+        "equity": 1260496.5901474997,
+        "cash": 6310.503606810537,
+        "holdings_value": 1254186.0865406892,
+        "invested_fraction": 0.9949936369077587,
+        "n_positions": 22,
+        "turnover": 1.265734179977171
+      },
+      {
+        "rebalance": "2012-06-29",
+        "equity": 1335515.1185786128,
+        "cash": 6688.542580039688,
+        "holdings_value": 1328826.575998573,
+        "invested_fraction": 0.9949917881969331,
+        "n_positions": 22,
+        "turnover": 1.6274209951933398
+      },
+      {
+        "rebalance": "2012-07-31",
+        "equity": 1323549.9362158042,
+        "cash": 6628.61737126193,
+        "holdings_value": 1316921.3188445424,
+        "invested_fraction": 0.9949917889836375,
+        "n_positions": 22,
+        "turnover": 1.6270932911959555
+      },
+      {
+        "rebalance": "2012-08-31",
+        "equity": 1338747.798480076,
+        "cash": 6704.249132129822,
+        "holdings_value": 1332043.5493479462,
+        "invested_fraction": 0.9949921492758073,
+        "n_positions": 23,
+        "turnover": 1.5565616282952741
+      },
+      {
+        "rebalance": "2012-09-28",
+        "equity": 1398523.5668375245,
+        "cash": 7000.557986544162,
+        "holdings_value": 1391523.0088509803,
+        "invested_fraction": 0.9949943224751124,
+        "n_positions": 23,
+        "turnover": 1.1248462996509165
+      },
+      {
+        "rebalance": "2012-10-31",
+        "equity": 1383634.6750117608,
+        "cash": 6927.220749834831,
+        "holdings_value": 1376707.454261926,
+        "invested_fraction": 0.9949934611534826,
+        "n_positions": 23,
+        "turnover": 1.297375655948023
+      },
+      {
+        "rebalance": "2012-11-30",
+        "equity": 1386982.9359809118,
+        "cash": 6946.427517493889,
+        "holdings_value": 1380036.5084634179,
+        "invested_fraction": 0.9949916993660911,
+        "n_positions": 23,
+        "turnover": 1.6428459714496806
+      },
+      {
+        "rebalance": "2012-12-31",
+        "equity": 1424938.6318618495,
+        "cash": 7135.267803933421,
+        "holdings_value": 1417803.364057916,
+        "invested_fraction": 0.9949925788771616,
+        "n_positions": 23,
+        "turnover": 1.470293099496121
+      },
+      {
+        "rebalance": "2013-01-31",
+        "equity": 1543052.7518942407,
+        "cash": 7725.384008406288,
+        "holdings_value": 1535327.3678858345,
+        "invested_fraction": 0.9949934414109157,
+        "n_positions": 23,
+        "turnover": 1.2992298520005754
+      },
+      {
+        "rebalance": "2013-02-28",
+        "equity": 1523704.2168053957,
+        "cash": 7631.162870584336,
+        "holdings_value": 1516073.0539348114,
+        "invested_fraction": 0.9949917032542026,
+        "n_positions": 23,
+        "turnover": 1.6427709175344374
+      },
+      {
+        "rebalance": "2013-03-28",
+        "equity": 1595209.8589611955,
+        "cash": 7987.896610151567,
+        "holdings_value": 1587221.962351044,
+        "invested_fraction": 0.9949925731932516,
+        "n_positions": 23,
+        "turnover": 1.470383525045498
+      },
+      {
+        "rebalance": "2013-04-30",
+        "equity": 1630849.902862428,
+        "cash": 8166.4514374504615,
+        "holdings_value": 1622683.4514249775,
+        "invested_fraction": 0.9949925180587638,
+        "n_positions": 23,
+        "turnover": 1.48083984738426
+      },
+      {
+        "rebalance": "2013-05-31",
+        "equity": 1763095.9354416896,
+        "cash": 8828.574751720556,
+        "holdings_value": 1754267.360689969,
+        "invested_fraction": 0.99499257268181,
+        "n_positions": 23,
+        "turnover": 1.4705351686432522
+      },
+      {
+        "rebalance": "2013-06-28",
+        "equity": 1775589.7139463755,
+        "cash": 8891.104312159867,
+        "holdings_value": 1766698.6096342157,
+        "invested_fraction": 0.9949925907757154,
+        "n_positions": 23,
+        "turnover": 1.4701970695631488
+      },
+      {
+        "rebalance": "2013-07-31",
+        "equity": 1909577.6245661275,
+        "cash": 9562.87977324981,
+        "holdings_value": 1900014.7447928777,
+        "invested_fraction": 0.9949921492322562,
+        "n_positions": 23,
+        "turnover": 1.5568564587409965
+      },
+      {
+        "rebalance": "2013-08-30",
+        "equity": 1927962.6589645247,
+        "cash": 9651.645442231253,
+        "holdings_value": 1918311.0135222934,
+        "invested_fraction": 0.9949938628752203,
+        "n_positions": 23,
+        "turnover": 1.2135677220537373
+      },
+      {
+        "rebalance": "2013-09-30",
+        "equity": 2041164.9104965283,
+        "cash": 10218.31657292232,
+        "holdings_value": 2030946.593923606,
+        "invested_fraction": 0.9949938799553258,
+        "n_positions": 23,
+        "turnover": 1.2116856875719741
+      },
+      {
+        "rebalance": "2013-10-31",
+        "equity": 2114011.2370411167,
+        "cash": 10587.573249775247,
+        "holdings_value": 2103423.6637913412,
+        "invested_fraction": 0.9949917138261789,
+        "n_positions": 23,
+        "turnover": 1.6430084084939416
+      },
+      {
+        "rebalance": "2013-11-29",
+        "equity": 2160455.5839956617,
+        "cash": 10821.09477039348,
+        "holdings_value": 2149634.4892252684,
+        "invested_fraction": 0.9949912903322085,
+        "n_positions": 23,
+        "turnover": 1.7292574064285384
+      },
+      {
+        "rebalance": "2013-12-31",
+        "equity": 2205912.2741019637,
+        "cash": 11046.838686333536,
+        "holdings_value": 2194865.43541563,
+        "invested_fraction": 0.9949921677230656,
+        "n_positions": 23,
+        "turnover": 1.5566094770718482
+      },
+      {
+        "rebalance": "2014-01-31",
+        "equity": 2188276.4390260004,
+        "cash": 10955.676255379218,
+        "holdings_value": 2177320.762770621,
+        "invested_fraction": 0.9949934678909874,
+        "n_positions": 23,
+        "turnover": 1.2973873939716907
+      },
+      {
+        "rebalance": "2014-02-28",
+        "equity": 2302250.376950065,
+        "cash": 11522.362911864122,
+        "holdings_value": 2290728.014038201,
+        "invested_fraction": 0.9949951738406799,
+        "n_positions": 23,
+        "turnover": 0.9567465593239209
+      },
+      {
+        "rebalance": "2014-03-31",
+        "equity": 2254869.9023531578,
+        "cash": 11294.025047507273,
+        "holdings_value": 2243575.8773056506,
+        "invested_fraction": 0.9949912742035713,
+        "n_positions": 23,
+        "turnover": 1.7290460415227054
+      },
+      {
+        "rebalance": "2014-04-30",
+        "equity": 2240870.783034554,
+        "cash": 11221.915994503921,
+        "holdings_value": 2229648.86704005,
+        "invested_fraction": 0.9949921628326522,
+        "n_positions": 23,
+        "turnover": 1.5564746214984349
+      },
+      {
+        "rebalance": "2014-05-30",
+        "equity": 2271791.5924123838,
+        "cash": 11376.762382318313,
+        "holdings_value": 2260414.8300300655,
+        "invested_fraction": 0.9949921628285289,
+        "n_positions": 23,
+        "turnover": 1.5565748035087872
+      },
+      {
+        "rebalance": "2014-06-30",
+        "equity": 2348418.8825565125,
+        "cash": 11758.45462292307,
+        "holdings_value": 2336660.4279335896,
+        "invested_fraction": 0.994993033521293,
+        "n_positions": 23,
+        "turnover": 1.3839656874215815
+      },
+      {
+        "rebalance": "2014-07-31",
+        "equity": 2291673.6495080036,
+        "cash": 11474.326015040064,
+        "holdings_value": 2280199.3234929633,
+        "invested_fraction": 0.9949930366317631,
+        "n_positions": 23,
+        "turnover": 1.3836798141415327
+      },
+      {
+        "rebalance": "2014-08-29",
+        "equity": 2376998.3395517906,
+        "cash": 11905.736925922612,
+        "holdings_value": 2365092.602625868,
+        "invested_fraction": 0.994991272510452,
+        "n_positions": 23,
+        "turnover": 1.729328057754943
+      },
+      {
+        "rebalance": "2014-09-30",
+        "equity": 2325247.737826588,
+        "cash": 11644.71043893166,
+        "holdings_value": 2313603.0273876563,
+        "invested_fraction": 0.9949920560078402,
+        "n_positions": 24,
+        "turnover": 1.5743792583188023
+      },
+      {
+        "rebalance": "2014-10-31",
+        "equity": 2373861.403209357,
+        "cash": 11887.17023503091,
+        "holdings_value": 2361974.2329743262,
+        "invested_fraction": 0.9949924750371021,
+        "n_positions": 24,
+        "turnover": 1.4918506183255538
+      },
+      {
+        "rebalance": "2014-11-28",
+        "equity": 2458165.6772750434,
+        "cash": 12305.213914375081,
+        "holdings_value": 2445860.463360668,
+        "invested_fraction": 0.9949941478606861,
+        "n_positions": 24,
+        "turnover": 1.162640376411632
+      },
+      {
+        "rebalance": "2014-12-31",
+        "equity": 2438301.6274325694,
+        "cash": 12211.869836549748,
+        "holdings_value": 2426089.7575960197,
+        "invested_fraction": 0.9949916492286444,
+        "n_positions": 24,
+        "turnover": 1.6571835350768445
+      },
+      {
+        "rebalance": "2015-01-30",
+        "equity": 2308727.036293214,
+        "cash": 11561.935374403212,
+        "holdings_value": 2297165.100918811,
+        "invested_fraction": 0.9949920734705101,
+        "n_positions": 24,
+        "turnover": 1.574212302137175
+      },
+      {
+        "rebalance": "2015-02-27",
+        "equity": 2418231.3128925296,
+        "cash": 12109.369471991473,
+        "holdings_value": 2406121.943420538,
+        "invested_fraction": 0.9949924685006634,
+        "n_positions": 24,
+        "turnover": 1.4919740202377452
+      },
+      {
+        "rebalance": "2015-03-31",
+        "equity": 2360906.6603278783,
+        "cash": 11823.27487663691,
+        "holdings_value": 2349083.3854512414,
+        "invested_fraction": 0.9949920617043815,
+        "n_positions": 24,
+        "turnover": 1.574371012351626
+      },
+      {
+        "rebalance": "2015-04-30",
+        "equity": 2329222.051052066,
+        "cash": 11665.573301932713,
+        "holdings_value": 2317556.4777501333,
+        "invested_fraction": 0.9949916439711433,
+        "n_positions": 24,
+        "turnover": 1.6571534622746633
+      },
+      {
+        "rebalance": "2015-05-29",
+        "equity": 2371466.741249676,
+        "cash": 11874.177358857032,
+        "holdings_value": 2359592.563890819,
+        "invested_fraction": 0.994992897369246,
+        "n_positions": 24,
+        "turnover": 1.4090801264060653
+      },
+      {
+        "rebalance": "2015-06-30",
+        "equity": 2426493.180895093,
+        "cash": 12141.630683359952,
+        "holdings_value": 2414351.5502117327,
+        "invested_fraction": 0.9949962230353843,
+        "n_positions": 24,
+        "turnover": 0.7489127381010073
+      },
+      {
+        "rebalance": "2015-07-31",
+        "equity": 2482520.811468488,
+        "cash": 12431.266886616479,
+        "holdings_value": 2470089.5445818715,
+        "invested_fraction": 0.9949924823070212,
+        "n_positions": 24,
+        "turnover": 1.4918658543660268
+      },
+      {
+        "rebalance": "2015-08-31",
+        "equity": 2289243.460045835,
+        "cash": 11460.548853573757,
+        "holdings_value": 2277782.911192261,
+        "invested_fraction": 0.9949937396115377,
+        "n_positions": 24,
+        "turnover": 1.243013867847082
+      },
+      {
+        "rebalance": "2015-09-30",
+        "equity": 2322256.3956413968,
+        "cash": 11624.831584259708,
+        "holdings_value": 2310631.564057137,
+        "invested_fraction": 0.9949941653272747,
+        "n_positions": 24,
+        "turnover": 1.1607097311966965
+      },
+      {
+        "rebalance": "2015-10-30",
+        "equity": 2511483.347196845,
+        "cash": 12574.216059161092,
+        "holdings_value": 2498909.131137684,
+        "invested_fraction": 0.9949933109955933,
+        "n_positions": 24,
+        "turnover": 1.3265988412043244
+      },
+      {
+        "rebalance": "2015-11-30",
+        "equity": 2572277.315578798,
+        "cash": 12877.492368012692,
+        "holdings_value": 2559399.823210785,
+        "invested_fraction": 0.9949937387038243,
+        "n_positions": 24,
+        "turnover": 1.2439545935227068
+      },
+      {
+        "rebalance": "2015-12-31",
+        "equity": 2530426.3716168515,
+        "cash": 12670.102554332145,
+        "holdings_value": 2517756.2690625195,
+        "invested_fraction": 0.9949928981548527,
+        "n_positions": 24,
+        "turnover": 1.4089105101154298
+      },
+      {
+        "rebalance": "2016-01-29",
+        "equity": 2486851.9226038572,
+        "cash": 12445.685168178788,
+        "holdings_value": 2474406.2374356785,
+        "invested_fraction": 0.9949954056150044,
+        "n_positions": 24,
+        "turnover": 0.9120696774090601
+      },
+      {
+        "rebalance": "2016-02-29",
+        "equity": 2508382.8592721433,
+        "cash": 12563.911572641251,
+        "holdings_value": 2495818.947699502,
+        "invested_fraction": 0.9949912304948987,
+        "n_positions": 24,
+        "turnover": 1.7399839273206117
+      },
+      {
+        "rebalance": "2016-03-31",
+        "equity": 2637901.1965294457,
+        "cash": 13206.04206074737,
+        "holdings_value": 2624695.1544686984,
+        "invested_fraction": 0.9949937313504684,
+        "n_positions": 24,
+        "turnover": 1.243680079952792
+      },
+      {
+        "rebalance": "2016-04-29",
+        "equity": 2674882.712192906,
+        "cash": 13396.761623693012,
+        "holdings_value": 2661485.950569213,
+        "invested_fraction": 0.9949916452177037,
+        "n_positions": 24,
+        "turnover": 1.6572924018707722
+      },
+      {
+        "rebalance": "2016-05-31",
+        "equity": 2719795.7381289126,
+        "cash": 13621.686977308496,
+        "holdings_value": 2706174.051151604,
+        "invested_fraction": 0.9949916507381985,
+        "n_positions": 24,
+        "turnover": 1.6573045157550716
+      },
+      {
+        "rebalance": "2016-06-30",
+        "equity": 2672962.9102961235,
+        "cash": 13388.245719831688,
+        "holdings_value": 2659574.6645762916,
+        "invested_fraction": 0.9949912340091734,
+        "n_positions": 24,
+        "turnover": 1.7398502211982736
+      },
+      {
+        "rebalance": "2016-07-29",
+        "equity": 2753472.7899179566,
+        "cash": 13792.658743214171,
+        "holdings_value": 2739680.1311747422,
+        "invested_fraction": 0.9949908134942472,
+        "n_positions": 24,
+        "turnover": 1.8227849947261248
+      },
+      {
+        "rebalance": "2016-08-31",
+        "equity": 2813193.1565675517,
+        "cash": 14084.753754075564,
+        "holdings_value": 2799108.402813476,
+        "invested_fraction": 0.9949933214784082,
+        "n_positions": 24,
+        "turnover": 1.3272614609059354
+      },
+      {
+        "rebalance": "2016-09-30",
+        "equity": 2801953.953482876,
+        "cash": 14031.974381991435,
+        "holdings_value": 2787921.9791008844,
+        "invested_fraction": 0.9949920753106775,
+        "n_positions": 24,
+        "turnover": 1.5744747757868087
+      },
+      {
+        "rebalance": "2016-10-31",
+        "equity": 2766917.890800434,
+        "cash": 13858.828064391728,
+        "holdings_value": 2753059.0627360423,
+        "invested_fraction": 0.9949912398519413,
+        "n_positions": 24,
+        "turnover": 1.7398758080919219
+      },
+      {
+        "rebalance": "2016-11-30",
+        "equity": 3004074.2851960887,
+        "cash": 15036.679216582868,
+        "holdings_value": 2989037.605979506,
+        "invested_fraction": 0.9949945714422966,
+        "n_positions": 24,
+        "turnover": 1.078217948162764
+      },
+      {
+        "rebalance": "2016-12-30",
+        "equity": 3142845.5950418306,
+        "cash": 15736.52842838464,
+        "holdings_value": 3127109.066613446,
+        "invested_fraction": 0.9949929043751908,
+        "n_positions": 24,
+        "turnover": 1.4092152337579864
+      },
+      {
+        "rebalance": "2017-01-31",
+        "equity": 3210537.5472189905,
+        "cash": 16078.138389222971,
+        "holdings_value": 3194459.4088297677,
+        "invested_fraction": 0.9949920727751184,
+        "n_positions": 24,
+        "turnover": 1.5745995220320088
+      },
+      {
+        "rebalance": "2017-02-28",
+        "equity": 3328345.5591595075,
+        "cash": 16666.736422189693,
+        "holdings_value": 3311678.822737318,
+        "invested_fraction": 0.9949924861688946,
+        "n_positions": 24,
+        "turnover": 1.4919263230191855
+      },
+      {
+        "rebalance": "2017-03-31",
+        "equity": 3321720.2019640645,
+        "cash": 16630.801420720098,
+        "holdings_value": 3305089.400543344,
+        "invested_fraction": 0.994993316592142,
+        "n_positions": 24,
+        "turnover": 1.3286867751826736
+      },
+      {
+        "rebalance": "2017-04-28",
+        "equity": 3412309.565969502,
+        "cash": 17084.316963740464,
+        "holdings_value": 3395225.2490057615,
+        "invested_fraction": 0.9949933273539657,
+        "n_positions": 24,
+        "turnover": 1.326355145076806
+      },
+      {
+        "rebalance": "2017-05-31",
+        "equity": 3570461.9477957236,
+        "cash": 17873.180024241752,
+        "holdings_value": 3552588.767771482,
+        "invested_fraction": 0.9949941547380793,
+        "n_positions": 24,
+        "turnover": 1.1608594022491285
+      },
+      {
+        "rebalance": "2017-06-30",
+        "equity": 3493343.836687423,
+        "cash": 17500.213768011738,
+        "holdings_value": 3475843.622919411,
+        "invested_fraction": 0.9949904118843891,
+        "n_positions": 24,
+        "turnover": 1.9052223160390014
+      },
+      {
+        "rebalance": "2017-07-31",
+        "equity": 3544221.661879373,
+        "cash": 17749.183400818507,
+        "holdings_value": 3526472.478478554,
+        "invested_fraction": 0.9949920786299221,
+        "n_positions": 24,
+        "turnover": 1.5745641041482765
+      },
+      {
+        "rebalance": "2017-08-31",
+        "equity": 3556804.6122764866,
+        "cash": 17809.238687056713,
+        "holdings_value": 3538995.37358943,
+        "invested_fraction": 0.994992910595767,
+        "n_positions": 24,
+        "turnover": 1.4090102468333119
+      },
+      {
+        "rebalance": "2017-09-29",
+        "equity": 3708496.049576851,
+        "cash": 18568.78422756624,
+        "holdings_value": 3689927.2653492847,
+        "invested_fraction": 0.9949929071032217,
+        "n_positions": 24,
+        "turnover": 1.4091976180520203
+      },
+      {
+        "rebalance": "2017-10-31",
+        "equity": 3883965.063693729,
+        "cash": 19448.973005615695,
+        "holdings_value": 3864516.0906881136,
+        "invested_fraction": 0.9949924953786481,
+        "n_positions": 24,
+        "turnover": 1.4919769441203679
+      },
+      {
+        "rebalance": "2017-11-30",
+        "equity": 3892478.9899595752,
+        "cash": 19494.85025715911,
+        "holdings_value": 3872984.139702416,
+        "invested_fraction": 0.9949916620468743,
+        "n_positions": 24,
+        "turnover": 1.657235223574425
+      },
+      {
+        "rebalance": "2017-12-29",
+        "equity": 3967369.2888073702,
+        "cash": 19861.657860612126,
+        "holdings_value": 3947507.630946758,
+        "invested_fraction": 0.9949937461287899,
+        "n_positions": 24,
+        "turnover": 1.243530037690847
+      },
+      {
+        "rebalance": "2018-01-31",
+        "equity": 4154855.9570412934,
+        "cash": 20810.641981956825,
+        "holdings_value": 4134045.3150593364,
+        "invested_fraction": 0.9949912482653728,
+        "n_positions": 24,
+        "turnover": 1.7401675381050357
+      },
+      {
+        "rebalance": "2018-02-28",
+        "equity": 4146540.804545329,
+        "cash": 20756.90572645874,
+        "holdings_value": 4125783.89881887,
+        "invested_fraction": 0.9949941633991144,
+        "n_positions": 24,
+        "turnover": 1.160774047767943
+      },
+      {
+        "rebalance": "2018-03-29",
+        "equity": 4057444.024939452,
+        "cash": 20312.578331370096,
+        "holdings_value": 4037131.446608082,
+        "invested_fraction": 0.9949937502017239,
+        "n_positions": 24,
+        "turnover": 1.243328527722875
+      },
+      {
+        "rebalance": "2018-04-30",
+        "equity": 4108735.0448521385,
+        "cash": 20571.07451139277,
+        "holdings_value": 4088163.9703407455,
+        "invested_fraction": 0.994993331454369,
+        "n_positions": 24,
+        "turnover": 1.3262855191089076
+      },
+      {
+        "rebalance": "2018-05-31",
+        "equity": 4268772.04956242,
+        "cash": 21375.881881493864,
+        "holdings_value": 4247396.167680926,
+        "invested_fraction": 0.9949924986311496,
+        "n_positions": 24,
+        "turnover": 1.4919392381068826
+      },
+      {
+        "rebalance": "2018-06-29",
+        "equity": 4186732.407946346,
+        "cash": 20970.29109303076,
+        "holdings_value": 4165762.116853315,
+        "invested_fraction": 0.9949912511596801,
+        "n_positions": 24,
+        "turnover": 1.73984326016095
+      },
+      {
+        "rebalance": "2018-07-31",
+        "equity": 4330031.403612466,
+        "cash": 21684.54313740848,
+        "holdings_value": 4308346.860475057,
+        "invested_fraction": 0.9949920586905403,
+        "n_positions": 24,
+        "turnover": 1.5792304818105862
+      },
+      {
+        "rebalance": "2018-08-31",
+        "equity": 4426471.150167977,
+        "cash": 22169.258285383825,
+        "holdings_value": 4404301.891882594,
+        "invested_fraction": 0.9949916632158458,
+        "n_positions": 24,
+        "turnover": 1.6573329338760912
+      },
+      {
+        "rebalance": "2018-09-28",
+        "equity": 4535368.879419837,
+        "cash": 22710.877210346996,
+        "holdings_value": 4512658.00220949,
+        "invested_fraction": 0.9949924961311521,
+        "n_positions": 24,
+        "turnover": 1.4918699797737343
+      },
+      {
+        "rebalance": "2018-10-31",
+        "equity": 4153930.2954599983,
+        "cash": 20804.26361213701,
+        "holdings_value": 4133126.031847861,
+        "invested_fraction": 0.994991667617804,
+        "n_positions": 24,
+        "turnover": 1.656765970740894
+      },
+      {
+        "rebalance": "2018-11-30",
+        "equity": 4288288.072551206,
+        "cash": 21475.413738485327,
+        "holdings_value": 4266812.65881272,
+        "invested_fraction": 0.9949920776367738,
+        "n_positions": 24,
+        "turnover": 1.574650113245252
+      },
+      {
+        "rebalance": "2018-12-31",
+        "equity": 3818445.174378597,
+        "cash": 19116.105185002998,
+        "holdings_value": 3799329.069193594,
+        "invested_fraction": 0.994993746325528,
+        "n_positions": 24,
+        "turnover": 1.244331689541158
+      },
+      {
+        "rebalance": "2019-01-31",
+        "equity": 4090555.7214732096,
+        "cash": 20486.872077700184,
+        "holdings_value": 4070068.8493955093,
+        "invested_fraction": 0.9949916653206421,
+        "n_positions": 24,
+        "turnover": 1.6575584397478043
+      },
+      {
+        "rebalance": "2019-02-28",
+        "equity": 4257851.639276291,
+        "cash": 21317.877435585968,
+        "holdings_value": 4236533.761840705,
+        "invested_fraction": 0.9949932784790008,
+        "n_positions": 24,
+        "turnover": 1.3365442948547448
+      },
+      {
+        "rebalance": "2019-03-29",
+        "equity": 4412772.849557787,
+        "cash": 22093.267029092378,
+        "holdings_value": 4390679.5825286945,
+        "invested_fraction": 0.9949933368921751,
+        "n_positions": 24,
+        "turnover": 1.326398531622327
+      },
+      {
+        "rebalance": "2019-04-30",
+        "equity": 4653926.511080855,
+        "cash": 23304.546478776112,
+        "holdings_value": 4630621.964602078,
+        "invested_fraction": 0.9949924979641839,
+        "n_positions": 24,
+        "turnover": 1.4920108008453483
+      },
+      {
+        "rebalance": "2019-05-31",
+        "equity": 4234501.520942599,
+        "cash": 21209.55175115293,
+        "holdings_value": 4213291.969191446,
+        "invested_fraction": 0.9949912518282833,
+        "n_positions": 24,
+        "turnover": 1.739446186137332
+      },
+      {
+        "rebalance": "2019-06-28",
+        "equity": 4485505.439564433,
+        "cash": 22466.7844052916,
+        "holdings_value": 4463038.655159141,
+        "invested_fraction": 0.9949912479857624,
+        "n_positions": 24,
+        "turnover": 1.7402192898674473
+      },
+      {
+        "rebalance": "2019-07-31",
+        "equity": 4500317.680437447,
+        "cash": 22535.358388316763,
+        "holdings_value": 4477782.32204913,
+        "invested_fraction": 0.9949924960883814,
+        "n_positions": 24,
+        "turnover": 1.4917659480774854
+      },
+      {
+        "rebalance": "2019-08-30",
+        "equity": 4259971.317052072,
+        "cash": 21338.906013677584,
+        "holdings_value": 4238632.411038394,
+        "invested_fraction": 0.9949908334057882,
+        "n_positions": 24,
+        "turnover": 1.8223613514272203
+      },
+      {
+        "rebalance": "2019-09-30",
+        "equity": 4269802.949281555,
+        "cash": 21391.727663887294,
+        "holdings_value": 4248411.221617667,
+        "invested_fraction": 0.9949899965131911,
+        "n_positions": 24,
+        "turnover": 1.9880156437154273
+      },
+      {
+        "rebalance": "2019-10-31",
+        "equity": 4535822.778396899,
+        "cash": 22700.08104251478,
+        "holdings_value": 4513122.697354384,
+        "invested_fraction": 0.9949953774317131,
+        "n_positions": 24,
+        "turnover": 0.9186744353239454
+      },
+      {
+        "rebalance": "2019-11-29",
+        "equity": 4821229.237002819,
+        "cash": 24132.280457792887,
+        "holdings_value": 4797096.956545026,
+        "invested_fraction": 0.9949945793341295,
+        "n_positions": 24,
+        "turnover": 1.0781940344421488
+      },
+      {
+        "rebalance": "2019-12-31",
+        "equity": 4950474.661382218,
+        "cash": 24789.5185506309,
+        "holdings_value": 4925685.142831587,
+        "invested_fraction": 0.9949924966298668,
+        "n_positions": 24,
+        "turnover": 1.491883351017321
+      },
+      {
+        "rebalance": "2020-01-31",
+        "equity": 4974402.831683365,
+        "cash": 24915.53876333405,
+        "holdings_value": 4949487.292920031,
+        "invested_fraction": 0.9949912502854332,
+        "n_positions": 24,
+        "turnover": 1.7399651250097767
+      },
+      {
+        "rebalance": "2020-02-28",
+        "equity": 4654202.681654492,
+        "cash": 23298.22906481217,
+        "holdings_value": 4630904.45258968,
+        "invested_fraction": 0.9949941524556619,
+        "n_positions": 24,
+        "turnover": 1.1636048678807294
+      },
+      {
+        "rebalance": "2020-03-31",
+        "equity": 4039403.113233281,
+        "cash": 20228.974678976534,
+        "holdings_value": 4019174.1385543044,
+        "invested_fraction": 0.9949920881595834,
+        "n_positions": 24,
+        "turnover": 1.5737364486490917
+      },
+      {
+        "rebalance": "2020-04-30",
+        "equity": 4520864.173615753,
+        "cash": 22640.128046572798,
+        "holdings_value": 4498224.04556918,
+        "invested_fraction": 0.9949920795721527,
+        "n_positions": 24,
+        "turnover": 1.5750265737339693
+      },
+      {
+        "rebalance": "2020-05-29",
+        "equity": 4873104.57749983,
+        "cash": 24402.06556163919,
+        "holdings_value": 4848702.511938191,
+        "invested_fraction": 0.994992501151256,
+        "n_positions": 24,
+        "turnover": 1.4921122603034727
+      },
+      {
+        "rebalance": "2020-06-30",
+        "equity": 5019671.031252068,
+        "cash": 25131.80244895327,
+        "holdings_value": 4994539.228803114,
+        "invested_fraction": 0.9949933367560374,
+        "n_positions": 24,
+        "turnover": 1.3263682235628382
+      },
+      {
+        "rebalance": "2020-07-31",
+        "equity": 5421866.811922851,
+        "cash": 27140.97289463541,
+        "holdings_value": 5394725.839028216,
+        "invested_fraction": 0.9949941645864573,
+        "n_positions": 24,
+        "turnover": 1.1610091823375972
+      },
+      {
+        "rebalance": "2020-08-31",
+        "equity": 5934615.641808103,
+        "cash": 29712.66785131694,
+        "holdings_value": 5904902.973956786,
+        "invested_fraction": 0.9949933290301065,
+        "n_positions": 24,
+        "turnover": 1.326655288602481
+      },
+      {
+        "rebalance": "2020-09-30",
+        "equity": 5823672.665460342,
+        "cash": 29159.60733204265,
+        "holdings_value": 5794513.058128299,
+        "invested_fraction": 0.9949929178703698,
+        "n_positions": 24,
+        "turnover": 1.4088991572967624
+      },
+      {
+        "rebalance": "2020-10-30",
+        "equity": 5777803.400644907,
+        "cash": 28925.165751510373,
+        "holdings_value": 5748878.2348933965,
+        "invested_fraction": 0.9949937435136195,
+        "n_positions": 24,
+        "turnover": 1.2433970410900406
+      },
+      {
+        "rebalance": "2020-11-30",
+        "equity": 6636528.745688897,
+        "cash": 33226.92762373842,
+        "holdings_value": 6603301.818065158,
+        "invested_fraction": 0.9949933272502853,
+        "n_positions": 24,
+        "turnover": 1.3268697402402
+      },
+      {
+        "rebalance": "2020-12-31",
+        "equity": 7062874.697362266,
+        "cash": 35352.68716610216,
+        "holdings_value": 7027522.010196163,
+        "invested_fraction": 0.9949945753420621,
+        "n_positions": 24,
+        "turnover": 1.0788323282167278
+      },
+      {
+        "rebalance": "2021-01-29",
+        "equity": 7090748.200098929,
+        "cash": 35498.05715098126,
+        "holdings_value": 7055250.142947948,
+        "invested_fraction": 0.9949937501446623,
+        "n_positions": 24,
+        "turnover": 1.2434583731187456
+      },
+      {
+        "rebalance": "2021-02-26",
+        "equity": 7166744.994322,
+        "cash": 35881.51069179089,
+        "holdings_value": 7130863.483630209,
+        "invested_fraction": 0.9949933322979653,
+        "n_positions": 24,
+        "turnover": 1.3262761784898989
+      },
+      {
+        "rebalance": "2021-03-31",
+        "equity": 7371974.11381895,
+        "cash": 36924.36080831189,
+        "holdings_value": 7335049.753010638,
+        "invested_fraction": 0.9949912519715586,
+        "n_positions": 24,
+        "turnover": 1.7400813019404433
+      },
+      {
+        "rebalance": "2021-04-30",
+        "equity": 7580429.843600386,
+        "cash": 37974.785906194425,
+        "holdings_value": 7542455.057694191,
+        "invested_fraction": 0.9949904178668372,
+        "n_positions": 24,
+        "turnover": 1.905468274712429
+      },
+      {
+        "rebalance": "2021-05-28",
+        "equity": 7730225.457080547,
+        "cash": 38705.8874783277,
+        "holdings_value": 7691519.569602219,
+        "invested_fraction": 0.9949929160936859,
+        "n_positions": 24,
+        "turnover": 1.4090882861856833
+      },
+      {
+        "rebalance": "2021-06-30",
+        "equity": 7722894.144350038,
+        "cash": 38678.78248293709,
+        "holdings_value": 7684215.361867101,
+        "invested_fraction": 0.9949916725828446,
+        "n_positions": 24,
+        "turnover": 1.65722135333622
+      },
+      {
+        "rebalance": "2021-07-30",
+        "equity": 8046543.352827064,
+        "cash": 40276.30728450896,
+        "holdings_value": 8006267.045542555,
+        "invested_fraction": 0.9949945827023527,
+        "n_positions": 24,
+        "turnover": 1.0780247967544816
+      },
+      {
+        "rebalance": "2021-08-31",
+        "equity": 8372296.751751146,
+        "cash": 41913.806029344094,
+        "holdings_value": 8330382.945721802,
+        "invested_fraction": 0.9949937505475331,
+        "n_positions": 24,
+        "turnover": 1.243633258658988
+      },
+      {
+        "rebalance": "2021-09-30",
+        "equity": 7955841.07097876,
+        "cash": 39842.16073400272,
+        "holdings_value": 7915998.910244757,
+        "invested_fraction": 0.9949920868983496,
+        "n_positions": 24,
+        "turnover": 1.574234948688772
+      },
+      {
+        "rebalance": "2021-10-29",
+        "equity": 8528769.991930438,
+        "cash": 42704.27198825408,
+        "holdings_value": 8486065.719942184,
+        "invested_fraction": 0.9949929155049722,
+        "n_positions": 24,
+        "turnover": 1.4093289023718056
+      },
+      {
+        "rebalance": "2021-11-30",
+        "equity": 8715421.411389867,
+        "cash": 43635.20540814557,
+        "holdings_value": 8671786.205981722,
+        "invested_fraction": 0.994993333844865,
+        "n_positions": 24,
+        "turnover": 1.3269918413909463
+      },
+      {
+        "rebalance": "2021-12-31",
+        "equity": 8896121.335284052,
+        "cash": 44562.121948374544,
+        "holdings_value": 8851559.213335678,
+        "invested_fraction": 0.9949908369873923,
+        "n_positions": 24,
+        "turnover": 1.8227462942107238
+      },
+      {
+        "rebalance": "2022-01-31",
+        "equity": 8581181.595400576,
+        "cash": 42970.261672699424,
+        "holdings_value": 8538211.333727876,
+        "invested_fraction": 0.9949925006020462,
+        "n_positions": 24,
+        "turnover": 1.491565955205685
+      },
+      {
+        "rebalance": "2022-02-28",
+        "equity": 8567389.473990494,
+        "cash": 42901.17159402721,
+        "holdings_value": 8524488.302396467,
+        "invested_fraction": 0.9949925036413636,
+        "n_positions": 24,
+        "turnover": 1.4917434341248716
+      },
+      {
+        "rebalance": "2022-03-31",
+        "equity": 8689656.943502063,
+        "cash": 43513.42958677703,
+        "holdings_value": 8646143.513915285,
+        "invested_fraction": 0.9949925031713345,
+        "n_positions": 24,
+        "turnover": 1.4918217922616543
+      },
+      {
+        "rebalance": "2022-04-29",
+        "equity": 7843165.615254821,
+        "cash": 39274.59320596288,
+        "holdings_value": 7803891.022048858,
+        "invested_fraction": 0.9949925074730572,
+        "n_positions": 24,
+        "turnover": 1.4912122273556685
+      },
+      {
+        "rebalance": "2022-05-31",
+        "equity": 7936557.34364785,
+        "cash": 39748.916477284474,
+        "holdings_value": 7896808.427170565,
+        "invested_fraction": 0.9949916677022314,
+        "n_positions": 24,
+        "turnover": 1.6572838735399729
+      },
+      {
+        "rebalance": "2022-06-30",
+        "equity": 7092605.79947368,
+        "cash": 35513.227273471726,
+        "holdings_value": 7057092.572200208,
+        "invested_fraction": 0.9949929224494463,
+        "n_positions": 24,
+        "turnover": 1.4083980173924882
+      },
+      {
+        "rebalance": "2022-07-29",
+        "equity": 7233092.714602931,
+        "cash": 36228.72297583296,
+        "holdings_value": 7196863.991627098,
+        "invested_fraction": 0.9949912541695075,
+        "n_positions": 24,
+        "turnover": 1.7400391631281222
+      },
+      {
+        "rebalance": "2022-08-31",
+        "equity": 6687648.582024452,
+        "cash": 33496.72233969354,
+        "holdings_value": 6654151.859684759,
+        "invested_fraction": 0.9949912556066823,
+        "n_positions": 24,
+        "turnover": 1.7395328297414834
+      },
+      {
+        "rebalance": "2022-09-30",
+        "equity": 6274933.5486523695,
+        "cash": 31416.477893943826,
+        "holdings_value": 6243517.070758426,
+        "invested_fraction": 0.9949933369572191,
+        "n_positions": 24,
+        "turnover": 1.3258919795993986
+      },
+      {
+        "rebalance": "2022-10-31",
+        "equity": 6803412.43376049,
+        "cash": 34073.76743286644,
+        "holdings_value": 6769338.666327624,
+        "invested_fraction": 0.9949916651732323,
+        "n_positions": 24,
+        "turnover": 1.6576138043957216
+      },
+      {
+        "rebalance": "2022-11-30",
+        "equity": 7234454.270092322,
+        "cash": 36223.52162980723,
+        "holdings_value": 7198230.748462514,
+        "invested_fraction": 0.9949929158057494,
+        "n_positions": 24,
+        "turnover": 1.4092905536255413
+      },
+      {
+        "rebalance": "2022-12-30",
+        "equity": 6892700.307859424,
+        "cash": 34515.21470772078,
+        "holdings_value": 6858185.093151703,
+        "invested_fraction": 0.9949924974007117,
+        "n_positions": 24,
+        "turnover": 1.491503392587446
+      },
+      {
+        "rebalance": "2023-01-31",
+        "equity": 6885925.676581114,
+        "cash": 34495.6485756311,
+        "holdings_value": 6851430.028005483,
+        "invested_fraction": 0.9949904122995474,
+        "n_positions": 24,
+        "turnover": 1.9053261163172885
+      },
+      {
+        "rebalance": "2023-02-28",
+        "equity": 6940730.064386579,
+        "cash": 34741.360806781624,
+        "holdings_value": 6905988.703579797,
+        "invested_fraction": 0.9949945667841136,
+        "n_positions": 24,
+        "turnover": 1.0811040749585763
+      },
+      {
+        "rebalance": "2023-03-31",
+        "equity": 7069331.11988669,
+        "cash": 35396.86687014544,
+        "holdings_value": 7033934.2530165445,
+        "invested_fraction": 0.9949928973095389,
+        "n_positions": 24,
+        "turnover": 1.413074554871949
+      },
+      {
+        "rebalance": "2023-04-28",
+        "equity": 7185638.569080414,
+        "cash": 35976.073747091024,
+        "holdings_value": 7149662.495333323,
+        "invested_fraction": 0.9949933365836274,
+        "n_positions": 24,
+        "turnover": 1.3263035290361098
+      },
+      {
+        "rebalance": "2023-05-31",
+        "equity": 7055280.360655737,
+        "cash": 35332.227907250955,
+        "holdings_value": 7019948.1327484865,
+        "invested_fraction": 0.9949920873301813,
+        "n_positions": 24,
+        "turnover": 1.5744038673434801
+      },
+      {
+        "rebalance": "2023-06-30",
+        "equity": 7570328.095284158,
+        "cash": 37898.95408050352,
+        "holdings_value": 7532429.141203655,
+        "invested_fraction": 0.9949937501250293,
+        "n_positions": 24,
+        "turnover": 1.2437765239468976
+      },
+      {
+        "rebalance": "2023-07-31",
+        "equity": 7856228.791537442,
+        "cash": 39343.32490216138,
+        "holdings_value": 7816885.466635281,
+        "invested_fraction": 0.9949920851408324,
+        "n_positions": 24,
+        "turnover": 1.5746782856688695
+      },
+      {
+        "rebalance": "2023-08-31",
+        "equity": 7632294.709211115,
+        "cash": 38212.333510710145,
+        "holdings_value": 7594082.375700405,
+        "invested_fraction": 0.9949933362158313,
+        "n_positions": 24,
+        "turnover": 1.3260750179388407
+      },
+      {
+        "rebalance": "2023-09-29",
+        "equity": 7250060.570148767,
+        "cash": 36304.69124521676,
+        "holdings_value": 7213755.87890355,
+        "invested_fraction": 0.9949924982151601,
+        "n_positions": 24,
+        "turnover": 1.4929665905317233
+      },
+      {
+        "rebalance": "2023-10-31",
+        "equity": 7072543.988337336,
+        "cash": 35415.75004607772,
+        "holdings_value": 7037128.238291258,
+        "invested_fraction": 0.9949925019760246,
+        "n_positions": 24,
+        "turnover": 1.491625819496994
+      },
+      {
+        "rebalance": "2023-11-30",
+        "equity": 7617963.979443841,
+        "cash": 38150.132814592434,
+        "holdings_value": 7579813.846629248,
+        "invested_fraction": 0.9949920828035501,
+        "n_positions": 24,
+        "turnover": 1.574852825345416
+      },
+      {
+        "rebalance": "2023-12-29",
+        "equity": 8112261.869668736,
+        "cash": 40608.67943730691,
+        "holdings_value": 8071653.190231429,
+        "invested_fraction": 0.9949941606804953,
+        "n_positions": 24,
+        "turnover": 1.1627092381967037
+      },
+      {
+        "rebalance": "2024-01-31",
+        "equity": 8240008.02086918,
+        "cash": 41265.2540836416,
+        "holdings_value": 8198742.766785538,
+        "invested_fraction": 0.9949920856898281,
+        "n_positions": 24,
+        "turnover": 1.5745743450705405
+      },
+      {
+        "rebalance": "2024-02-29",
+        "equity": 8725654.706070516,
+        "cash": 43682.85657570754,
+        "holdings_value": 8681971.84949481,
+        "invested_fraction": 0.9949937445329671,
+        "n_positions": 24,
+        "turnover": 1.2449157060867906
+      },
+      {
+        "rebalance": "2024-03-28",
+        "equity": 8942340.020418352,
+        "cash": 44775.40218226296,
+        "holdings_value": 8897564.61823609,
+        "invested_fraction": 0.9949928763522718,
+        "n_positions": 24,
+        "turnover": 1.4178714244769794
+      },
+      {
+        "rebalance": "2024-04-30",
+        "equity": 8858083.437729115,
+        "cash": 44353.13201696476,
+        "holdings_value": 8813730.30571215,
+        "invested_fraction": 0.9949929200454297,
+        "n_positions": 24,
+        "turnover": 1.4089465681713123
+      },
+      {
+        "rebalance": "2024-05-31",
+        "equity": 9241727.564866262,
+        "cash": 46277.91379917425,
+        "holdings_value": 9195449.651067087,
+        "invested_fraction": 0.9949925040016213,
+        "n_positions": 24,
+        "turnover": 1.4919594812847239
+      },
+      {
+        "rebalance": "2024-06-28",
+        "equity": 9467814.730617313,
+        "cash": 47403.40141279605,
+        "holdings_value": 9420411.329204516,
+        "invested_fraction": 0.9949932056380971,
+        "n_positions": 25,
+        "turnover": 1.3528301835964258
+      },
+      {
+        "rebalance": "2024-07-31",
+        "equity": 9419851.685774662,
+        "cash": 47178.35207813639,
+        "holdings_value": 9372673.333696526,
+        "invested_fraction": 0.9949916035143757,
+        "n_positions": 25,
+        "turnover": 1.6704361414556768
+      },
+      {
+        "rebalance": "2024-08-30",
+        "equity": 9595355.13425486,
+        "cash": 48061.16388265409,
+        "holdings_value": 9547293.970372206,
+        "invested_fraction": 0.9949912053060883,
+        "n_positions": 25,
+        "turnover": 1.7499573962676156
+      },
+      {
+        "rebalance": "2024-09-30",
+        "equity": 9912209.227710664,
+        "cash": 49632.382086687474,
+        "holdings_value": 9862576.845623977,
+        "invested_fraction": 0.9949928032241355,
+        "n_positions": 25,
+        "turnover": 1.4323258795735783
+      },
+      {
+        "rebalance": "2024-10-31",
+        "equity": 9905359.758802628,
+        "cash": 49606.02977910818,
+        "holdings_value": 9855753.72902352,
+        "invested_fraction": 0.9949920012006606,
+        "n_positions": 25,
+        "turnover": 1.5910390210059144
+      },
+      {
+        "rebalance": "2024-11-29",
+        "equity": 11069022.403147895,
+        "cash": 55394.38998447863,
+        "holdings_value": 11013628.013163416,
+        "invested_fraction": 0.9949955481191614,
+        "n_positions": 25,
+        "turnover": 0.8862224356004659
+      },
+      {
+        "rebalance": "2024-12-31",
+        "equity": 10667892.553444682,
+        "cash": 53420.45605966221,
+        "holdings_value": 10614472.097385019,
+        "invested_fraction": 0.9949924077513873,
+        "n_positions": 25,
+        "turnover": 1.5114268487854665
+      },
+      {
+        "rebalance": "2025-01-31",
+        "equity": 10874610.742805494,
+        "cash": 54468.67002634998,
+        "holdings_value": 10820142.072779143,
+        "invested_fraction": 0.9949912073806976,
+        "n_positions": 25,
+        "turnover": 1.749962089702193
+      },
+      {
+        "rebalance": "2025-02-28",
+        "equity": 11126171.946925007,
+        "cash": 55715.41916026762,
+        "holdings_value": 11070456.52776474,
+        "invested_fraction": 0.9949923999533671,
+        "n_positions": 25,
+        "turnover": 1.5122772513688414
+      },
+      {
+        "rebalance": "2025-03-31",
+        "equity": 10947794.066460561,
+        "cash": 54791.51606344167,
+        "holdings_value": 10893002.550397119,
+        "invested_fraction": 0.9949952003361754,
+        "n_positions": 25,
+        "turnover": 0.9559309717768137
+      },
+      {
+        "rebalance": "2025-04-30",
+        "equity": 10434803.07471746,
+        "cash": 52265.72836508375,
+        "holdings_value": 10382537.346352376,
+        "invested_fraction": 0.9949912108555533,
+        "n_positions": 25,
+        "turnover": 1.7496247648582486
+      },
+      {
+        "rebalance": "2025-05-30",
+        "equity": 11114148.273031084,
+        "cash": 55650.71170619686,
+        "holdings_value": 11058497.561324887,
+        "invested_fraction": 0.9949928046361199,
+        "n_positions": 25,
+        "turnover": 1.4326792810087354
+      },
+      {
+        "rebalance": "2025-06-30",
+        "equity": 12340995.523865456,
+        "cash": 61754.74433949739,
+        "holdings_value": 12279240.779525958,
+        "invested_fraction": 0.9949959673658357,
+        "n_positions": 25,
+        "turnover": 0.8035097262356219
+      },
+      {
+        "rebalance": "2025-07-31",
+        "equity": 12433670.14173188,
+        "cash": 62237.938813690154,
+        "holdings_value": 12371432.20291819,
+        "invested_fraction": 0.9949944032530832,
+        "n_positions": 25,
+        "turnover": 1.1143046465813917
+      },
+      {
+        "rebalance": "2025-08-29",
+        "equity": 12528196.136151584,
+        "cash": 62741.13674316785,
+        "holdings_value": 12465454.999408416,
+        "invested_fraction": 0.9949920055480198,
+        "n_positions": 25,
+        "turnover": 1.591082298300795
+      },
+      {
+        "rebalance": "2025-09-30",
+        "equity": 14176058.980931055,
+        "cash": 70954.90991208405,
+        "holdings_value": 14105104.071018972,
+        "invested_fraction": 0.9949947365478989,
+        "n_positions": 25,
+        "turnover": 1.0477775462962737
+      },
+      {
+        "rebalance": "2025-10-31",
+        "equity": 15952648.177607324,
+        "cash": 79846.40572715079,
+        "holdings_value": 15872801.771880174,
+        "invested_fraction": 0.9949947867690563,
+        "n_positions": 25,
+        "turnover": 1.0384157756301995
+      },
+      {
+        "rebalance": "2025-11-28",
+        "equity": 15486230.200840233,
+        "cash": 77536.3420082152,
+        "holdings_value": 15408693.858832018,
+        "invested_fraction": 0.9949932074492857,
+        "n_positions": 25,
+        "turnover": 1.3525626333309222
+      },
+      {
+        "rebalance": "2025-12-31",
+        "equity": 15639362.845366031,
+        "cash": 78328.0826971383,
+        "holdings_value": 15561034.762668893,
+        "invested_fraction": 0.9949916065333604,
+        "n_positions": 25,
+        "turnover": 1.670510941600705
+      },
+      {
+        "rebalance": "2026-01-30",
+        "equity": 16991381.56844253,
+        "cash": 85079.21908619496,
+        "holdings_value": 16906302.349356335,
+        "invested_fraction": 0.9949928015715797,
+        "n_positions": 25,
+        "turnover": 1.4325642048713587
+      },
+      {
+        "rebalance": "2026-02-27",
+        "equity": 18060432.50102036,
+        "cash": 90410.58156418834,
+        "holdings_value": 17970021.919456173,
+        "invested_fraction": 0.9949939968736031,
+        "n_positions": 25,
+        "turnover": 1.194971165855892
+      },
+      {
+        "rebalance": "2026-03-31",
+        "equity": 17598714.615056317,
+        "cash": 88092.02196371798,
+        "holdings_value": 17510622.593092598,
+        "invested_fraction": 0.9949944059046021,
+        "n_positions": 25,
+        "turnover": 1.1141342930257065
+      },
+      {
+        "rebalance": "2026-04-30",
+        "equity": 18944698.337353997,
+        "cash": 94867.37422649928,
+        "holdings_value": 18849830.963127498,
+        "invested_fraction": 0.9949924051290147,
+        "n_positions": 25,
+        "turnover": 1.5119684274000527
+      },
+      {
+        "rebalance": "2026-05-29",
+        "equity": 22191051.298728712,
+        "cash": 111065.4146627504,
+        "holdings_value": 22079985.884065963,
+        "invested_fraction": 0.9949950359193163,
+        "n_positions": 25,
+        "turnover": 0.9889654098542231
+      },
+      {
+        "rebalance": "2026-06-30",
+        "equity": 22466849.397743225,
+        "cash": 112477.87891667271,
+        "holdings_value": 22354371.51882655,
+        "invested_fraction": 0.9949936069394771,
+        "n_positions": 25,
+        "turnover": 1.2733052343191797
+      },
+      {
+        "rebalance": "2026-07-31",
+        "equity": 20694698.68399891,
+        "cash": 103671.93763497738,
+        "holdings_value": 20591026.74636393,
+        "invested_fraction": 0.9949904108671495,
+        "n_positions": 25,
+        "turnover": 1.9082142746304078
+      },
+      {
+        "rebalance": "2026-08-31",
+        "equity": 21830806.61661409,
+        "cash": 109319.89634807166,
+        "holdings_value": 21721486.720266018,
+        "invested_fraction": 0.9949924023299774,
+        "n_positions": 25,
+        "turnover": 1.511869363709908
+      },
+      {
+        "rebalance": "2026-09-30",
+        "equity": 21695833.02268791,
+        "cash": 108617.88601054417,
+        "holdings_value": 21587215.136677366,
+        "invested_fraction": 0.9949936061041327,
+        "n_positions": 25,
+        "turnover": 1.273210083528313
+      }
+    ],
+    "benchmark_rebalances": [
+      {
+        "rebalance": "2010-04-30",
+        "equity": 999499.7291574831,
+        "cash": 4999.999999998148,
+        "holdings_value": 994499.729157485,
+        "invested_fraction": 0.9949974973938084,
+        "n_positions": 89,
+        "turnover": 0.994499729157485
+      },
+      {
+        "rebalance": "2010-05-28",
+        "equity": 916615.4539584119,
+        "cash": 4583.275540903956,
+        "holdings_value": 912032.178417508,
+        "invested_fraction": 0.9949997836921568,
+        "n_positions": 89,
+        "turnover": 0.043410569202192294
+      },
+      {
+        "rebalance": "2010-06-30",
+        "equity": 878305.3520001561,
+        "cash": 4391.743039112884,
+        "holdings_value": 873913.6089610432,
+        "invested_fraction": 0.994999753754077,
+        "n_positions": 89,
+        "turnover": 0.049281913619478604
+      },
+      {
+        "rebalance": "2010-07-30",
+        "equity": 947293.5933274498,
+        "cash": 4736.687189621292,
+        "holdings_value": 942556.9061378285,
+        "invested_fraction": 0.9949997685796826,
+        "n_positions": 89,
+        "turnover": 0.04603310752758706
+      },
+      {
+        "rebalance": "2010-08-31",
+        "equity": 911435.3066849586,
+        "cash": 4557.446336293581,
+        "holdings_value": 906877.860348665,
+        "invested_fraction": 0.9949997039802312,
+        "n_positions": 89,
+        "turnover": 0.059211446419294655
+      },
+      {
+        "rebalance": "2010-09-30",
+        "equity": 993467.1774504973,
+        "cash": 4967.608251545924,
+        "holdings_value": 988499.5691989514,
+        "invested_fraction": 0.9949997258446986,
+        "n_positions": 90,
+        "turnover": 0.05426518305840286
+      },
+      {
+        "rebalance": "2010-10-29",
+        "equity": 1030316.9764745111,
+        "cash": 5151.791123388358,
+        "holdings_value": 1025165.1853511228,
+        "invested_fraction": 0.994999799827606,
+        "n_positions": 90,
+        "turnover": 0.03989674169782788
+      },
+      {
+        "rebalance": "2010-11-30",
+        "equity": 1044383.208088808,
+        "cash": 5222.192302933407,
+        "holdings_value": 1039161.0157858746,
+        "invested_fraction": 0.9949997354778521,
+        "n_positions": 90,
+        "turnover": 0.05267702851291297
+      },
+      {
+        "rebalance": "2010-12-31",
+        "equity": 1100375.2334093407,
+        "cash": 5502.143407071979,
+        "holdings_value": 1094873.0900022688,
+        "invested_fraction": 0.9949997571373681,
+        "n_positions": 90,
+        "turnover": 0.048350692849929544
+      },
+      {
+        "rebalance": "2011-01-31",
+        "equity": 1135756.43288748,
+        "cash": 5679.068748160498,
+        "holdings_value": 1130077.3641393194,
+        "invested_fraction": 0.9949997476714947,
+        "n_positions": 90,
+        "turnover": 0.050273798800790526
+      },
+      {
+        "rebalance": "2011-02-28",
+        "equity": 1169664.9088273258,
+        "cash": 5848.590008585127,
+        "holdings_value": 1163816.3188187408,
+        "invested_fraction": 0.9949997730423078,
+        "n_positions": 91,
+        "turnover": 0.045249451070192265
+      },
+      {
+        "rebalance": "2011-03-31",
+        "equity": 1180199.145805455,
+        "cash": 5901.227574974381,
+        "holdings_value": 1174297.9182304807,
+        "invested_fraction": 0.9949998035535377,
+        "n_positions": 91,
+        "turnover": 0.039206576563400604
+      },
+      {
+        "rebalance": "2011-04-29",
+        "equity": 1212421.6772903518,
+        "cash": 6062.335172363893,
+        "holdings_value": 1206359.342117988,
+        "invested_fraction": 0.9949998129479898,
+        "n_positions": 91,
+        "turnover": 0.037297305047639076
+      },
+      {
+        "rebalance": "2011-05-31",
+        "equity": 1199524.0506549561,
+        "cash": 5997.8511864950915,
+        "holdings_value": 1193526.199468461,
+        "invested_fraction": 0.9949998074792914,
+        "n_positions": 91,
+        "turnover": 0.038484181038413355
+      },
+      {
+        "rebalance": "2011-06-30",
+        "equity": 1177448.7751741137,
+        "cash": 5887.466248454018,
+        "holdings_value": 1171561.3089256596,
+        "invested_fraction": 0.9949998111403331,
+        "n_positions": 91,
+        "turnover": 0.03775193742870365
+      },
+      {
+        "rebalance": "2011-07-29",
+        "equity": 1162997.2610263994,
+        "cash": 5815.239866598299,
+        "holdings_value": 1157182.0211598012,
+        "invested_fraction": 0.9949997819758698,
+        "n_positions": 91,
+        "turnover": 0.04357940172184014
+      },
+      {
+        "rebalance": "2011-08-31",
+        "equity": 1091812.309202058,
+        "cash": 5459.3730123487285,
+        "holdings_value": 1086352.9361897092,
+        "invested_fraction": 0.9949997147253828,
+        "n_positions": 91,
+        "turnover": 0.05713878814644371
+      },
+      {
+        "rebalance": "2011-09-30",
+        "equity": 1015285.8375234419,
+        "cash": 5076.757509067662,
+        "holdings_value": 1010209.0800143742,
+        "invested_fraction": 0.9949996766216583,
+        "n_positions": 91,
+        "turnover": 0.06476572192477068
+      },
+      {
+        "rebalance": "2011-10-31",
+        "equity": 1091217.8519798012,
+        "cash": 5456.363226393733,
+        "holdings_value": 1085761.4887534075,
+        "invested_fraction": 0.9949997489351057,
+        "n_positions": 91,
+        "turnover": 0.04996676081039967
+      },
+      {
+        "rebalance": "2011-11-30",
+        "equity": 1114668.0555281576,
+        "cash": 5573.601125255113,
+        "holdings_value": 1109094.4544029024,
+        "invested_fraction": 0.9949997659862834,
+        "n_positions": 91,
+        "turnover": 0.046677124385633435
+      },
+      {
+        "rebalance": "2011-12-30",
+        "equity": 1151736.7566631762,
+        "cash": 5758.935965943176,
+        "holdings_value": 1145977.820697233,
+        "invested_fraction": 0.9949997810414352,
+        "n_positions": 91,
+        "turnover": 0.04364238372080284
+      },
+      {
+        "rebalance": "2012-01-31",
+        "equity": 1214770.5078316152,
+        "cash": 6074.2519667493625,
+        "holdings_value": 1208696.2558648658,
+        "invested_fraction": 0.994999671190905,
+        "n_positions": 91,
+        "turnover": 0.06551997887726574
+      },
+      {
+        "rebalance": "2012-02-29",
+        "equity": 1267221.6250615816,
+        "cash": 6336.396425320714,
+        "holdings_value": 1260885.2286362608,
+        "invested_fraction": 0.9949997724944026,
+        "n_positions": 91,
+        "turnover": 0.04533278229593052
+      },
+      {
+        "rebalance": "2012-03-30",
+        "equity": 1314381.5192570935,
+        "cash": 6572.139620670991,
+        "holdings_value": 1307809.3796364225,
+        "invested_fraction": 0.9949998234725747,
+        "n_positions": 91,
+        "turnover": 0.035172682939543704
+      },
+      {
+        "rebalance": "2012-04-30",
+        "equity": 1292300.658972584,
+        "cash": 6461.813840290016,
+        "holdings_value": 1285838.8451322939,
+        "invested_fraction": 0.9949997596956831,
+        "n_positions": 91,
+        "turnover": 0.048009342758926925
+      },
+      {
+        "rebalance": "2012-05-31",
+        "equity": 1192006.7698276413,
+        "cash": 5960.3796261167845,
+        "holdings_value": 1186046.3902015246,
+        "invested_fraction": 0.9949997099202896,
+        "n_positions": 91,
+        "turnover": 0.058142595204934755
+      },
+      {
+        "rebalance": "2012-06-29",
+        "equity": 1269949.489477239,
+        "cash": 6349.943760704066,
+        "holdings_value": 1263599.545716535,
+        "invested_fraction": 0.9949998454164363,
+        "n_positions": 91,
+        "turnover": 0.030719964925268364
+      },
+      {
+        "rebalance": "2012-07-31",
+        "equity": 1275564.6332638445,
+        "cash": 6378.132309414446,
+        "holdings_value": 1269186.50095443,
+        "invested_fraction": 0.9949997576421553,
+        "n_positions": 91,
+        "turnover": 0.04835370001131059
+      },
+      {
+        "rebalance": "2012-08-31",
+        "equity": 1297050.2845536158,
+        "cash": 6485.564340681578,
+        "holdings_value": 1290564.7202129343,
+        "invested_fraction": 0.9949997587465057,
+        "n_positions": 92,
+        "turnover": 0.048139612189348285
+      },
+      {
+        "rebalance": "2012-09-28",
+        "equity": 1338618.6114164116,
+        "cash": 6693.428857632645,
+        "holdings_value": 1331925.182558779,
+        "invested_fraction": 0.9949997491439699,
+        "n_positions": 93,
+        "turnover": 0.04982739115407092
+      },
+      {
+        "rebalance": "2012-10-31",
+        "equity": 1328031.553614238,
+        "cash": 6640.594989195622,
+        "holdings_value": 1321390.9586250423,
+        "invested_fraction": 0.994999670775048,
+        "n_positions": 94,
+        "turnover": 0.06560728646269619
+      },
+      {
+        "rebalance": "2012-11-30",
+        "equity": 1357499.3373682164,
+        "cash": 6787.770932077749,
+        "holdings_value": 1350711.5664361387,
+        "invested_fraction": 0.9949997979776276,
+        "n_positions": 94,
+        "turnover": 0.04028848742729832
+      },
+      {
+        "rebalance": "2012-12-31",
+        "equity": 1399186.4268749643,
+        "cash": 6996.18993843307,
+        "holdings_value": 1392190.2369365313,
+        "invested_fraction": 0.9949998157471704,
+        "n_positions": 94,
+        "turnover": 0.03672201100795264
+      },
+      {
+        "rebalance": "2013-01-31",
+        "equity": 1472085.5578276303,
+        "cash": 7360.757301598803,
+        "holdings_value": 1464724.8005260315,
+        "invested_fraction": 0.9949997761594366,
+        "n_positions": 94,
+        "turnover": 0.04454727411769711
+      },
+      {
+        "rebalance": "2013-02-28",
+        "equity": 1479211.8646137444,
+        "cash": 7396.28524744572,
+        "holdings_value": 1471815.5793662986,
+        "invested_fraction": 0.9949998472670599,
+        "n_positions": 94,
+        "turnover": 0.030485021948883747
+      },
+      {
+        "rebalance": "2013-03-28",
+        "equity": 1538110.2195012367,
+        "cash": 7690.828530517387,
+        "holdings_value": 1530419.3909707193,
+        "invested_fraction": 0.9949998196273533,
+        "n_positions": 94,
+        "turnover": 0.03592518928286645
+      },
+      {
+        "rebalance": "2013-04-30",
+        "equity": 1576001.5771327526,
+        "cash": 7880.413701475358,
+        "holdings_value": 1568121.1634312773,
+        "invested_fraction": 0.9949997425029153,
+        "n_positions": 95,
+        "turnover": 0.05132268355097153
+      },
+      {
+        "rebalance": "2013-05-31",
+        "equity": 1654557.1185022949,
+        "cash": 8273.330272884596,
+        "holdings_value": 1646283.7882294103,
+        "invested_fraction": 0.9949996707998975,
+        "n_positions": 95,
+        "turnover": 0.06558496714145236
+      },
+      {
+        "rebalance": "2013-06-28",
+        "equity": 1649264.2821255762,
+        "cash": 8246.646287575895,
+        "holdings_value": 1641017.6358380003,
+        "invested_fraction": 0.9949998030170474,
+        "n_positions": 95,
+        "turnover": 0.03935207653869967
+      },
+      {
+        "rebalance": "2013-07-31",
+        "equity": 1751376.263984107,
+        "cash": 8757.303937855035,
+        "holdings_value": 1742618.960046252,
+        "invested_fraction": 0.9949997586938095,
+        "n_positions": 95,
+        "turnover": 0.04804892276614187
+      },
+      {
+        "rebalance": "2013-08-30",
+        "equity": 1712651.506476514,
+        "cash": 8563.568423876726,
+        "holdings_value": 1704087.9380526373,
+        "invested_fraction": 0.9949998184735814,
+        "n_positions": 95,
+        "turnover": 0.03631279649043449
+      },
+      {
+        "rebalance": "2013-09-30",
+        "equity": 1776519.8182290385,
+        "cash": 8882.92113338655,
+        "holdings_value": 1767636.897095652,
+        "invested_fraction": 0.9949998187229673,
+        "n_positions": 95,
+        "turnover": 0.036117068056954714
+      },
+      {
+        "rebalance": "2013-10-31",
+        "equity": 1855249.4079148548,
+        "cash": 9276.607341148456,
+        "holdings_value": 1845972.8005737064,
+        "invested_fraction": 0.9949998057934569,
+        "n_positions": 95,
+        "turnover": 0.03868049159782412
+      },
+      {
+        "rebalance": "2013-11-29",
+        "equity": 1909310.1473955403,
+        "cash": 9546.907753065792,
+        "holdings_value": 1899763.2396424746,
+        "invested_fraction": 0.9949998130130464,
+        "n_positions": 95,
+        "turnover": 0.037278848483861246
+      },
+      {
+        "rebalance": "2013-12-31",
+        "equity": 1974110.9768658662,
+        "cash": 9870.877403012768,
+        "holdings_value": 1964240.0994628535,
+        "invested_fraction": 0.9949998366258599,
+        "n_positions": 95,
+        "turnover": 0.0325509569534466
+      },
+      {
+        "rebalance": "2014-01-31",
+        "equity": 1939374.342632026,
+        "cash": 9697.382460651232,
+        "holdings_value": 1929676.9601713747,
+        "invested_fraction": 0.9949997366431638,
+        "n_positions": 95,
+        "turnover": 0.05264937621494145
+      },
+      {
+        "rebalance": "2014-02-28",
+        "equity": 2011607.82332691,
+        "cash": 10058.365577672479,
+        "holdings_value": 2001549.4577492375,
+        "invested_fraction": 0.9949998377113899,
+        "n_positions": 95,
+        "turnover": 0.03232177040465767
+      },
+      {
+        "rebalance": "2014-03-31",
+        "equity": 2049150.7134243199,
+        "cash": 10246.158226330717,
+        "holdings_value": 2038904.555197989,
+        "invested_fraction": 0.994999802523452,
+        "n_positions": 95,
+        "turnover": 0.03940300230850243
+      },
+      {
+        "rebalance": "2014-04-30",
+        "equity": 2033563.5755186,
+        "cash": 10168.247769988528,
+        "holdings_value": 2023395.3277486113,
+        "invested_fraction": 0.9949997886014478,
+        "n_positions": 95,
+        "turnover": 0.04224898375295854
+      },
+      {
+        "rebalance": "2014-05-30",
+        "equity": 2095991.2041741372,
+        "cash": 10480.298366319827,
+        "holdings_value": 2085510.9058078174,
+        "invested_fraction": 0.9949998366665621,
+        "n_positions": 95,
+        "turnover": 0.03255280970407185
+      },
+      {
+        "rebalance": "2014-06-30",
+        "equity": 2158171.3429918103,
+        "cash": 10791.234931201974,
+        "holdings_value": 2147380.108060608,
+        "invested_fraction": 0.994999824751522,
+        "n_positions": 95,
+        "turnover": 0.034934534472289204
+      },
+      {
+        "rebalance": "2014-07-31",
+        "equity": 2120328.1959356815,
+        "cash": 10602.011309939846,
+        "holdings_value": 2109726.1846257416,
+        "invested_fraction": 0.994999825342953,
+        "n_positions": 95,
+        "turnover": 0.034936943026218
+      },
+      {
+        "rebalance": "2014-08-29",
+        "equity": 2218868.6039299774,
+        "cash": 11094.67406772518,
+        "holdings_value": 2207773.9298622524,
+        "invested_fraction": 0.9949998508032091,
+        "n_positions": 95,
+        "turnover": 0.029689104672083643
+      },
+      {
+        "rebalance": "2014-09-30",
+        "equity": 2201175.15647781,
+        "cash": 11006.35782383351,
+        "holdings_value": 2190168.7986539765,
+        "invested_fraction": 0.9949997810072302,
+        "n_positions": 96,
+        "turnover": 0.04357589489627629
+      },
+      {
+        "rebalance": "2014-10-31",
+        "equity": 2264615.2976948894,
+        "cash": 11323.525114777816,
+        "holdings_value": 2253291.7725801114,
+        "invested_fraction": 0.9949998018973448,
+        "n_positions": 96,
+        "turnover": 0.039489615506927284
+      },
+      {
+        "rebalance": "2014-11-28",
+        "equity": 2326581.3503109775,
+        "cash": 11633.373852785064,
+        "holdings_value": 2314947.9764581923,
+        "invested_fraction": 0.994999799232797,
+        "n_positions": 96,
+        "turnover": 0.04003162139271936
+      },
+      {
+        "rebalance": "2014-12-31",
+        "equity": 2331382.9290701863,
+        "cash": 11657.314138667472,
+        "holdings_value": 2319725.6149315187,
+        "invested_fraction": 0.9949998286453453,
+        "n_positions": 96,
+        "turnover": 0.03421328472745912
+      },
+      {
+        "rebalance": "2015-01-30",
+        "equity": 2265211.7654738943,
+        "cash": 11326.65016492381,
+        "holdings_value": 2253885.1153089707,
+        "invested_fraction": 0.9949997389482241,
+        "n_positions": 96,
+        "turnover": 0.052214613724554354
+      },
+      {
+        "rebalance": "2015-02-27",
+        "equity": 2406812.2696891474,
+        "cash": 12034.511459820822,
+        "holdings_value": 2394777.7582293265,
+        "invested_fraction": 0.9949998129844272,
+        "n_positions": 96,
+        "turnover": 0.03720147489031913
+      },
+      {
+        "rebalance": "2015-03-31",
+        "equity": 2347842.3016971117,
+        "cash": 11739.562523116734,
+        "holdings_value": 2336102.739173995,
+        "invested_fraction": 0.9949998504948007,
+        "n_positions": 96,
+        "turnover": 0.029919691561421838
+      },
+      {
+        "rebalance": "2015-04-30",
+        "equity": 2392193.9980085376,
+        "cash": 11961.542784570116,
+        "holdings_value": 2380232.4552239673,
+        "invested_fraction": 0.9949997605568244,
+        "n_positions": 96,
+        "turnover": 0.047765250244634176
+      },
+      {
+        "rebalance": "2015-05-29",
+        "equity": 2450600.2945611393,
+        "cash": 12253.34225972744,
+        "holdings_value": 2438346.952301412,
+        "invested_fraction": 0.9949998609373701,
+        "n_positions": 96,
+        "turnover": 0.02771815600228292
+      },
+      {
+        "rebalance": "2015-06-30",
+        "equity": 2423619.703413575,
+        "cash": 12118.556640516092,
+        "holdings_value": 2411501.146773059,
+        "invested_fraction": 0.9949998109755225,
+        "n_positions": 96,
+        "turnover": 0.03777063056919562
+      },
+      {
+        "rebalance": "2015-07-31",
+        "equity": 2476393.6480791434,
+        "cash": 12382.598575776079,
+        "holdings_value": 2464011.0495033674,
+        "invested_fraction": 0.9949997454623659,
+        "n_positions": 96,
+        "turnover": 0.05076099754745144
+      },
+      {
+        "rebalance": "2015-08-31",
+        "equity": 2267373.746586391,
+        "cash": 11337.260780560973,
+        "holdings_value": 2256036.48580583,
+        "invested_fraction": 0.9949998270917491,
+        "n_positions": 96,
+        "turnover": 0.03475751897583638
+      },
+      {
+        "rebalance": "2015-09-30",
+        "equity": 2273052.893176234,
+        "cash": 11365.68657126227,
+        "holdings_value": 2261687.2066049716,
+        "invested_fraction": 0.9949998143002381,
+        "n_positions": 96,
+        "turnover": 0.037076161612969595
+      },
+      {
+        "rebalance": "2015-10-30",
+        "equity": 2471216.193044572,
+        "cash": 12356.592191069703,
+        "holdings_value": 2458859.6008535023,
+        "invested_fraction": 0.9949997931278338,
+        "n_positions": 96,
+        "turnover": 0.04110967287394612
+      },
+      {
+        "rebalance": "2015-11-30",
+        "equity": 2511215.552445627,
+        "cash": 12556.5508372982,
+        "holdings_value": 2498659.0016083284,
+        "invested_fraction": 0.9949998116151082,
+        "n_positions": 96,
+        "turnover": 0.03757124587116588
+      },
+      {
+        "rebalance": "2015-12-31",
+        "equity": 2440935.824825491,
+        "cash": 12205.154414798282,
+        "holdings_value": 2428730.6704106927,
+        "invested_fraction": 0.9949998052834221,
+        "n_positions": 96,
+        "turnover": 0.03893996997442576
+      },
+      {
+        "rebalance": "2016-01-29",
+        "equity": 2306519.7587070996,
+        "cash": 11533.341299155201,
+        "holdings_value": 2294986.4174079443,
+        "invested_fraction": 0.9949996780839978,
+        "n_positions": 96,
+        "turnover": 0.06441169757427812
+      },
+      {
+        "rebalance": "2016-02-29",
+        "equity": 2338232.000112809,
+        "cash": 11691.632025145607,
+        "holdings_value": 2326540.3680876633,
+        "invested_fraction": 0.9949997981275676,
+        "n_positions": 96,
+        "turnover": 0.040289241517645416
+      },
+      {
+        "rebalance": "2016-03-31",
+        "equity": 2479177.552168744,
+        "cash": 12396.335232203135,
+        "holdings_value": 2466781.216936541,
+        "invested_fraction": 0.9949998195081432,
+        "n_positions": 96,
+        "turnover": 0.035883869426791094
+      },
+      {
+        "rebalance": "2016-04-29",
+        "equity": 2545390.62952914,
+        "cash": 12727.54285741737,
+        "holdings_value": 2532663.0866717226,
+        "invested_fraction": 0.9949997683224866,
+        "n_positions": 96,
+        "turnover": 0.04619447364885018
+      },
+      {
+        "rebalance": "2016-05-31",
+        "equity": 2593663.0433379607,
+        "cash": 12968.858390727411,
+        "holdings_value": 2580694.184947233,
+        "invested_fraction": 0.9949997905764825,
+        "n_positions": 96,
+        "turnover": 0.041753979535626214
+      },
+      {
+        "rebalance": "2016-06-30",
+        "equity": 2596135.3229015535,
+        "cash": 12981.267496592822,
+        "holdings_value": 2583154.0554049606,
+        "invested_fraction": 0.9949997723993508,
+        "n_positions": 96,
+        "turnover": 0.045458087325794184
+      },
+      {
+        "rebalance": "2016-07-29",
+        "equity": 2738526.165445172,
+        "cash": 13693.30973986252,
+        "holdings_value": 2724832.8557053097,
+        "invested_fraction": 0.9949997520883148,
+        "n_positions": 96,
+        "turnover": 0.04937513946222241
+      },
+      {
+        "rebalance": "2016-08-31",
+        "equity": 2764951.7626965195,
+        "cash": 13825.317626397864,
+        "holdings_value": 2751126.4450701214,
+        "invested_fraction": 0.9949997978941539,
+        "n_positions": 96,
+        "turnover": 0.040344038302116185
+      },
+      {
+        "rebalance": "2016-09-30",
+        "equity": 2774615.913665042,
+        "cash": 13873.510232209224,
+        "holdings_value": 2760742.4034328326,
+        "invested_fraction": 0.9949998447843242,
+        "n_positions": 96,
+        "turnover": 0.030997286180746684
+      },
+      {
+        "rebalance": "2016-10-31",
+        "equity": 2767749.7959442064,
+        "cash": 13839.329421168093,
+        "holdings_value": 2753910.466523038,
+        "invested_fraction": 0.9949997902839888,
+        "n_positions": 96,
+        "turnover": 0.04190175488923857
+      },
+      {
+        "rebalance": "2016-11-30",
+        "equity": 2882977.318499983,
+        "cash": 14416.100969751467,
+        "holdings_value": 2868561.2175302315,
+        "invested_fraction": 0.9949995787766891,
+        "n_positions": 97,
+        "turnover": 0.08397678373315591
+      },
+      {
+        "rebalance": "2016-12-30",
+        "equity": 2969187.5021378384,
+        "cash": 14846.414523213793,
+        "holdings_value": 2954341.0876146248,
+        "invested_fraction": 0.9949998393457725,
+        "n_positions": 97,
+        "turnover": 0.0320211842878862
+      },
+      {
+        "rebalance": "2017-01-31",
+        "equity": 3043985.2402501306,
+        "cash": 15220.62151172098,
+        "holdings_value": 3028764.6187384096,
+        "invested_fraction": 0.9949997715788956,
+        "n_positions": 97,
+        "turnover": 0.04556621696827821
+      },
+      {
+        "rebalance": "2017-02-28",
+        "equity": 3204654.69282647,
+        "cash": 16023.849737743314,
+        "holdings_value": 3188630.8430887265,
+        "invested_fraction": 0.9949998201760669,
+        "n_positions": 97,
+        "turnover": 0.03579033211735762
+      },
+      {
+        "rebalance": "2017-03-31",
+        "equity": 3194312.242061428,
+        "cash": 15972.118144990569,
+        "holdings_value": 3178340.1239164374,
+        "invested_fraction": 0.994999825648014,
+        "n_positions": 97,
+        "turnover": 0.03483704436918288
+      },
+      {
+        "rebalance": "2017-04-28",
+        "equity": 3253584.145404844,
+        "cash": 16268.473963346281,
+        "holdings_value": 3237315.6714414977,
+        "invested_fraction": 0.9949998299609608,
+        "n_positions": 97,
+        "turnover": 0.03392718903868526
+      },
+      {
+        "rebalance": "2017-05-31",
+        "equity": 3340061.02118449,
+        "cash": 16701.05242112003,
+        "holdings_value": 3323359.96876337,
+        "invested_fraction": 0.9949997762570226,
+        "n_positions": 97,
+        "turnover": 0.04462912903469445
+      },
+      {
+        "rebalance": "2017-06-30",
+        "equity": 3366098.0555105596,
+        "cash": 16831.193097251387,
+        "holdings_value": 3349266.862413308,
+        "invested_fraction": 0.9949997912064096,
+        "n_positions": 97,
+        "turnover": 0.04169320587619744
+      },
+      {
+        "rebalance": "2017-07-31",
+        "equity": 3437071.3898636773,
+        "cash": 17185.99119127608,
+        "holdings_value": 3419885.3986724014,
+        "invested_fraction": 0.9949998154702403,
+        "n_positions": 97,
+        "turnover": 0.03681640325344271
+      },
+      {
+        "rebalance": "2017-08-31",
+        "equity": 3481635.267913909,
+        "cash": 17408.784097712818,
+        "holdings_value": 3464226.483816196,
+        "invested_fraction": 0.9949998254388824,
+        "n_positions": 97,
+        "turnover": 0.03483771993174799
+      },
+      {
+        "rebalance": "2017-09-29",
+        "equity": 3585125.3161021383,
+        "cash": 17926.359130100565,
+        "holdings_value": 3567198.956972038,
+        "invested_fraction": 0.9949997956697395,
+        "n_positions": 97,
+        "turnover": 0.040751351522774856
+      },
+      {
+        "rebalance": "2017-10-31",
+        "equity": 3703595.150428858,
+        "cash": 18518.850402670396,
+        "holdings_value": 3685076.3000261877,
+        "invested_fraction": 0.9949997638374362,
+        "n_positions": 97,
+        "turnover": 0.047100461095478025
+      },
+      {
+        "rebalance": "2017-11-30",
+        "equity": 3792598.949946045,
+        "cash": 18963.699752374967,
+        "holdings_value": 3773635.25019367,
+        "invested_fraction": 0.9949998141109424,
+        "n_positions": 97,
+        "turnover": 0.037078043378919893
+      },
+      {
+        "rebalance": "2017-12-29",
+        "equity": 3859234.41154602,
+        "cash": 19296.760175043997,
+        "holdings_value": 3839937.6513709757,
+        "invested_fraction": 0.9949998476077763,
+        "n_positions": 97,
+        "turnover": 0.030405300650991226
+      },
+      {
+        "rebalance": "2018-01-31",
+        "equity": 4079812.035815195,
+        "cash": 20400.08282881914,
+        "holdings_value": 4059411.952986376,
+        "invested_fraction": 0.9949997493390053,
+        "n_positions": 97,
+        "turnover": 0.04993772220294718
+      },
+      {
+        "rebalance": "2018-02-28",
+        "equity": 3980496.396638396,
+        "cash": 19903.40226369354,
+        "holdings_value": 3960592.9943747027,
+        "invested_fraction": 0.9949997688025789,
+        "n_positions": 97,
+        "turnover": 0.04625439486411486
+      },
+      {
+        "rebalance": "2018-03-29",
+        "equity": 3852679.9536497663,
+        "cash": 19264.16224722127,
+        "holdings_value": 3833415.791402545,
+        "invested_fraction": 0.9949998020912763,
+        "n_positions": 97,
+        "turnover": 0.03962375853261532
+      },
+      {
+        "rebalance": "2018-04-30",
+        "equity": 3861750.615552489,
+        "cash": 19309.69229509801,
+        "holdings_value": 3842440.923257391,
+        "invested_fraction": 0.9949997567897492,
+        "n_positions": 97,
+        "turnover": 0.0485863126357612
+      },
+      {
+        "rebalance": "2018-05-31",
+        "equity": 4017566.522561136,
+        "cash": 20088.82176514501,
+        "holdings_value": 3997477.7007959913,
+        "invested_fraction": 0.9949997537931647,
+        "n_positions": 97,
+        "turnover": 0.049090652706257766
+      },
+      {
+        "rebalance": "2018-06-29",
+        "equity": 3971694.831016739,
+        "cash": 19859.366518195187,
+        "holdings_value": 3951835.4644985436,
+        "invested_fraction": 0.9949997753193159,
+        "n_positions": 97,
+        "turnover": 0.0449163391002791
+      },
+      {
+        "rebalance": "2018-07-31",
+        "equity": 4163098.0090860515,
+        "cash": 20816.314314013594,
+        "holdings_value": 4142281.6947720377,
+        "invested_fraction": 0.9949998020059625,
+        "n_positions": 97,
+        "turnover": 0.039444736440116916
+      },
+      {
+        "rebalance": "2018-08-31",
+        "equity": 4274781.776822639,
+        "cash": 21374.920416953475,
+        "holdings_value": 4253406.856405686,
+        "invested_fraction": 0.994999763372052,
+        "n_positions": 97,
+        "turnover": 0.04720828288133521
+      },
+      {
+        "rebalance": "2018-09-28",
+        "equity": 4354054.137212555,
+        "cash": 21771.07074005685,
+        "holdings_value": 4332283.066472498,
+        "invested_fraction": 0.9949998162507931,
+        "n_positions": 97,
+        "turnover": 0.036666607011393716
+      },
+      {
+        "rebalance": "2018-10-31",
+        "equity": 4065430.2075761072,
+        "cash": 20328.534301538028,
+        "holdings_value": 4045101.673274569,
+        "invested_fraction": 0.9949996597497468,
+        "n_positions": 97,
+        "turnover": 0.06814747744386322
+      },
+      {
+        "rebalance": "2018-11-30",
+        "equity": 4250727.946899822,
+        "cash": 21254.64767947842,
+        "holdings_value": 4229473.299220343,
+        "invested_fraction": 0.9949997628770901,
+        "n_positions": 97,
+        "turnover": 0.04726312064462822
+      },
+      {
+        "rebalance": "2018-12-31",
+        "equity": 3768234.1355752544,
+        "cash": 18842.125704879592,
+        "holdings_value": 3749392.009870375,
+        "invested_fraction": 0.9949997465584757,
+        "n_positions": 97,
+        "turnover": 0.05095338220454101
+      },
+      {
+        "rebalance": "2019-01-31",
+        "equity": 4151075.7880801675,
+        "cash": 20756.529083411337,
+        "holdings_value": 4130319.2589967563,
+        "invested_fraction": 0.99499972292893,
+        "n_positions": 97,
+        "turnover": 0.055124054726267385
+      },
+      {
+        "rebalance": "2019-02-28",
+        "equity": 4341659.091850811,
+        "cash": 21709.11764251191,
+        "holdings_value": 4319949.974208299,
+        "invested_fraction": 0.9949998106292456,
+        "n_positions": 97,
+        "turnover": 0.03772201719012622
+      },
+      {
+        "rebalance": "2019-03-29",
+        "equity": 4424341.82597089,
+        "cash": 22122.489542313822,
+        "holdings_value": 4402219.336428576,
+        "invested_fraction": 0.9949998236093661,
+        "n_positions": 97,
+        "turnover": 0.03519676781235092
+      },
+      {
+        "rebalance": "2019-04-30",
+        "equity": 4574977.85749444,
+        "cash": 22876.100938638814,
+        "holdings_value": 4552101.756555801,
+        "invested_fraction": 0.9949997351569332,
+        "n_positions": 97,
+        "turnover": 0.05283023944771812
+      },
+      {
+        "rebalance": "2019-05-31",
+        "equity": 4229062.197518779,
+        "cash": 21146.59850154049,
+        "holdings_value": 4207915.599017238,
+        "invested_fraction": 0.9949996955556842,
+        "n_positions": 97,
+        "turnover": 0.061021294129582244
+      },
+      {
+        "rebalance": "2019-06-28",
+        "equity": 4595514.336383076,
+        "cash": 22978.54113702177,
+        "holdings_value": 4572535.795246054,
+        "invested_fraction": 0.9949997890431765,
+        "n_positions": 97,
+        "turnover": 0.04194261519132385
+      },
+      {
+        "rebalance": "2019-07-31",
+        "equity": 4638907.04211572,
+        "cash": 23195.426950400542,
+        "holdings_value": 4615711.615165319,
+        "invested_fraction": 0.9949998077694133,
+        "n_positions": 97,
+        "turnover": 0.0383837339446569
+      },
+      {
+        "rebalance": "2019-08-30",
+        "equity": 4523703.595167498,
+        "cash": 22619.99898291902,
+        "holdings_value": 4501083.596184579,
+        "invested_fraction": 0.9949996726118211,
+        "n_positions": 98,
+        "turnover": 0.06544357176027737
+      },
+      {
+        "rebalance": "2019-09-30",
+        "equity": 4647255.694734119,
+        "cash": 23237.205250277726,
+        "holdings_value": 4624018.489483841,
+        "invested_fraction": 0.9949998005755077,
+        "n_positions": 98,
+        "turnover": 0.039778799390945724
+      },
+      {
+        "rebalance": "2019-10-31",
+        "equity": 4793351.816954426,
+        "cash": 23967.818654043276,
+        "holdings_value": 4769383.998300382,
+        "invested_fraction": 0.9949997789502394,
+        "n_positions": 98,
+        "turnover": 0.044075525085828134
+      },
+      {
+        "rebalance": "2019-11-29",
+        "equity": 4955691.450773234,
+        "cash": 24779.410681993006,
+        "holdings_value": 4930912.040091241,
+        "invested_fraction": 0.9949998076094656,
+        "n_positions": 98,
+        "turnover": 0.038353075072446535
+      },
+      {
+        "rebalance": "2019-12-31",
+        "equity": 5133461.508448328,
+        "cash": 25668.089832902984,
+        "holdings_value": 5107793.418615425,
+        "invested_fraction": 0.9949998476095204,
+        "n_positions": 98,
+        "turnover": 0.030362638626872263
+      },
+      {
+        "rebalance": "2020-01-31",
+        "equity": 5156046.70574323,
+        "cash": 25781.859544077208,
+        "holdings_value": 5130264.846199153,
+        "invested_fraction": 0.9949996846391327,
+        "n_positions": 98,
+        "turnover": 0.06299109992175539
+      },
+      {
+        "rebalance": "2020-02-28",
+        "equity": 4771080.498126003,
+        "cash": 23856.51176226147,
+        "holdings_value": 4747223.986363742,
+        "invested_fraction": 0.9949997675009609,
+        "n_positions": 98,
+        "turnover": 0.04664888019459749
+      },
+      {
+        "rebalance": "2020-03-31",
+        "equity": 4016332.768474601,
+        "cash": 20083.69952945328,
+        "holdings_value": 3996249.068945148,
+        "invested_fraction": 0.9949994931478049,
+        "n_positions": 98,
+        "turnover": 0.10170737103537479
+      },
+      {
+        "rebalance": "2020-04-30",
+        "equity": 4582422.150452734,
+        "cash": 22913.297118730785,
+        "holdings_value": 4559508.853334003,
+        "invested_fraction": 0.9949997411049379,
+        "n_positions": 98,
+        "turnover": 0.0514174027034152
+      },
+      {
+        "rebalance": "2020-05-29",
+        "equity": 4875222.769574897,
+        "cash": 24377.32425250053,
+        "holdings_value": 4850845.445322397,
+        "invested_fraction": 0.994999751723217,
+        "n_positions": 98,
+        "turnover": 0.049453907560611444
+      },
+      {
+        "rebalance": "2020-06-30",
+        "equity": 4989537.063925875,
+        "cash": 24949.04297159165,
+        "holdings_value": 4964588.020954284,
+        "invested_fraction": 0.9949997279002151,
+        "n_positions": 98,
+        "turnover": 0.054305422773292866
+      },
+      {
+        "rebalance": "2020-07-31",
+        "equity": 5238513.438527999,
+        "cash": 26194.159234088136,
+        "holdings_value": 5212319.2792939115,
+        "invested_fraction": 0.9949996960890782,
+        "n_positions": 98,
+        "turnover": 0.06059441138979315
+      },
+      {
+        "rebalance": "2020-08-31",
+        "equity": 5586675.96782475,
+        "cash": 27935.085482389917,
+        "holdings_value": 5558740.88234236,
+        "invested_fraction": 0.9949996946944345,
+        "n_positions": 98,
+        "turnover": 0.060836534734974905
+      },
+      {
+        "rebalance": "2020-09-30",
+        "equity": 5489773.54687252,
+        "cash": 27450.064206755065,
+        "holdings_value": 5462323.482665765,
+        "invested_fraction": 0.9949997820543267,
+        "n_positions": 98,
+        "turnover": 0.04358712831588385
+      },
+      {
+        "rebalance": "2020-10-30",
+        "equity": 5374026.551733029,
+        "cash": 26871.4519279528,
+        "holdings_value": 5347155.099805077,
+        "invested_fraction": 0.9949997545286994,
+        "n_positions": 98,
+        "turnover": 0.04909465738931872
+      },
+      {
+        "rebalance": "2020-11-30",
+        "equity": 6161036.4386270335,
+        "cash": 30807.6192001134,
+        "holdings_value": 6130228.81942692,
+        "invested_fraction": 0.9949996044485369,
+        "n_positions": 98,
+        "turnover": 0.07869880301202443
+      },
+      {
+        "rebalance": "2020-12-31",
+        "equity": 6371210.090444291,
+        "cash": 31857.72293442343,
+        "holdings_value": 6339352.367509868,
+        "invested_fraction": 0.9949997374937919,
+        "n_positions": 99,
+        "turnover": 0.05234935923219534
+      },
+      {
+        "rebalance": "2021-01-29",
+        "equity": 6384358.509610082,
+        "cash": 31923.548335459698,
+        "holdings_value": 6352434.961274622,
+        "invested_fraction": 0.9949997249860879,
+        "n_positions": 99,
+        "turnover": 0.05494109756574676
+      },
+      {
+        "rebalance": "2021-02-26",
+        "equity": 6671770.510983686,
+        "cash": 33361.51837872008,
+        "holdings_value": 6638408.992604966,
+        "invested_fraction": 0.9949996004323295,
+        "n_positions": 99,
+        "turnover": 0.0797134711311583
+      },
+      {
+        "rebalance": "2021-03-31",
+        "equity": 6991048.112379822,
+        "cash": 34956.820099747085,
+        "holdings_value": 6956091.292280075,
+        "invested_fraction": 0.9949997740627983,
+        "n_positions": 99,
+        "turnover": 0.045031503915392304
+      },
+      {
+        "rebalance": "2021-04-30",
+        "equity": 7288550.974404405,
+        "cash": 36444.285300114345,
+        "holdings_value": 7252106.689104291,
+        "invested_fraction": 0.9949997900229967,
+        "n_positions": 99,
+        "turnover": 0.041854277345401814
+      },
+      {
+        "rebalance": "2021-05-28",
+        "equity": 7435421.067411012,
+        "cash": 37178.44463846124,
+        "holdings_value": 7398242.622772551,
+        "invested_fraction": 0.9949998198755129,
+        "n_positions": 99,
+        "turnover": 0.03594347589695745
+      },
+      {
+        "rebalance": "2021-06-30",
+        "equity": 7520105.070916183,
+        "cash": 37602.13026643851,
+        "holdings_value": 7482502.940649745,
+        "invested_fraction": 0.9949997865838519,
+        "n_positions": 99,
+        "turnover": 0.04261559870656641
+      },
+      {
+        "rebalance": "2021-07-30",
+        "equity": 7660446.989729817,
+        "cash": 38303.877456034716,
+        "holdings_value": 7622143.1122737825,
+        "invested_fraction": 0.9949997855859603,
+        "n_positions": 99,
+        "turnover": 0.04279613910996435
+      },
+      {
+        "rebalance": "2021-08-31",
+        "equity": 7829747.585506919,
+        "cash": 39150.34036870657,
+        "holdings_value": 7790597.245138212,
+        "invested_fraction": 0.9949997953393575,
+        "n_positions": 99,
+        "turnover": 0.04083865058234901
+      },
+      {
+        "rebalance": "2021-09-30",
+        "equity": 7578129.456644288,
+        "cash": 37892.478855242334,
+        "holdings_value": 7540236.977789046,
+        "invested_fraction": 0.9949997583081641,
+        "n_positions": 99,
+        "turnover": 0.048371069945004605
+      },
+      {
+        "rebalance": "2021-10-29",
+        "equity": 8001443.314420087,
+        "cash": 40009.637309563506,
+        "holdings_value": 7961433.677110524,
+        "invested_fraction": 0.9949996974623992,
+        "n_positions": 99,
+        "turnover": 0.06031320278861901
+      },
+      {
+        "rebalance": "2021-11-30",
+        "equity": 7980419.267026073,
+        "cash": 39904.718854635365,
+        "holdings_value": 7940514.548171438,
+        "invested_fraction": 0.9949996713807362,
+        "n_positions": 99,
+        "turnover": 0.06565646242282763
+      },
+      {
+        "rebalance": "2021-12-31",
+        "equity": 8331359.4707481265,
+        "cash": 41658.84229073286,
+        "holdings_value": 8289700.6284573935,
+        "invested_fraction": 0.9949997545494226,
+        "n_positions": 99,
+        "turnover": 0.04893675679603956
+      },
+      {
+        "rebalance": "2022-01-31",
+        "equity": 8036885.807475258,
+        "cash": 40187.43530816441,
+        "holdings_value": 7996698.372167094,
+        "invested_fraction": 0.9949996259408358,
+        "n_positions": 99,
+        "turnover": 0.07482141782956457
+      },
+      {
+        "rebalance": "2022-02-28",
+        "equity": 7771028.422721081,
+        "cash": 38857.323610674866,
+        "holdings_value": 7732171.099110407,
+        "invested_fraction": 0.9949997192782023,
+        "n_positions": 99,
+        "turnover": 0.05617461172933737
+      },
+      {
+        "rebalance": "2022-03-31",
+        "equity": 8024482.801304441,
+        "cash": 40124.64090670023,
+        "holdings_value": 7984358.160397741,
+        "invested_fraction": 0.9949997224867655,
+        "n_positions": 99,
+        "turnover": 0.05537032934997271
+      },
+      {
+        "rebalance": "2022-04-29",
+        "equity": 7321629.721756307,
+        "cash": 36610.964220332025,
+        "holdings_value": 7285018.757535975,
+        "invested_fraction": 0.9949996154392318,
+        "n_positions": 99,
+        "turnover": 0.07706446717179571
+      },
+      {
+        "rebalance": "2022-05-31",
+        "equity": 7488772.168833906,
+        "cash": 37445.875688223256,
+        "holdings_value": 7451326.293145683,
+        "invested_fraction": 0.9949997309513484,
+        "n_positions": 99,
+        "turnover": 0.05369417934684893
+      },
+      {
+        "rebalance": "2022-06-30",
+        "equity": 6831634.856648083,
+        "cash": 34160.513008749986,
+        "holdings_value": 6797474.343639333,
+        "invested_fraction": 0.9949996576623958,
+        "n_positions": 99,
+        "turnover": 0.06863427694872175
+      },
+      {
+        "rebalance": "2022-07-29",
+        "equity": 7354296.452763705,
+        "cash": 36773.654450032926,
+        "holdings_value": 7317522.798313672,
+        "invested_fraction": 0.9949997046371154,
+        "n_positions": 99,
+        "turnover": 0.05883170529345379
+      },
+      {
+        "rebalance": "2022-08-31",
+        "equity": 7089227.517928283,
+        "cash": 35447.86472707374,
+        "holdings_value": 7053779.653201209,
+        "invested_fraction": 0.9949997563715612,
+        "n_positions": 99,
+        "turnover": 0.04875945105727466
+      },
+      {
+        "rebalance": "2022-09-30",
+        "equity": 6538254.185847637,
+        "cash": 32692.889495729723,
+        "holdings_value": 6505561.296351908,
+        "invested_fraction": 0.994999752446686,
+        "n_positions": 99,
+        "turnover": 0.049667929794669136
+      },
+      {
+        "rebalance": "2022-10-31",
+        "equity": 7201167.552315748,
+        "cash": 36008.06347333143,
+        "holdings_value": 7165159.488842417,
+        "invested_fraction": 0.9949996909234875,
+        "n_positions": 99,
+        "turnover": 0.061521947057970164
+      },
+      {
+        "rebalance": "2022-11-30",
+        "equity": 7656819.848834576,
+        "cash": 38286.106149213054,
+        "holdings_value": 7618533.742685363,
+        "invested_fraction": 0.9949997378931358,
+        "n_positions": 99,
+        "turnover": 0.052213624240110314
+      },
+      {
+        "rebalance": "2022-12-30",
+        "equity": 7271513.520874618,
+        "cash": 36359.36642258916,
+        "holdings_value": 7235154.154452029,
+        "invested_fraction": 0.9949997526212101,
+        "n_positions": 99,
+        "turnover": 0.04955794664395714
+      },
+      {
+        "rebalance": "2023-01-31",
+        "equity": 7706571.034277735,
+        "cash": 38535.710063379556,
+        "holdings_value": 7668035.324214356,
+        "invested_fraction": 0.9949996295509407,
+        "n_positions": 99,
+        "turnover": 0.073865388979885
+      },
+      {
+        "rebalance": "2023-02-28",
+        "equity": 7535298.980438216,
+        "cash": 37678.185847914465,
+        "holdings_value": 7497620.794590301,
+        "invested_fraction": 0.994999775596731,
+        "n_positions": 99,
+        "turnover": 0.044894658427439824
+      },
+      {
+        "rebalance": "2023-03-31",
+        "equity": 7767183.745764358,
+        "cash": 38838.285510395035,
+        "holdings_value": 7728345.460253963,
+        "invested_fraction": 0.9949996952844621,
+        "n_positions": 99,
+        "turnover": 0.060798011113335465
+      },
+      {
+        "rebalance": "2023-04-28",
+        "equity": 7846397.3830072535,
+        "cash": 39233.76089880256,
+        "holdings_value": 7807163.622108451,
+        "invested_fraction": 0.9949997739110473,
+        "n_positions": 99,
+        "turnover": 0.0451468923595166
+      },
+      {
+        "rebalance": "2023-05-31",
+        "equity": 7924616.08179062,
+        "cash": 39626.54746279347,
+        "holdings_value": 7884989.534327827,
+        "invested_fraction": 0.9949995624956712,
+        "n_positions": 99,
+        "turnover": 0.08734673640140474
+      },
+      {
+        "rebalance": "2023-06-30",
+        "equity": 8389083.396847729,
+        "cash": 41947.12944192274,
+        "holdings_value": 8347136.267405806,
+        "invested_fraction": 0.9949997958707045,
+        "n_positions": 99,
+        "turnover": 0.04064772539611275
+      },
+      {
+        "rebalance": "2023-07-31",
+        "equity": 8756779.827654278,
+        "cash": 43785.881498540366,
+        "holdings_value": 8712993.946155738,
+        "invested_fraction": 0.9949997736199485,
+        "n_positions": 99,
+        "turnover": 0.04512394318520313
+      },
+      {
+        "rebalance": "2023-08-31",
+        "equity": 8680579.822489835,
+        "cash": 43404.9222491414,
+        "holdings_value": 8637174.900240693,
+        "invested_fraction": 0.9949997669353046,
+        "n_positions": 99,
+        "turnover": 0.04658344294113688
+      },
+      {
+        "rebalance": "2023-09-29",
+        "equity": 8244225.997305077,
+        "cash": 41222.70829971736,
+        "holdings_value": 8203003.28900536,
+        "invested_fraction": 0.994999808555322,
+        "n_positions": 99,
+        "turnover": 0.038383652024733705
+      },
+      {
+        "rebalance": "2023-10-31",
+        "equity": 8103685.484121954,
+        "cash": 40520.420159798356,
+        "holdings_value": 8063165.063962156,
+        "invested_fraction": 0.9949997540947026,
+        "n_positions": 99,
+        "turnover": 0.0491740718015351
+      },
+      {
+        "rebalance": "2023-11-30",
+        "equity": 8863638.614634637,
+        "cash": 44320.561884825474,
+        "holdings_value": 8819318.05274981,
+        "invested_fraction": 0.9949997327495225,
+        "n_positions": 99,
+        "turnover": 0.05317737615968211
+      },
+      {
+        "rebalance": "2023-12-29",
+        "equity": 9328688.191043722,
+        "cash": 46645.50244517814,
+        "holdings_value": 9282042.688598543,
+        "invested_fraction": 0.9949997790160935,
+        "n_positions": 99,
+        "turnover": 0.044028227422015065
+      },
+      {
+        "rebalance": "2024-01-31",
+        "equity": 9579493.130493864,
+        "cash": 47900.132448927594,
+        "holdings_value": 9531592.998044936,
+        "invested_fraction": 0.9949997216140329,
+        "n_positions": 99,
+        "turnover": 0.055556083738477494
+      },
+      {
+        "rebalance": "2024-02-29",
+        "equity": 10028730.218098287,
+        "cash": 50146.8403883124,
+        "holdings_value": 9978583.377709974,
+        "invested_fraction": 0.9949996819838851,
+        "n_positions": 99,
+        "turnover": 0.06341654803962075
+      },
+      {
+        "rebalance": "2024-03-28",
+        "equity": 10382887.802656544,
+        "cash": 51916.78980147364,
+        "holdings_value": 10330971.012855072,
+        "invested_fraction": 0.9949997735901385,
+        "n_positions": 99,
+        "turnover": 0.04515454157189739
+      },
+      {
+        "rebalance": "2024-04-30",
+        "equity": 9934497.153382275,
+        "cash": 49675.25646465782,
+        "holdings_value": 9884821.896917617,
+        "invested_fraction": 0.994999721103373,
+        "n_positions": 99,
+        "turnover": 0.05583365668614816
+      },
+      {
+        "rebalance": "2024-05-31",
+        "equity": 10328829.82655106,
+        "cash": 51646.85216899088,
+        "holdings_value": 10277182.974382069,
+        "invested_fraction": 0.9949997383017941,
+        "n_positions": 99,
+        "turnover": 0.052195782200146514
+      },
+      {
+        "rebalance": "2024-06-28",
+        "equity": 10633339.92105158,
+        "cash": 53169.71099812614,
+        "holdings_value": 10580170.210053455,
+        "invested_fraction": 0.9949997167970844,
+        "n_positions": 100,
+        "turnover": 0.05650588852698065
+      },
+      {
+        "rebalance": "2024-07-31",
+        "equity": 10922201.504207017,
+        "cash": 54614.37287429515,
+        "holdings_value": 10867587.131332722,
+        "invested_fraction": 0.994999691879585,
+        "n_positions": 100,
+        "turnover": 0.06149536553870363
+      },
+      {
+        "rebalance": "2024-08-30",
+        "equity": 11145622.401753988,
+        "cash": 55730.73542538795,
+        "holdings_value": 11089891.6663286,
+        "invested_fraction": 0.9949997646235873,
+        "n_positions": 100,
+        "turnover": 0.04697667300072553
+      },
+      {
+        "rebalance": "2024-09-30",
+        "equity": 11496013.48624881,
+        "cash": 57482.624200728846,
+        "holdings_value": 11438530.86204808,
+        "invested_fraction": 0.9949997775951213,
+        "n_positions": 100,
+        "turnover": 0.04436359666143192
+      },
+      {
+        "rebalance": "2024-10-31",
+        "equity": 11561449.069758961,
+        "cash": 57810.14963880562,
+        "holdings_value": 11503638.920120155,
+        "invested_fraction": 0.9949997487953289,
+        "n_positions": 100,
+        "turnover": 0.050176745363810796
+      },
+      {
+        "rebalance": "2024-11-29",
+        "equity": 12213421.947556725,
+        "cash": 61070.92002157493,
+        "holdings_value": 12152351.02753515,
+        "invested_fraction": 0.9949996880248789,
+        "n_positions": 100,
+        "turnover": 0.062198122302392675
+      },
+      {
+        "rebalance": "2024-12-31",
+        "equity": 11749200.52764273,
+        "cash": 58749.12337382752,
+        "holdings_value": 11690451.404268904,
+        "invested_fraction": 0.9949997343874074,
+        "n_positions": 100,
+        "turnover": 0.05317089699809654
+      },
+      {
+        "rebalance": "2025-01-31",
+        "equity": 12065188.750116542,
+        "cash": 60329.31403631044,
+        "holdings_value": 12004859.436080232,
+        "invested_fraction": 0.9949997206603397,
+        "n_positions": 100,
+        "turnover": 0.05574619312217951
+      },
+      {
+        "rebalance": "2025-02-28",
+        "equity": 12394754.022351881,
+        "cash": 61977.534698919575,
+        "holdings_value": 12332776.487652961,
+        "invested_fraction": 0.9949996962757668,
+        "n_positions": 100,
+        "turnover": 0.060618930375091085
+      },
+      {
+        "rebalance": "2025-03-31",
+        "equity": 11768502.269399352,
+        "cash": 58845.87634758108,
+        "holdings_value": 11709656.393051771,
+        "invested_fraction": 0.9949997140672189,
+        "n_positions": 100,
+        "turnover": 0.05726398874671144
+      },
+      {
+        "rebalance": "2025-04-30",
+        "equity": 11706041.757972311,
+        "cash": 58534.03913039704,
+        "holdings_value": 11647507.718841914,
+        "invested_fraction": 0.9949996727894351,
+        "n_positions": 100,
+        "turnover": 0.06539303420162353
+      },
+      {
+        "rebalance": "2025-05-30",
+        "equity": 12263940.907554634,
+        "cash": 61323.789266199026,
+        "holdings_value": 12202617.118288435,
+        "invested_fraction": 0.9949996669318243,
+        "n_positions": 101,
+        "turnover": 0.06637051584143526
+      },
+      {
+        "rebalance": "2025-06-30",
+        "equity": 12938966.830250436,
+        "cash": 64698.30585069312,
+        "holdings_value": 12874268.524399742,
+        "invested_fraction": 0.9949997316865027,
+        "n_positions": 101,
+        "turnover": 0.05348128344937302
+      },
+      {
+        "rebalance": "2025-07-31",
+        "equity": 12922108.615775242,
+        "cash": 64614.44991304004,
+        "holdings_value": 12857494.165862203,
+        "invested_fraction": 0.9949996976627979,
+        "n_positions": 101,
+        "turnover": 0.06041297805919046
+      },
+      {
+        "rebalance": "2025-08-29",
+        "equity": 13350836.409725681,
+        "cash": 66757.43383883801,
+        "holdings_value": 13284078.975886842,
+        "invested_fraction": 0.9949997564354689,
+        "n_positions": 101,
+        "turnover": 0.04858379524663246
+      },
+      {
+        "rebalance": "2025-09-30",
+        "equity": 14041307.153555922,
+        "cash": 70212.07873677311,
+        "holdings_value": 13971095.07481915,
+        "invested_fraction": 0.9949996052383918,
+        "n_positions": 101,
+        "turnover": 0.07872020200292895
+      },
+      {
+        "rebalance": "2025-10-31",
+        "equity": 14611698.223327538,
+        "cash": 73064.63523655855,
+        "holdings_value": 14538633.588090979,
+        "invested_fraction": 0.9949995795067877,
+        "n_positions": 101,
+        "turnover": 0.08390775635602958
+      },
+      {
+        "rebalance": "2025-11-28",
+        "equity": 14619436.774802962,
+        "cash": 73101.48503667771,
+        "holdings_value": 14546335.289766284,
+        "invested_fraction": 0.9949997057914932,
+        "n_positions": 101,
+        "turnover": 0.058786253900697465
+      },
+      {
+        "rebalance": "2025-12-31",
+        "equity": 14961307.284019971,
+        "cash": 74810.20627431192,
+        "holdings_value": 14886497.07774566,
+        "invested_fraction": 0.9949997547103243,
+        "n_positions": 101,
+        "turnover": 0.04895587750135545
+      },
+      {
+        "rebalance": "2026-01-30",
+        "equity": 15554565.87703651,
+        "cash": 77779.84423635392,
+        "holdings_value": 15476786.032800157,
+        "invested_fraction": 0.9949995490165893,
+        "n_positions": 101,
+        "turnover": 0.09001455436730212
+      },
+      {
+        "rebalance": "2026-02-27",
+        "equity": 15604441.913350262,
+        "cash": 78029.02152969396,
+        "holdings_value": 15526412.891820569,
+        "invested_fraction": 0.9949995634600084,
+        "n_positions": 101,
+        "turnover": 0.08721287723719791
+      },
+      {
+        "rebalance": "2026-03-31",
+        "equity": 15138244.205120392,
+        "cash": 75694.81822895475,
+        "holdings_value": 15062549.386891438,
+        "invested_fraction": 0.9949997623764484,
+        "n_positions": 101,
+        "turnover": 0.04756035966837605
+      },
+      {
+        "rebalance": "2026-04-30",
+        "equity": 16405382.894924797,
+        "cash": 82035.84961785594,
+        "holdings_value": 16323347.045306941,
+        "invested_fraction": 0.9949994553529601,
+        "n_positions": 101,
+        "turnover": 0.10862307837518878
+      },
+      {
+        "rebalance": "2026-05-29",
+        "equity": 17245664.153354574,
+        "cash": 86238.22482579132,
+        "holdings_value": 17159425.928528782,
+        "invested_fraction": 0.9949994257073006,
+        "n_positions": 101,
+        "turnover": 0.11461536228000298
+      },
+      {
+        "rebalance": "2026-06-30",
+        "equity": 17413471.853602815,
+        "cash": 87075.68639294224,
+        "holdings_value": 17326396.167209875,
+        "invested_fraction": 0.9949995217998457,
+        "n_positions": 101,
+        "turnover": 0.09552021706549942
+      },
+      {
+        "rebalance": "2026-07-31",
+        "equity": 17745216.924334727,
+        "cash": 88733.77059775827,
+        "holdings_value": 17656483.153736968,
+        "invested_fraction": 0.9949995668705478,
+        "n_positions": 101,
+        "turnover": 0.08649663936738608
+      },
+      {
+        "rebalance": "2026-08-31",
+        "equity": 18370285.49022805,
+        "cash": 91857.42406175732,
+        "holdings_value": 18278428.066166293,
+        "invested_fraction": 0.9949996735700912,
+        "n_positions": 101,
+        "turnover": 0.06514189345722429
+      },
+      {
+        "rebalance": "2026-09-30",
+        "equity": 17930003.345116347,
+        "cash": 89656.64880325583,
+        "holdings_value": 17840346.69631309,
+        "invested_fraction": 0.9949996301128591,
+        "n_positions": 101,
+        "turnover": 0.07396816320718977
+      }
+    ]
+  },
+  "basket_sizes": [
+    [
+      "2010-04-30",
+      22
+    ],
+    [
+      "2010-05-28",
+      22
+    ],
+    [
+      "2010-06-30",
+      22
+    ],
+    [
+      "2010-07-30",
+      22
+    ],
+    [
+      "2010-08-31",
+      22
+    ],
+    [
+      "2010-09-30",
+      22
+    ],
+    [
+      "2010-10-29",
+      22
+    ],
+    [
+      "2010-11-30",
+      22
+    ],
+    [
+      "2010-12-31",
+      22
+    ],
+    [
+      "2011-01-31",
+      22
+    ],
+    [
+      "2011-02-28",
+      22
+    ],
+    [
+      "2011-03-31",
+      22
+    ],
+    [
+      "2011-04-29",
+      22
+    ],
+    [
+      "2011-05-31",
+      22
+    ],
+    [
+      "2011-06-30",
+      22
+    ],
+    [
+      "2011-07-29",
+      22
+    ],
+    [
+      "2011-08-31",
+      22
+    ],
+    [
+      "2011-09-30",
+      22
+    ],
+    [
+      "2011-10-31",
+      22
+    ],
+    [
+      "2011-11-30",
+      22
+    ],
+    [
+      "2011-12-30",
+      22
+    ],
+    [
+      "2012-01-31",
+      22
+    ],
+    [
+      "2012-02-29",
+      22
+    ],
+    [
+      "2012-03-30",
+      22
+    ],
+    [
+      "2012-04-30",
+      22
+    ],
+    [
+      "2012-05-31",
+      22
+    ],
+    [
+      "2012-06-29",
+      22
+    ],
+    [
+      "2012-07-31",
+      22
+    ],
+    [
+      "2012-08-31",
+      23
+    ],
+    [
+      "2012-09-28",
+      23
+    ],
+    [
+      "2012-10-31",
+      23
+    ],
+    [
+      "2012-11-30",
+      23
+    ],
+    [
+      "2012-12-31",
+      23
+    ],
+    [
+      "2013-01-31",
+      23
+    ],
+    [
+      "2013-02-28",
+      23
+    ],
+    [
+      "2013-03-28",
+      23
+    ],
+    [
+      "2013-04-30",
+      23
+    ],
+    [
+      "2013-05-31",
+      23
+    ],
+    [
+      "2013-06-28",
+      23
+    ],
+    [
+      "2013-07-31",
+      23
+    ],
+    [
+      "2013-08-30",
+      23
+    ],
+    [
+      "2013-09-30",
+      23
+    ],
+    [
+      "2013-10-31",
+      23
+    ],
+    [
+      "2013-11-29",
+      23
+    ],
+    [
+      "2013-12-31",
+      23
+    ],
+    [
+      "2014-01-31",
+      23
+    ],
+    [
+      "2014-02-28",
+      23
+    ],
+    [
+      "2014-03-31",
+      23
+    ],
+    [
+      "2014-04-30",
+      23
+    ],
+    [
+      "2014-05-30",
+      23
+    ],
+    [
+      "2014-06-30",
+      23
+    ],
+    [
+      "2014-07-31",
+      23
+    ],
+    [
+      "2014-08-29",
+      23
+    ],
+    [
+      "2014-09-30",
+      24
+    ],
+    [
+      "2014-10-31",
+      24
+    ],
+    [
+      "2014-11-28",
+      24
+    ],
+    [
+      "2014-12-31",
+      24
+    ],
+    [
+      "2015-01-30",
+      24
+    ],
+    [
+      "2015-02-27",
+      24
+    ],
+    [
+      "2015-03-31",
+      24
+    ],
+    [
+      "2015-04-30",
+      24
+    ],
+    [
+      "2015-05-29",
+      24
+    ],
+    [
+      "2015-06-30",
+      24
+    ],
+    [
+      "2015-07-31",
+      24
+    ],
+    [
+      "2015-08-31",
+      24
+    ],
+    [
+      "2015-09-30",
+      24
+    ],
+    [
+      "2015-10-30",
+      24
+    ],
+    [
+      "2015-11-30",
+      24
+    ],
+    [
+      "2015-12-31",
+      24
+    ],
+    [
+      "2016-01-29",
+      24
+    ],
+    [
+      "2016-02-29",
+      24
+    ],
+    [
+      "2016-03-31",
+      24
+    ],
+    [
+      "2016-04-29",
+      24
+    ],
+    [
+      "2016-05-31",
+      24
+    ],
+    [
+      "2016-06-30",
+      24
+    ],
+    [
+      "2016-07-29",
+      24
+    ],
+    [
+      "2016-08-31",
+      24
+    ],
+    [
+      "2016-09-30",
+      24
+    ],
+    [
+      "2016-10-31",
+      24
+    ],
+    [
+      "2016-11-30",
+      24
+    ],
+    [
+      "2016-12-30",
+      24
+    ],
+    [
+      "2017-01-31",
+      24
+    ],
+    [
+      "2017-02-28",
+      24
+    ],
+    [
+      "2017-03-31",
+      24
+    ],
+    [
+      "2017-04-28",
+      24
+    ],
+    [
+      "2017-05-31",
+      24
+    ],
+    [
+      "2017-06-30",
+      24
+    ],
+    [
+      "2017-07-31",
+      24
+    ],
+    [
+      "2017-08-31",
+      24
+    ],
+    [
+      "2017-09-29",
+      24
+    ],
+    [
+      "2017-10-31",
+      24
+    ],
+    [
+      "2017-11-30",
+      24
+    ],
+    [
+      "2017-12-29",
+      24
+    ],
+    [
+      "2018-01-31",
+      24
+    ],
+    [
+      "2018-02-28",
+      24
+    ],
+    [
+      "2018-03-29",
+      24
+    ],
+    [
+      "2018-04-30",
+      24
+    ],
+    [
+      "2018-05-31",
+      24
+    ],
+    [
+      "2018-06-29",
+      24
+    ],
+    [
+      "2018-07-31",
+      24
+    ],
+    [
+      "2018-08-31",
+      24
+    ],
+    [
+      "2018-09-28",
+      24
+    ],
+    [
+      "2018-10-31",
+      24
+    ],
+    [
+      "2018-11-30",
+      24
+    ],
+    [
+      "2018-12-31",
+      24
+    ],
+    [
+      "2019-01-31",
+      24
+    ],
+    [
+      "2019-02-28",
+      24
+    ],
+    [
+      "2019-03-29",
+      24
+    ],
+    [
+      "2019-04-30",
+      24
+    ],
+    [
+      "2019-05-31",
+      24
+    ],
+    [
+      "2019-06-28",
+      24
+    ],
+    [
+      "2019-07-31",
+      24
+    ],
+    [
+      "2019-08-30",
+      24
+    ],
+    [
+      "2019-09-30",
+      24
+    ],
+    [
+      "2019-10-31",
+      24
+    ],
+    [
+      "2019-11-29",
+      24
+    ],
+    [
+      "2019-12-31",
+      24
+    ],
+    [
+      "2020-01-31",
+      24
+    ],
+    [
+      "2020-02-28",
+      24
+    ],
+    [
+      "2020-03-31",
+      24
+    ],
+    [
+      "2020-04-30",
+      24
+    ],
+    [
+      "2020-05-29",
+      24
+    ],
+    [
+      "2020-06-30",
+      24
+    ],
+    [
+      "2020-07-31",
+      24
+    ],
+    [
+      "2020-08-31",
+      24
+    ],
+    [
+      "2020-09-30",
+      24
+    ],
+    [
+      "2020-10-30",
+      24
+    ],
+    [
+      "2020-11-30",
+      24
+    ],
+    [
+      "2020-12-31",
+      24
+    ],
+    [
+      "2021-01-29",
+      24
+    ],
+    [
+      "2021-02-26",
+      24
+    ],
+    [
+      "2021-03-31",
+      24
+    ],
+    [
+      "2021-04-30",
+      24
+    ],
+    [
+      "2021-05-28",
+      24
+    ],
+    [
+      "2021-06-30",
+      24
+    ],
+    [
+      "2021-07-30",
+      24
+    ],
+    [
+      "2021-08-31",
+      24
+    ],
+    [
+      "2021-09-30",
+      24
+    ],
+    [
+      "2021-10-29",
+      24
+    ],
+    [
+      "2021-11-30",
+      24
+    ],
+    [
+      "2021-12-31",
+      24
+    ],
+    [
+      "2022-01-31",
+      24
+    ],
+    [
+      "2022-02-28",
+      24
+    ],
+    [
+      "2022-03-31",
+      24
+    ],
+    [
+      "2022-04-29",
+      24
+    ],
+    [
+      "2022-05-31",
+      24
+    ],
+    [
+      "2022-06-30",
+      24
+    ],
+    [
+      "2022-07-29",
+      24
+    ],
+    [
+      "2022-08-31",
+      24
+    ],
+    [
+      "2022-09-30",
+      24
+    ],
+    [
+      "2022-10-31",
+      24
+    ],
+    [
+      "2022-11-30",
+      24
+    ],
+    [
+      "2022-12-30",
+      24
+    ],
+    [
+      "2023-01-31",
+      24
+    ],
+    [
+      "2023-02-28",
+      24
+    ],
+    [
+      "2023-03-31",
+      24
+    ],
+    [
+      "2023-04-28",
+      24
+    ],
+    [
+      "2023-05-31",
+      24
+    ],
+    [
+      "2023-06-30",
+      24
+    ],
+    [
+      "2023-07-31",
+      24
+    ],
+    [
+      "2023-08-31",
+      24
+    ],
+    [
+      "2023-09-29",
+      24
+    ],
+    [
+      "2023-10-31",
+      24
+    ],
+    [
+      "2023-11-30",
+      24
+    ],
+    [
+      "2023-12-29",
+      24
+    ],
+    [
+      "2024-01-31",
+      24
+    ],
+    [
+      "2024-02-29",
+      24
+    ],
+    [
+      "2024-03-28",
+      24
+    ],
+    [
+      "2024-04-30",
+      24
+    ],
+    [
+      "2024-05-31",
+      24
+    ],
+    [
+      "2024-06-28",
+      25
+    ],
+    [
+      "2024-07-31",
+      25
+    ],
+    [
+      "2024-08-30",
+      25
+    ],
+    [
+      "2024-09-30",
+      25
+    ],
+    [
+      "2024-10-31",
+      25
+    ],
+    [
+      "2024-11-29",
+      25
+    ],
+    [
+      "2024-12-31",
+      25
+    ],
+    [
+      "2025-01-31",
+      25
+    ],
+    [
+      "2025-02-28",
+      25
+    ],
+    [
+      "2025-03-31",
+      25
+    ],
+    [
+      "2025-04-30",
+      25
+    ],
+    [
+      "2025-05-30",
+      25
+    ],
+    [
+      "2025-06-30",
+      25
+    ],
+    [
+      "2025-07-31",
+      25
+    ],
+    [
+      "2025-08-29",
+      25
+    ],
+    [
+      "2025-09-30",
+      25
+    ],
+    [
+      "2025-10-31",
+      25
+    ],
+    [
+      "2025-11-28",
+      25
+    ],
+    [
+      "2025-12-31",
+      25
+    ],
+    [
+      "2026-01-30",
+      25
+    ],
+    [
+      "2026-02-27",
+      25
+    ],
+    [
+      "2026-03-31",
+      25
+    ],
+    [
+      "2026-04-30",
+      25
+    ],
+    [
+      "2026-05-29",
+      25
+    ],
+    [
+      "2026-06-30",
+      25
+    ],
+    [
+      "2026-07-31",
+      25
+    ],
+    [
+      "2026-08-31",
+      25
+    ],
+    [
+      "2026-09-30",
+      25
+    ]
+  ],
+  "eligible_counts": {
+    "2010-01-29": 0,
+    "2010-02-26": 0,
+    "2010-03-31": 0,
+    "2010-04-30": 89,
+    "2010-05-28": 89,
+    "2010-06-30": 89,
+    "2010-07-30": 89,
+    "2010-08-31": 89,
+    "2010-09-30": 90,
+    "2010-10-29": 90,
+    "2010-11-30": 90,
+    "2010-12-31": 90,
+    "2011-01-31": 90,
+    "2011-02-28": 91,
+    "2011-03-31": 91,
+    "2011-04-29": 91,
+    "2011-05-31": 91,
+    "2011-06-30": 91,
+    "2011-07-29": 91,
+    "2011-08-31": 91,
+    "2011-09-30": 91,
+    "2011-10-31": 91,
+    "2011-11-30": 91,
+    "2011-12-30": 91,
+    "2012-01-31": 91,
+    "2012-02-29": 91,
+    "2012-03-30": 91,
+    "2012-04-30": 91,
+    "2012-05-31": 91,
+    "2012-06-29": 91,
+    "2012-07-31": 91,
+    "2012-08-31": 92,
+    "2012-09-28": 93,
+    "2012-10-31": 94,
+    "2012-11-30": 94,
+    "2012-12-31": 94,
+    "2013-01-31": 94,
+    "2013-02-28": 94,
+    "2013-03-28": 94,
+    "2013-04-30": 95,
+    "2013-05-31": 95,
+    "2013-06-28": 95,
+    "2013-07-31": 95,
+    "2013-08-30": 95,
+    "2013-09-30": 95,
+    "2013-10-31": 95,
+    "2013-11-29": 95,
+    "2013-12-31": 95,
+    "2014-01-31": 95,
+    "2014-02-28": 95,
+    "2014-03-31": 95,
+    "2014-04-30": 95,
+    "2014-05-30": 95,
+    "2014-06-30": 95,
+    "2014-07-31": 95,
+    "2014-08-29": 95,
+    "2014-09-30": 96,
+    "2014-10-31": 96,
+    "2014-11-28": 96,
+    "2014-12-31": 96,
+    "2015-01-30": 96,
+    "2015-02-27": 96,
+    "2015-03-31": 96,
+    "2015-04-30": 96,
+    "2015-05-29": 96,
+    "2015-06-30": 96,
+    "2015-07-31": 96,
+    "2015-08-31": 96,
+    "2015-09-30": 96,
+    "2015-10-30": 96,
+    "2015-11-30": 96,
+    "2015-12-31": 96,
+    "2016-01-29": 96,
+    "2016-02-29": 96,
+    "2016-03-31": 96,
+    "2016-04-29": 96,
+    "2016-05-31": 96,
+    "2016-06-30": 96,
+    "2016-07-29": 96,
+    "2016-08-31": 96,
+    "2016-09-30": 96,
+    "2016-10-31": 96,
+    "2016-11-30": 97,
+    "2016-12-30": 97,
+    "2017-01-31": 97,
+    "2017-02-28": 97,
+    "2017-03-31": 97,
+    "2017-04-28": 97,
+    "2017-05-31": 97,
+    "2017-06-30": 97,
+    "2017-07-31": 97,
+    "2017-08-31": 97,
+    "2017-09-29": 97,
+    "2017-10-31": 97,
+    "2017-11-30": 97,
+    "2017-12-29": 97,
+    "2018-01-31": 97,
+    "2018-02-28": 97,
+    "2018-03-29": 97,
+    "2018-04-30": 97,
+    "2018-05-31": 97,
+    "2018-06-29": 97,
+    "2018-07-31": 97,
+    "2018-08-31": 97,
+    "2018-09-28": 97,
+    "2018-10-31": 97,
+    "2018-11-30": 97,
+    "2018-12-31": 97,
+    "2019-01-31": 97,
+    "2019-02-28": 97,
+    "2019-03-29": 97,
+    "2019-04-30": 97,
+    "2019-05-31": 97,
+    "2019-06-28": 97,
+    "2019-07-31": 97,
+    "2019-08-30": 98,
+    "2019-09-30": 98,
+    "2019-10-31": 98,
+    "2019-11-29": 98,
+    "2019-12-31": 98,
+    "2020-01-31": 98,
+    "2020-02-28": 98,
+    "2020-03-31": 98,
+    "2020-04-30": 98,
+    "2020-05-29": 98,
+    "2020-06-30": 98,
+    "2020-07-31": 98,
+    "2020-08-31": 98,
+    "2020-09-30": 98,
+    "2020-10-30": 98,
+    "2020-11-30": 98,
+    "2020-12-31": 99,
+    "2021-01-29": 99,
+    "2021-02-26": 99,
+    "2021-03-31": 99,
+    "2021-04-30": 99,
+    "2021-05-28": 99,
+    "2021-06-30": 99,
+    "2021-07-30": 99,
+    "2021-08-31": 99,
+    "2021-09-30": 99,
+    "2021-10-29": 99,
+    "2021-11-30": 99,
+    "2021-12-31": 99,
+    "2022-01-31": 99,
+    "2022-02-28": 99,
+    "2022-03-31": 99,
+    "2022-04-29": 99,
+    "2022-05-31": 99,
+    "2022-06-30": 99,
+    "2022-07-29": 99,
+    "2022-08-31": 99,
+    "2022-09-30": 99,
+    "2022-10-31": 99,
+    "2022-11-30": 99,
+    "2022-12-30": 99,
+    "2023-01-31": 99,
+    "2023-02-28": 99,
+    "2023-03-31": 99,
+    "2023-04-28": 99,
+    "2023-05-31": 99,
+    "2023-06-30": 99,
+    "2023-07-31": 99,
+    "2023-08-31": 99,
+    "2023-09-29": 99,
+    "2023-10-31": 99,
+    "2023-11-30": 99,
+    "2023-12-29": 99,
+    "2024-01-31": 99,
+    "2024-02-29": 99,
+    "2024-03-28": 99,
+    "2024-04-30": 99,
+    "2024-05-31": 99,
+    "2024-06-28": 100,
+    "2024-07-31": 100,
+    "2024-08-30": 100,
+    "2024-09-30": 100,
+    "2024-10-31": 100,
+    "2024-11-29": 100,
+    "2024-12-31": 100,
+    "2025-01-31": 100,
+    "2025-02-28": 100,
+    "2025-03-31": 100,
+    "2025-04-30": 100,
+    "2025-05-30": 101,
+    "2025-06-30": 101,
+    "2025-07-31": 101,
+    "2025-08-29": 101,
+    "2025-09-30": 101,
+    "2025-10-31": 101,
+    "2025-11-28": 101,
+    "2025-12-31": 101,
+    "2026-01-30": 101,
+    "2026-02-27": 101,
+    "2026-03-31": 101,
+    "2026-04-30": 101,
+    "2026-05-29": 101,
+    "2026-06-30": 101,
+    "2026-07-31": 101,
+    "2026-08-31": 101,
+    "2026-09-30": 101,
+    "2026-10-30": 101
+  },
+  "skipped_rebalances": {
+    "basket": [
+      "2010-01-29",
+      "2010-02-26",
+      "2010-03-31",
+      "2026-10-30"
+    ],
+    "benchmark": [
+      "2010-01-29",
+      "2010-02-26",
+      "2010-03-31",
+      "2026-10-30"
+    ]
+  }
+}
