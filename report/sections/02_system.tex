@@ -1,6 +1,19 @@
-\section{System}
-Placeholder: engine components, architecture diagram and measured benchmarks.
+\section{System}\label{sec:system}
+The engine lives in \texttt{engine/src/}. Figure~\ref{fig:architecture} shows its components and which one includes which.
+
+\begin{itemize}
+\item \textbf{Matching engine.} Matches orders by price, then by arrival time. It uses three building blocks: \texttt{FlatPriceMap}, a flat array of price levels in place of a tree; an object pool that reuses order objects; and a multi-producer single-consumer (MPSC) queue for passing work between threads.
+\item \textbf{ITCH parser and gateway.} Decode an ITCH-style binary feed and pass messages to the engine.
+\item \textbf{Python bridge.} Exposes the engine to the Python backtests.
+\item \textbf{Replication log and heartbeat.} The primary appends each entry to a journal and sends it to the backup. Heartbeats carry the sender's epoch; the lease decides whether a node may act as primary. These two components share no include with the matching path.
+\end{itemize}
 
 \input{generated/fig_architecture}
+
+Table~\ref{tab:benchmarks} gives the recorded micro-benchmarks with the machine and compiler. The two rows measure different operations on different data structures, so I do not report a speed-up between them. They come from one machine and one run each; I have not measured tail latency or throughput under load.
+
 \input{generated/benchmarks}
+
+Table~\ref{tab:tests} lists the test suites from one recorded run: \TestsPyPassed{} Python tests passed, \TestsPySkipped{} were skipped and \TestsPyFailed{} failed; \TestsCppPassed{} of \TestsCppTotal{} C++ test executables passed, including two built with ThreadSanitizer. Each skipped test states its reason; for example, some need local data files that are not tracked in the repository.
+
 \input{generated/tests}

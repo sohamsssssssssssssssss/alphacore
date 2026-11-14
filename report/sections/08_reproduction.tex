@@ -1,4 +1,8 @@
-\section{Reproduction}
-Placeholder: what \texttt{make all} re-runs and the cases that fail by design.
+\section{Reproduction}\label{sec:reproduction}
+\texttt{make all} verifies the frozen snapshot against its manifest, builds the engine, runs the C++ and Python tests and the benchmarks, runs TLC on every model, and re-runs the experiments on the snapshot. \texttt{make report} regenerates every table, figure and number in this document from tracked files and then runs a consistency check. The check fails if any number in a generated table does not trace to a recorded source value, or if a number is typed by hand into the text.
+
+The price files are not tracked in the repository; only the manifest is, listing \SnapshotFiles{} files with checksums (\SnapshotUnavailable{} symbol had no data at the provider). On a fresh clone the files must be supplied from a copy of the snapshot. If they are missing, the tooling tries to fetch them again and accepts them only if the bytes match the recorded checksums. Because the provider revises its history, that can fail, and then the run stops; it does not fall back to different data. This is the weakest point of the reproduction: it depends on a copy of the snapshot that lives outside the repository.
+
+Table~\ref{tab:not-reproducible} lists what cannot be re-run or recomputed at all. None of these is replaced by a substitute.
 
 \input{generated/not_reproducible}

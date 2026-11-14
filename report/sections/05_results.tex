@@ -1,7 +1,34 @@
-\section{Results}
-Placeholder: one table and one chart with intervals, in four categories.
+\section{Results}\label{sec:results}
+Table~\ref{tab:results-main} and Figure~\ref{fig:forest} give one row per distinct long/short, gap and earnings configuration that could be re-run, \NumRerunConfigs{} in all. The long-only basket is treated separately below. Two rows of the original experiment list, the full-universe run and the one-position run, turned out to be the same return series and are counted once. Rows with different deployment are not directly comparable with each other; the question for each row is only whether its own interval excludes zero.
 
 \input{generated/results_main}
 \input{generated/fig_forest}
-\input{generated/basket_benchmarks}
+
+\textbf{Significantly negative (\NumSigNegConfigs{} configurations).} Every cross-sectional long/short variant and the overnight-gap strategy has an interval entirely below zero. This holds across rebalance frequency, universe size and number of positions. For example, the full-universe run has a Sharpe of \UniverseSharpe{} with interval $[\UniverseCILow, \UniverseCIHigh]$.
+
+Figure~\ref{fig:cost-drag} splits the loss for the position-count experiment. Gross profit is negative at every position count, so the signal does not make money even before costs, and modelled costs grow as positions are added, because each rebalance trades more names. Costs make the result worse; they are not the only reason it is negative.
+
 \input{generated/fig_cost_drag}
+
+\textbf{Inconclusive (\NumInconclusiveConfigs{}).} Post-earnings drift has a Sharpe of \PeadSharpe{} with interval $[\PeadCILow, \PeadCIHigh]$ on \PeadEvents{} trades, with returns measured before explicit fees. The interval is wide on both sides of zero. With this few trades the data cannot separate a small edge from none.
+
+\textbf{Not re-run (\NumNotRerun{}).} Two early experiments were not re-run because doing so would re-select signal weights on data already seen. The hourly experiment cannot be re-run because its source data is no longer obtainable.
+
+\subsection{The long-only basket}
+The basket buys the top quarter of stocks by one-month return each month, long only. It was the only idea in the project that looked positive, so it got the strictest test.
+
+\textbf{Out-of-sample test.} The strategy was frozen and a protocol registered: run it once on \OosSymbols{} large US stocks, data this project had never used, and compare it after costs with holding every stock in equal weight. Pass required the whole interval of the information ratio to lie above zero. Table~\ref{tab:oos-basket} gives both runs.
+
+The registered run came out as Fail, with an information ratio of \OosRegIR{} and interval $[\OosRegCILow, \OosRegCIHigh]$. A check of that run showed it had not compared like with like. The simulator bought each position at a fixed size set by the starting budget and never topped up, so as the account grew the basket drifted into cash: on average \OosRegInvestedMean\% invested, and \OosRegInvestedEnd\% by the end. The benchmark stayed fully invested and was never rebalanced. That result stays on record as registered.
+
+An amendment, written before any corrected number existed, fixed the simulator for both sides: every holding is reset to an equal share of current equity each month. The corrected run gives \OosCorrIR{} with interval $[\OosCorrCILow, \OosCorrCIHigh]$. This run was made after seeing a result on the same data, so it could not count as a pass whatever it showed. It shows no evidence of an edge.
+
+\input{generated/oos_basket}
+
+\textbf{NSE, restated.} The same correction applied to the original NSE basket (Table~\ref{tab:basket-benchmarks}) gives an excess-return Sharpe of \BasketSharpeExcess{} against \EqualWeightSharpeExcess{} for the equal-weight benchmark, and an information ratio of \BasketActiveIR{} with interval $[\BasketActiveCILow, \BasketActiveCIHigh]$ on \BasketPeriods{} months. This is the data the basket was chosen on, so the figures are descriptive only. Even here it trails the benchmark on point estimates.
+
+\input{generated/basket_benchmarks}
+
+By the rule set in the protocol, the basket is retired as a candidate.
+
+\textbf{Reading.} No configuration has an interval above zero, and the basket does not beat its benchmark. That is a negative result for these signals, on this market, period and cost model. It is not evidence that momentum fails in general.

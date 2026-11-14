@@ -22,12 +22,14 @@ CI **[{UniverseCILow}, {UniverseCIHigh}]**; with rf={RiskFreeAnnual} it is {Univ
 CI [{UniverseCILowExcess}, {UniverseCIHighExcess}] ([raw JSON](research/v2/experiment_7_universe_49.json)).
 Post-earnings drift is inconclusive: zero-rf Sharpe {PeadSharpe}, CI [{PeadCILow}, {PeadCIHigh}],
 on {PeadEvents} events, before explicit model fees ([raw JSON](research/v2/experiment_6_pead.json)).
-The long-only K={BasketK} basket has excess-return Sharpe **{BasketSharpeExcess}**,
-CI **[{BasketCILowExcess}, {BasketCIHighExcess}]** ([raw JSON](research/v2/k12_basket.json)), versus
-{NiftySharpeExcess} for ^NSEI and {EqualWeightSharpeExcess} for equal-weight buy-and-hold (gross of
-costs) under the same convention. Its CI includes zero, and its ADV cost lookahead remains.
-Under zero-rf, which is not its primary convention, the basket CI is [{BasketCILow}, {BasketCIHigh}];
-that convention also flatters buy-and-hold (^NSEI {NiftySharpe}, equal-weight {EqualWeightSharpe}).
+The long-only K={BasketK} basket was restated with a corrected simulator (the original let the
+basket drift into cash): excess-return Sharpe **{BasketSharpeExcess}**, CI **[{BasketCILowExcess},
+{BasketCIHighExcess}]**, against {EqualWeightSharpeExcess} for an equal-weight benchmark from the same
+simulator ([raw JSON](research/oos/k12_restated.json); in-sample, descriptive). A pre-registered
+out-of-sample test on {OosSymbols} US stocks was registered as **Fail** (IR {OosRegIR}, CI [{OosRegCILow},
+{OosRegCIHigh}]) and, after the same correction, shows no evidence of an edge (IR {OosCorrIR},
+CI [{OosCorrCILow}, {OosCorrCIHigh}]; post hoc) ([protocol](research/OOS_BASKET_PROTOCOL.md),
+[amendment](research/OOS_BASKET_AMENDMENT_1.md)). The basket is retired as a candidate.
 Values are rounded to two decimals; full precision is in the linked JSON."""
 
 

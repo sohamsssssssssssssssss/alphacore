@@ -91,19 +91,21 @@ locked configuration was tuned or reselected.
 
 <!-- BEGIN generated:headline (scripts/report/build_assets.py --update-readme; do not edit) -->
 **Result: no tested configuration establishes a statistically significant,
-cost-surviving edge in the frozen-data reruns.** Of 9 distinct re-run
+cost-surviving edge in the frozen-data reruns.** Of 8 distinct re-run
 configurations, 7 have primary-convention 95% CIs entirely below zero.
 Long/short K=1 on the expanded universe has zero-rf Sharpe **-1.94**,
 CI **[-3.32, -0.34]**; with rf=0.065 it is -3.78,
 CI [-5.17, -2.23] ([raw JSON](research/v2/experiment_7_universe_49.json)).
 Post-earnings drift is inconclusive: zero-rf Sharpe 0.02, CI [-1.66, 1.41],
 on 30 events, before explicit model fees ([raw JSON](research/v2/experiment_6_pead.json)).
-The long-only K=12 basket has excess-return Sharpe **0.66**,
-CI **[-0.23, 1.36]** ([raw JSON](research/v2/k12_basket.json)), versus
-0.58 for ^NSEI and 1.01 for equal-weight buy-and-hold (gross of
-costs) under the same convention. Its CI includes zero, and its ADV cost lookahead remains.
-Under zero-rf, which is not its primary convention, the basket CI is [0.57, 1.95];
-that convention also flatters buy-and-hold (^NSEI 1.05, equal-weight 1.40).
+The long-only K=12 basket was restated with a corrected simulator (the original let the
+basket drift into cash): excess-return Sharpe **0.59**, CI **[-0.22,
+1.43]**, against 0.92 for an equal-weight benchmark from the same
+simulator ([raw JSON](research/oos/k12_restated.json); in-sample, descriptive). A pre-registered
+out-of-sample test on 101 US stocks was registered as **Fail** (IR -0.84, CI [-1.33,
+-0.38]) and, after the same correction, shows no evidence of an edge (IR 0.16,
+CI [-0.33, 0.62]; post hoc) ([protocol](research/OOS_BASKET_PROTOCOL.md),
+[amendment](research/OOS_BASKET_AMENDMENT_1.md)). The basket is retired as a candidate.
 Values are rounded to two decimals; full precision is in the linked JSON.
 <!-- END generated:headline -->
 The basket Sharpe is not comparable to the
