@@ -126,6 +126,9 @@ def execution_date(as_of, bars, now):
     if now < datetime.combine(as_of, time(15, 30), IST):
         raise ValueError('log must run at or after 15:30 IST on as-of')
     d = as_of + timedelta(days=1)
+    if d.year != as_of.year and not any(h.year == d.year for h in closed):
+        # The December log trades in January: that year's holidays must be known first.
+        raise ValueError(f'no NSE holiday entries for {d.year}; needed to find the execution session')
     while d.weekday() >= 5 or d in closed:
         d += timedelta(days=1)
     return d

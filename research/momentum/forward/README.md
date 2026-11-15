@@ -23,6 +23,7 @@ Late means no valid receipt, a remote log mismatch, or receipt time at/after exe
 09:15 IST. Accounts still trade; the holding period starting then is missed for both
 accounts and active returns. The preceding period is unaffected. Commit time is not used.
 
-Only 2026 holidays are supplied. Before each new year's first log, add that year's
-published NSE equity holiday circular dates to `nse_holidays.txt` in a separate commit.
+Only 2026 holidays are supplied. Before each **December** log, add the next year's
+published NSE equity holiday circular dates to `nse_holidays.txt` in a separate commit:
+that log trades on the first session of January, and the tool refuses it otherwise.
 Keep the gitignored `data_snapshots/momentum-forward/` payloads; marking checks their hashes.

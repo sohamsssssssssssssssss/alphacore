@@ -68,6 +68,15 @@ def test_close_time_and_missing_year_refused():
         log(bars,date(2026,11,30))
 
 
+def test_december_log_needs_next_years_holidays():
+    bars=panel()
+    (f.FORWARD/'nse_holidays.txt').write_text('2026-01-26\n')
+    with pytest.raises(ValueError, match='no NSE holiday entries for 2027'):
+        log(bars,date(2026,12,31))
+    (f.FORWARD/'nse_holidays.txt').write_text('2026-01-26\n2027-01-01\n')
+    assert f.read(log(bars,date(2026,12,31)))['execution_session']=='2027-01-04'
+
+
 def test_last_weekday_holiday_allows_earlier_month_end():
     (f.FORWARD/'nse_holidays.txt').write_text('2026-11-30\n')
     p=log(panel(),date(2026,11,27))
