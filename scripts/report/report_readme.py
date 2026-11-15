@@ -14,8 +14,8 @@ BEGIN = "<!-- BEGIN generated:{name} (scripts/report/build_assets.py --update-re
 END = "<!-- END generated:{name} -->"
 
 HEADLINE = """\
-**Result: no tested configuration establishes a statistically significant,
-cost-surviving edge in the frozen-data reruns.** Of {NumRerunConfigs} distinct re-run
+**Result: the original signals show no cost-surviving edge in the frozen-data reruns; one later
+pre-registered test, twelve-month momentum on a broad NSE universe, is a candidate with a known survivorship caveat.** Of {NumRerunConfigs} distinct re-run
 configurations, {NumSigNegConfigs} have primary-convention {CILevel}% CIs entirely below zero.
 Long/short K={UniverseK} on the expanded universe has zero-rf Sharpe **{UniverseSharpe}**,
 CI **[{UniverseCILow}, {UniverseCIHigh}]**; with rf={RiskFreeAnnual} it is {UniverseSharpeExcess},
@@ -30,6 +30,12 @@ out-of-sample test on {OosSymbols} US stocks was registered as **Fail** (IR {Oos
 {OosRegCIHigh}]) and, after the same correction, shows no evidence of an edge (IR {OosCorrIR},
 CI [{OosCorrCILow}, {OosCorrCIHigh}]; post hoc) ([protocol](research/OOS_BASKET_PROTOCOL.md),
 [amendment](research/OOS_BASKET_AMENDMENT_1.md)). The basket is retired as a candidate.
+A second pre-registered test, twelve-month momentum on {MomSymbols} broad-index NSE stocks outside the original
+universe, came out as **Candidate**: IR **{MomIR}**, CI **[{MomCILow}, {MomCIHigh}]** against an
+equal-weight benchmark on {MomMonths} months ([result](research/momentum/RESULT.md),
+[protocol](research/MOMENTUM_12_1_PROTOCOL.md)). The universe is today's index membership applied to
+the past, which can flatter momentum; the protocol allows no stronger word than candidate, and a
+forward paper test is the next step.
 Values are rounded to two decimals; full precision is in the linked JSON."""
 
 
