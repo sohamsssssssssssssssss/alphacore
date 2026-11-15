@@ -89,3 +89,6 @@ report/*.synctex.gz
 report/*.toc
 report/*.bbl
 report/*.blg
+
+# Immutable local forward-paper bar payloads; manifest is tracked separately.
+/data_snapshots/momentum-forward/
