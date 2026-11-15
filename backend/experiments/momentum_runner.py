@@ -5,8 +5,8 @@ Basket: top n_eligible // 5 by 12-1 signal. Benchmark: all eligible names. Both 
 basket_backtest.simulate_rebalanced with CostModel(brokerage_per_trade=0) and other defaults,
 spread 30 bps, budget 10,000,000, month-end rebalances, next-session open.
 
-Abort gates, checked before any return, IR or interval is computed: invested fraction must
-stay in [0.99, 1.00] and eligible count >= 50 at every actionable rebalance after the first 13.
+Start at the first month-end with >= 50 eligible names. From then on, no grace period:
+invested fraction must stay in [0.99, 1.00] and eligible count >= 50, before return statistics.
 
 Run from backend/:  python3.11 -m experiments.momentum_runner
 """
@@ -29,7 +29,7 @@ REPO_ROOT = _BACKEND.parent
 sys.path.insert(0, str(_BACKEND))
 sys.path.insert(0, str(_BACKEND / "experiments"))
 
-from basket_backtest import monthly_rebalance_dates, simulate_rebalanced  # noqa: E402
+from basket_backtest import execution_day, monthly_rebalance_dates, simulate_rebalanced  # noqa: E402
 from engines.backtest_metrics import stationary_bootstrap_sharpe_ci  # noqa: E402
 from engines.cost_model import CostModel  # noqa: E402
 from momentum_12_1 import make_selectors  # noqa: E402
@@ -37,6 +37,15 @@ from oos_basket import _ir  # noqa: E402
 from prices import point_in_time_adv  # noqa: E402
 
 PROTOCOL_PATH = "research/MOMENTUM_12_1_PROTOCOL.md"
+AMENDMENT_PATHS = [f"research/MOMENTUM_12_1_AMENDMENT_{i}.md" for i in (1, 2, 3)]
+RUN_HISTORY = {
+    "first_attempt": "Crashed before any return, eligibility count or result file was produced.",
+    "cause": "Undefined session calendar included sparse and weekend rows; the held-price lookup did not skip NaN.",
+    "amendment_1": "Defines the session calendar and prior-close carry that skips missing values.",
+    "amendment_2": "Defines the first rebalance and abort gates without a grace period.",
+    "amendment_3": "Defines earlier held-name ADV and missing execution-input handling.",
+    "fix": "Filter all frames first; opt into earlier valid held inputs; count uses; enforce start and gates.",
+}
 UNIVERSE_DIR = REPO_ROOT / "data_snapshots" / "nse500-2026-11"
 RESULT_PATH = REPO_ROOT / "research" / "momentum" / "result.json"
 SPREAD_BPS = 30.0
@@ -46,13 +55,16 @@ N_BOOTSTRAP = 2000
 MEAN_BLOCK = 3
 SEED = 2026
 CONFIDENCE = 0.95
-GATE_SKIP_FIRST = 13  # actionable rebalances ignored by the abort gates
 GATE_INVESTED = (0.99, 1.00)
 GATE_MIN_ELIGIBLE = 50
 
 
 class AbortRun(RuntimeError):
-    """An abort gate failed; no return, IR or interval is computed."""
+    """An abort gate failed; no return statistics or result file are produced."""
+
+    def __init__(self, message, diagnostics=None):
+        super().__init__(message)
+        self.diagnostics = diagnostics or {}
 
 
 def sha256(path: Path) -> str:
@@ -89,48 +101,82 @@ def load_frames(snapshot: Path, tickers: list[str]):
     return closes, opens, volumes, unavailable
 
 
+def sessions(closes: pd.DataFrame) -> tuple[pd.DatetimeIndex, list[dict]]:
+    """Amendment 1 calendar, using each name's unfiltered first/last close."""
+    if not closes.index.is_unique or not closes.index.is_monotonic_increasing:
+        raise ValueError("close dates must be unique and sorted")
+    listed = pd.Series(0, index=closes.index)
+    for sym in closes:
+        valid = closes[sym].dropna()
+        if not valid.empty:
+            listed += ((closes.index >= valid.index[0]) & (closes.index <= valid.index[-1])).astype(int)
+    counts = closes.notna().sum(axis=1)
+    keep = (closes.index.dayofweek < 5) & (2 * counts >= listed)
+    dropped = [{"date": d.date().isoformat(), "names_with_close": int(counts.at[d]),
+                "listed_names": int(listed.at[d])} for d in closes.index[~keep]]
+    return closes.index[keep], dropped
+
+
 def run(closes: pd.DataFrame, opens: pd.DataFrame, volumes: pd.DataFrame, *,
         basket_select=None, benchmark_select=None) -> dict:
-    """Both simulations, gates, then the metrics. Selectors default to the protocol's."""
+    """Filter the calendar, apply start/gates, simulate, then compute return statistics."""
+    index, dropped = sessions(closes)
+    closes, opens, volumes = (frame.loc[index] for frame in (closes, opens, volumes))
     first, end = closes.index.min().date(), closes.index.max().date()
     months_back = (end.year - first.year) * 12 + (end.month - first.month) + 1
     sched = monthly_rebalance_dates(closes, end, months_back=months_back)
-    assert (sched[0].year, sched[0].month) == (first.year, first.month), f"first rebalance {sched[0]}"
-    assert (sched[-1].year, sched[-1].month) == (end.year, end.month), f"last rebalance {sched[-1]}"
-    adv = point_in_time_adv(closes, volumes, sched)
-
     sel_b, sel_m, info = make_selectors(closes, volumes)
-    basket_select = basket_select or sel_b
-    benchmark_select = benchmark_select or sel_m
-    kw = dict(cost_model=CostModel(brokerage_per_trade=0.0), budget=BUDGET, spread_bps=SPREAD_BPS, lookback=21)
-    bt, bm = [], []
-    basket = simulate_rebalanced(closes, opens, adv, sched, select=basket_select, trace=bt, **kw)
-    bench = simulate_rebalanced(closes, opens, adv, sched, select=benchmark_select, trace=bm, **kw)
+    skipped_start = []
+    start = None
+    for d in sched:
+        if info(d)["eligible"] >= GATE_MIN_ELIGIBLE:
+            start = d
+            break
+        skipped_start.append(d.isoformat())
+    if start is None:
+        raise ValueError("no month-end has at least 50 eligible names; run never starts")
+    no_later = [d.isoformat() for d in sched if execution_day(closes, d) is None]
+    active_sched = [d for d in sched if d >= start and execution_day(closes, d) is not None]
+    diagnostics = {"session_count": len(index), "dropped_dates": dropped,
+                   "first_rebalance": start.isoformat(), "skipped_month_ends_before_start": skipped_start,
+                   "month_ends_no_later_session": no_later}
 
-    b_dates = [d for d, _, _ in basket["baskets"]]
-    if b_dates != [d for d, _, _ in bench["baskets"]]:
-        raise RuntimeError("basket and benchmark actionable rebalances differ")
+    def checked_select(select):
+        def choose(c, d, eligible):
+            n = info(d)["eligible"]
+            if n < GATE_MIN_ELIGIBLE:
+                raise AbortRun(f"eligible count at {d}: {n} < {GATE_MIN_ELIGIBLE}", diagnostics)
+            return select(c, d, eligible)
+        return choose
 
-    # Abort gates: checked before any return, IR or interval is computed.
-    problems = []
-    for idx, d in enumerate(b_dates):
-        if idx < GATE_SKIP_FIRST:
-            continue
-        iso = d.isoformat()
-        for side, trace in (("basket", bt), ("benchmark", bm)):
-            f = trace[idx]["invested_fraction"]
+    def check(side):
+        def check_row(row):
+            f = row["invested_fraction"]
             if not (GATE_INVESTED[0] <= f <= GATE_INVESTED[1]):
-                problems.append(f"{side} invested fraction {f:.6f} at {iso}")
-        n_elig = info(d)["eligible"]
-        if n_elig < GATE_MIN_ELIGIBLE:
-            problems.append(f"eligible count {n_elig} < {GATE_MIN_ELIGIBLE} at {iso}")
-    if problems:
-        raise AbortRun("; ".join(problems))
+                raise AbortRun(f"{side} invested fraction at {row['rebalance']}: {f!r} outside [0.99, 1.00]",
+                               diagnostics)
+        return check_row
+
+    # The fallback must find a complete window on any earlier session, not just month-ends.
+    adv_history = point_in_time_adv(closes, volumes, [d.date() for d in index])
+    adv = {d: adv_history[d] for d in active_sched}
+    kw = dict(cost_model=CostModel(brokerage_per_trade=0.0), budget=BUDGET, spread_bps=SPREAD_BPS,
+              lookback=21, prior_close_carry=True, held_adv_history=adv_history, compute_period_returns=False)
+    bt, bm = [], []
+    basket = simulate_rebalanced(closes, opens, adv, active_sched,
+                                select=checked_select(basket_select or sel_b), trace=bt,
+                                check_rebalance=check("basket"), **kw)
+    bench = simulate_rebalanced(closes, opens, adv, active_sched,
+                               select=checked_select(benchmark_select or sel_m), trace=bm,
+                               check_rebalance=check("benchmark"), **kw)
+    b_dates = [d for d, _, _ in basket["baskets"]]
+    if b_dates != active_sched or [d for d, _, _ in bench["baskets"]] != active_sched:
+        raise RuntimeError("an executable rebalance was skipped; no registered rule covers this case")
 
     period_dates = b_dates[1:]
-    assert len(period_dates) == len(basket["period_returns"]) == len(bench["period_returns"])
-    b_ret = np.asarray(basket["period_returns"], dtype=float)
-    m_ret = np.asarray(bench["period_returns"], dtype=float)
+    b_ret = np.asarray([b["equity"] / a["equity"] - 1.0 for a, b in zip(bt, bt[1:])], dtype=float)
+    m_ret = np.asarray([b["equity"] / a["equity"] - 1.0 for a, b in zip(bm, bm[1:])], dtype=float)
+    assert len(period_dates) == len(b_ret) == len(m_ret)
     active = b_ret - m_ret
     ir = _ir(active)
     ci = stationary_bootstrap_sharpe_ci(active.tolist(), n_bootstrap=N_BOOTSTRAP, confidence=CONFIDENCE,
@@ -150,6 +196,8 @@ def run(closes: pd.DataFrame, opens: pd.DataFrame, volumes: pd.DataFrame, *,
             "invested_min": min(inv), "invested_mean": sum(inv) / len(inv), "invested_max": max(inv),
             "carried_names": len(sim["carried"]), "skipped_buys": len(sim["skipped_buys"]),
             "final_equity": float(sim["final_equity"]),
+            "amendment_3": {rule: {"count": len(uses), "uses": uses}
+                            for rule, uses in sim["input_uses"].items()},
         }
 
     rows_per_date = []
@@ -161,9 +209,15 @@ def run(closes: pd.DataFrame, opens: pd.DataFrame, volumes: pd.DataFrame, *,
             "excluded_by_rule": i["failed"],
             "basket_size": basket["baskets"][idx][2],
             "benchmark_size": bench["baskets"][idx][2],
+            "basket": {key: bt[idx][key] for key in ("invested_fraction", "turnover", "costs", "n_positions")},
+            "benchmark": {key: bm[idx][key] for key in ("invested_fraction", "turnover", "costs", "n_positions")},
         })
 
     return {
+        **diagnostics,
+        "run_history": RUN_HISTORY,
+        "amendment_3_month_end_no_later_session": {"count": len(no_later), "uses": no_later},
+        "carried_count": len(basket["carried"]) + len(bench["carried"]),
         "params": {
             "signal": "close[t-21 sessions] / close[t-252 sessions] - 1",
             "selection": "top n_eligible // 5 by signal (ties: symbol ascending); benchmark all eligible",
@@ -176,7 +230,8 @@ def run(closes: pd.DataFrame, opens: pd.DataFrame, volumes: pd.DataFrame, *,
             "bootstrap": {"type": "stationary", "n_bootstrap": N_BOOTSTRAP, "mean_block": MEAN_BLOCK,
                           "seed": SEED, "confidence": CONFIDENCE, "periods_per_year": PERIODS_PER_YEAR,
                           "risk_free": 0.0},
-            "gates": {"skip_first_actionable": GATE_SKIP_FIRST, "invested": list(GATE_INVESTED),
+            "gates": {"start": "first month-end with >= 50 eligible", "grace_period": 0,
+                      "invested": list(GATE_INVESTED),
                       "min_eligible": GATE_MIN_ELIGIBLE},
         },
         "data_window": [first.isoformat(), end.isoformat()],
@@ -193,6 +248,7 @@ def run(closes: pd.DataFrame, opens: pd.DataFrame, volumes: pd.DataFrame, *,
         "per_date": rows_per_date,
         "eligible_count_min": min(r["eligible_count"] for r in rows_per_date),
         "eligible_count_max": max(r["eligible_count"] for r in rows_per_date),
+        "eligible_count_median": float(np.median([r["eligible_count"] for r in rows_per_date])),
         "prediction": {"ir_between": [0.0, 0.6],
                        "chances": {"Candidate": 0.25, "No evidence of an edge": 0.70, "Not supported": 0.05}},
     }
@@ -210,19 +266,23 @@ def main(argv: list[str] | None = None) -> int:
     if args.out.exists():
         print(f"[REFUSED] {args.out} exists; the momentum run happens once", file=sys.stderr)
         return 2
+    run_started = datetime.now(timezone.utc).isoformat(timespec="seconds")
     header, tickers = read_universe(args.snapshot / "universe.txt")
     closes, opens, volumes, unavailable = load_frames(args.snapshot, tickers)
     try:
         res = run(closes, opens, volumes)
     except AbortRun as exc:
-        print(f"[ABORT] gate failed, no returns computed: {exc}", file=sys.stderr)
+        print(f"[ABORT] gate failed, no return statistics computed: {exc}", file=sys.stderr)
+        print(json.dumps(exc.diagnostics, indent=2), file=sys.stderr)
         return 3
     out = {
         "protocol": PROTOCOL_PATH,
         "protocol_commit": _git("log", "-1", "--format=%H", "--", PROTOCOL_PATH),
+        "amendments": {path: _git("log", "-1", "--format=%H", "--", path) for path in AMENDMENT_PATHS},
         "code_commit": _git("rev-parse", "HEAD"),
         "code_dirty_tracked_files": bool(_git("status", "--porcelain", "--untracked-files=no")),
-        "run_timestamp_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "run_timestamp_utc": run_started,
+        "run_completed_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "universe_file": str(args.snapshot.relative_to(REPO_ROOT) / "universe.txt"),
         "universe_sha256": sha256(args.snapshot / "universe.txt"),
         "universe_header": header,

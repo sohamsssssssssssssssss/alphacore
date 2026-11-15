@@ -383,18 +383,24 @@ def _open_px(opens: pd.DataFrame | None, sym: str, day: date) -> float | None:
     return val if math.isfinite(val) and val > 0 else None
 
 
-def _carry_px(closes: pd.DataFrame, opens: pd.DataFrame | None, sym: str, day: date) -> float:
+def _carry_px(closes: pd.DataFrame, opens: pd.DataFrame | None, sym: str, day: date,
+              *, prior_close: bool = False) -> float:
     """Valuation price: open on `day`, else the last close on/before `day` (carry)."""
     px = _open_px(opens, sym, day)
     if px is None:
-        px = _last_price(closes[sym], day)
+        if prior_close:
+            earlier = closes.loc[closes.index < pd.Timestamp(day), sym].dropna()
+            px = float(earlier.iloc[-1]) if len(earlier) else None
+        else:
+            px = _last_price(closes[sym], day)
     if px is None:
         raise ValueError(f"no price at all for held {sym} on {day}")
     return px
 
 
 def _rebalance_step(state: dict, basket: list[str], adv_now: dict[str, float], closes: pd.DataFrame,
-                    opens: pd.DataFrame, day: date, cost_model, spread_bps: float) -> tuple[dict, dict] | None:
+                    opens: pd.DataFrame, day: date, cost_model, spread_bps: float,
+                    *, prior_close_carry: bool = False) -> tuple[dict, dict] | None:
     """
     One rebalance at `day`'s open. E = cash + holdings at `day` (carried where no open).
     Each tradeable basket name is set to an equal share of E; trades are the differences
@@ -404,7 +410,7 @@ def _rebalance_step(state: dict, basket: list[str], adv_now: dict[str, float], c
     """
     cash0 = float(state["cash"])
     holdings = dict(state["holdings"])
-    carry = {s: _carry_px(closes, opens, s, day) for s in holdings}
+    carry = {s: _carry_px(closes, opens, s, day, prior_close=prior_close_carry) for s in holdings}
     E0 = cash0 + sum(q * carry[s] for s, q in holdings.items())
 
     tradeable = [s for s in basket if _open_px(opens, s, day) is not None]
@@ -463,6 +469,8 @@ def _rebalance_step(state: dict, basket: list[str], adv_now: dict[str, float], c
     new_state = {"cash": cash, "holdings": {s: q for s, q in holdings.items() if q > 0}}
     info = {"equity_pre": E0, "traded_notional": traded, "costs": costs,
             "carried": carried, "skipped_buys": skipped_buys, "n_trades": len(legs)}
+    if prior_close_carry:
+        info["traded_names"] = [s for s, _, _, _, _ in legs]
     return new_state, info
 
 
@@ -479,6 +487,10 @@ def simulate_rebalanced(
     lookback: int = LOOKBACK_TRADING_DAYS,
     trace: list | None = None,
     select=None,
+    prior_close_carry: bool = False,
+    held_adv_history: dict[date, dict[str, float]] | None = None,
+    check_rebalance=None,
+    compute_period_returns: bool = True,
 ) -> dict:
     """
     Amendment 1 simulator. Same signal, eligibility (point-in-time ADV, full 63-session
@@ -489,6 +501,8 @@ def simulate_rebalanced(
 
     select(closes, rebalance_date, eligible) -> ordered basket. None (default) uses the
     top-quartile selection by lookback return, unchanged.
+    Momentum opts into prior-close carry, earlier complete held-name ADV, and
+    a check_rebalance(row) hook. It defers returns until both sides pass every gate.
     """
     state = {"cash": float(budget), "holdings": {}}
     prev_equity: float | None = None
@@ -499,6 +513,8 @@ def simulate_rebalanced(
     rows: list[dict] = []
     carried_log: list[dict] = []
     skipped_buy_log: list[dict] = []
+    adv_uses, resumed_trades, carry_uses, dropped_targets = [], [], [], []
+    previously_carried: set[str] = set()
 
     for rb in rebalance_dates_list:
         eligible = set(adv_by_date.get(rb, {}))
@@ -512,7 +528,24 @@ def simulate_rebalanced(
         if not basket or exec_day is None:
             skipped.append(rb)
             continue
-        step = _rebalance_step(state, basket, adv_by_date[rb], closes, opens, exec_day, cost_model, spread_bps)
+        adv_now = adv_by_date[rb]
+        fallbacks = {}
+        if held_adv_history is not None:
+            adv_now = dict(adv_now)
+            for sym in state["holdings"]:
+                if sym in adv_now or _open_px(opens, sym, exec_day) is None:
+                    continue
+                for source in sorted((d for d in held_adv_history if d < rb), reverse=True):
+                    if sym in held_adv_history[source]:
+                        adv_now[sym] = held_adv_history[source][sym]
+                        fallbacks[sym] = {"rebalance": rb.isoformat(), "symbol": sym,
+                                          "source_date": source.isoformat(), "adv": adv_now[sym]}
+                        break
+                else:
+                    raise ValueError(f"no earlier complete ADV for held {sym} at {rb}")
+        held_before = set(state["holdings"])
+        step = _rebalance_step(state, basket, adv_now, closes, opens, exec_day, cost_model, spread_bps,
+                               prior_close_carry=prior_close_carry)
         if step is None:
             skipped.append(rb)
             continue
@@ -520,7 +553,7 @@ def simulate_rebalanced(
         holdings_value = 0.0
         position_values: dict[str, float] = {}
         for s, q in state["holdings"].items():
-            v = q * _carry_px(closes, opens, s, exec_day)
+            v = q * _carry_px(closes, opens, s, exec_day, prior_close=prior_close_carry)
             position_values[s] = v
             holdings_value += v
         equity = state["cash"] + holdings_value
@@ -529,14 +562,31 @@ def simulate_rebalanced(
             carried_log.append({"rebalance": rb.isoformat(), "symbol": s})
         for s in info["skipped_buys"]:
             skipped_buy_log.append({"rebalance": rb.isoformat(), "symbol": s})
-        if prev_equity is not None:
-            period_rets.append(equity / prev_equity - 1.0)
-        prev_equity = equity
         row = {"rebalance": rb.isoformat(), "exec_day": exec_day.isoformat(), "equity": equity,
                "cash": state["cash"], "holdings_value": holdings_value,
                "invested_fraction": holdings_value / equity, "n_positions": len(position_values),
                "traded_notional": info["traded_notional"], "costs": info["costs"],
                "turnover": info["traded_notional"] / info["equity_pre"], "position_values": position_values}
+        if check_rebalance is not None:
+            check_rebalance(row)
+        if compute_period_returns and prev_equity is not None:
+            period_rets.append(equity / prev_equity - 1.0)
+        prev_equity = equity
+        if prior_close_carry:
+            traded = set(info["traded_names"])
+            adv_uses.extend(fallbacks[s] for s in sorted(traded & fallbacks.keys()))
+            for sym in sorted(previously_carried & traded):
+                resumed_trades.append({"rebalance": rb.isoformat(), "symbol": sym,
+                                       "action": "resized" if sym in basket else "sold"})
+            for sym in info["carried"]:
+                earlier = closes.loc[closes.index < pd.Timestamp(exec_day), sym].dropna()
+                carry_uses.append({"rebalance": rb.isoformat(), "exec_day": exec_day.isoformat(),
+                                   "symbol": sym, "source_date": earlier.index[-1].date().isoformat(),
+                                   "price": float(earlier.iloc[-1]), "value": position_values[sym]})
+            for sym in info["skipped_buys"]:
+                if sym not in held_before:
+                    dropped_targets.append({"rebalance": rb.isoformat(), "symbol": sym})
+            previously_carried = set(info["carried"])
         rows.append(row)
         if trace is not None:
             trace.append(row)
@@ -557,6 +607,11 @@ def simulate_rebalanced(
         "carried": carried_log,
         "skipped_buys": skipped_buy_log,
         "final_equity": prev_equity,
+        **({"input_uses": {"held_adv_fallback": adv_uses, "unheld_target_no_open": dropped_targets,
+                           "held_no_open": carry_uses, "resumed_held_trades": resumed_trades,
+                           "carried_invested": [{"rebalance": r["rebalance"], "symbol": r["symbol"],
+                                                  "value": r["value"]} for r in carry_uses]}}
+           if prior_close_carry else {}),
     }
 
 
