@@ -1,0 +1,6450 @@
+{
+  "protocol": "research/MOMENTUM_12_1_PROTOCOL.md",
+  "protocol_commit": "f848520f1fbaaa4dbb9ef00c0264e4125a00e6fb",
+  "amendments": {
+    "research/MOMENTUM_12_1_AMENDMENT_1.md": "444199a4275df5d53302ac2bd52f06dd101ec43a",
+    "research/MOMENTUM_12_1_AMENDMENT_2.md": "73391b67fe3b23e5f4436541f40d9916d7669b6b",
+    "research/MOMENTUM_12_1_AMENDMENT_3.md": "55b766e540297bc48bbefc6513cc14027806c87c"
+  },
+  "code_commit": "3d9595942d50815b42b44ae5e15154e128eeb043",
+  "code_dirty_tracked_files": false,
+  "run_timestamp_utc": "2026-11-15T03:56:58+00:00",
+  "run_completed_utc": "2026-11-15T03:57:10+00:00",
+  "universe_file": "data_snapshots/nse500-2026-11/universe.txt",
+  "universe_sha256": "53d91d2f8648b573fb92cadcdb14d5c361e7764bb60aac78ce92076757f0b575",
+  "universe_header": [
+    "# Nifty 500 constituents minus the 49 symbols of the AlphaCore universe (UNIVERSE_49)",
+    "# source_url: https://nsearchives.nseindia.com/content/indices/ind_nifty500list.csv",
+    "# identical bytes at: https://www.niftyindices.com/IndexConstituent/ind_nifty500list.csv",
+    "# retrieved_utc: 2026-11-14T17:55:06Z",
+    "# source_file_sha256: 31b764a95cc03ad1d7ddb6c42340de9125ed2c78b3d436bf0dbc8440e4e38c5e",
+    "# source_rows: 501 (501 unique symbols)",
+    "# removed_from_source (48, all in UNIVERSE_49): ADANIENT ADANIPORTS APOLLOHOSP ASIANPAINT AXISBANK BAJAJ-AUTO BAJFINANCE BAJAJFINSV BPCL BHARTIARTL BRITANNIA CIPLA COALINDIA DIVISLAB DRREDDY EICHERMOT GRASIM HCLTECH HDFCBANK HEROMOTOCO HINDALCO HINDUNILVR ICICIBANK ITC IOC INDUSINDBK INFY JSWSTEEL KOTAKBANK LT M&M MARUTI NTPC NESTLEIND ONGC POWERGRID RELIANCE SHREECEM SBIN SUNPHARMA TCS TATACONSUM TATASTEEL TECHM TITAN UPL ULTRACEMCO WIPRO",
+    "# UNIVERSE_49 member not in the source file: TATAMOTORS (the file lists TMPV and TMCV instead; they are kept)",
+    "# SBILIFE is in the source file and is not in UNIVERSE_49, so it is kept",
+    "# NIFTY50_SYMBOLS (50) was not used: the protocol's removal set is the 49 names of UNIVERSE_49",
+    "# Yahoo symbol = ticker + '.NS' (ticker may contain '&' or '-')",
+    "# count: 453"
+  ],
+  "manifest_sha256": "1dff29121ba75ee80464ffaff5ef1b44644427bc8a17efabcedab133c00ca764",
+  "tickers_requested": 453,
+  "symbols_loaded": 451,
+  "unavailable": {
+    "BAGMANE": {
+      "fetch_timestamp": "2026-11-14T17:56:28.063344+00:00",
+      "reason": "no daily data for BAGMANE.NS",
+      "yahoo_symbol": "BAGMANE.NS"
+    },
+    "DUMMYHEG": {
+      "fetch_timestamp": "2026-11-14T17:57:08.796450+00:00",
+      "reason": "no daily data for DUMMYHEG.NS",
+      "yahoo_symbol": "DUMMYHEG.NS"
+    }
+  },
+  "session_count": 4394,
+  "dropped_dates": [
+    {
+      "date": "2010-02-06",
+      "names_with_close": 10,
+      "listed_names": 229
+    },
+    {
+      "date": "2012-01-07",
+      "names_with_close": 1,
+      "listed_names": 248
+    },
+    {
+      "date": "2012-03-03",
+      "names_with_close": 1,
+      "listed_names": 248
+    },
+    {
+      "date": "2012-09-08",
+      "names_with_close": 1,
+      "listed_names": 254
+    },
+    {
+      "date": "2019-10-27",
+      "names_with_close": 323,
+      "listed_names": 323
+    },
+    {
+      "date": "2020-11-14",
+      "names_with_close": 332,
+      "listed_names": 332
+    },
+    {
+      "date": "2025-02-01",
+      "names_with_close": 412,
+      "listed_names": 418
+    }
+  ],
+  "first_rebalance": "2010-01-29",
+  "skipped_month_ends_before_start": [
+    "2009-01-30",
+    "2009-02-27",
+    "2009-03-31",
+    "2009-04-30",
+    "2009-05-29",
+    "2009-06-30",
+    "2009-07-31",
+    "2009-08-31",
+    "2009-09-30",
+    "2009-10-30",
+    "2009-11-30",
+    "2009-12-31"
+  ],
+  "month_ends_no_later_session": [
+    "2026-10-30"
+  ],
+  "run_history": {
+    "first_attempt": "Crashed before any return, eligibility count or result file was produced.",
+    "cause": "Undefined session calendar included sparse and weekend rows; the held-price lookup did not skip NaN.",
+    "amendment_1": "Defines the session calendar and prior-close carry that skips missing values.",
+    "amendment_2": "Defines the first rebalance and abort gates without a grace period.",
+    "amendment_3": "Defines earlier held-name ADV and missing execution-input handling.",
+    "fix": "Filter all frames first; opt into earlier valid held inputs; count uses; enforce start and gates."
+  },
+  "amendment_3_month_end_no_later_session": {
+    "count": 1,
+    "uses": [
+      "2026-10-30"
+    ]
+  },
+  "carried_count": 4,
+  "params": {
+    "signal": "close[t-21 sessions] / close[t-252 sessions] - 1",
+    "selection": "top n_eligible // 5 by signal (ties: symbol ascending); benchmark all eligible",
+    "eligibility": {
+      "closes_complete_sessions": 253,
+      "adv_sessions": 63,
+      "adv_min_inr": 10000000,
+      "max_abs_move": 0.4,
+      "moves_counted": "252 consecutive moves inside the 253-session window"
+    },
+    "sizing": "equal weight of current equity, fractional shares (simulate_rebalanced)",
+    "schedule": "last session of each month; next-session open",
+    "budget": 10000000.0,
+    "spread_bps": 30.0,
+    "cost_model": "CostModel(brokerage_per_trade=0.0), other defaults",
+    "bootstrap": {
+      "type": "stationary",
+      "n_bootstrap": 2000,
+      "mean_block": 3,
+      "seed": 2026,
+      "confidence": 0.95,
+      "periods_per_year": 12,
+      "risk_free": 0.0
+    },
+    "gates": {
+      "start": "first month-end with >= 50 eligible",
+      "grace_period": 0,
+      "invested": [
+        0.99,
+        1.0
+      ],
+      "min_eligible": 50
+    }
+  },
+  "data_window": [
+    "2009-01-02",
+    "2026-10-30"
+  ],
+  "scheduled_month_ends": 214,
+  "scheduled_first": "2009-01-30",
+  "scheduled_last": "2026-10-30",
+  "actionable_first": "2010-01-29",
+  "actionable_last": "2026-09-30",
+  "skipped_rebalances": {
+    "basket": [],
+    "benchmark": []
+  },
+  "n_months": 200,
+  "monthly": [
+    {
+      "rebalance_date": "2010-02-26",
+      "basket_net": 0.014771851187415974,
+      "benchmark_net": 0.0032679061297620215,
+      "active": 0.011503945057653953
+    },
+    {
+      "rebalance_date": "2010-03-31",
+      "basket_net": 0.07930063094511408,
+      "benchmark_net": 0.06032933630012516,
+      "active": 0.018971294644988923
+    },
+    {
+      "rebalance_date": "2010-04-30",
+      "basket_net": 0.04198558701274191,
+      "benchmark_net": 0.042802286078822416,
+      "active": -0.0008166990660805062
+    },
+    {
+      "rebalance_date": "2010-05-31",
+      "basket_net": -0.06555530931902198,
+      "benchmark_net": -0.041459536628696836,
+      "active": -0.024095772690325146
+    },
+    {
+      "rebalance_date": "2010-06-30",
+      "basket_net": 0.05998502314480425,
+      "benchmark_net": 0.04911981332259896,
+      "active": 0.01086520982220529
+    },
+    {
+      "rebalance_date": "2010-07-30",
+      "basket_net": 0.04327532800915623,
+      "benchmark_net": 0.04746015728441555,
+      "active": -0.004184829275259316
+    },
+    {
+      "rebalance_date": "2010-08-31",
+      "basket_net": 0.04998272402674342,
+      "benchmark_net": 0.036634775827670385,
+      "active": 0.013347948199073034
+    },
+    {
+      "rebalance_date": "2010-09-30",
+      "basket_net": 0.05997982292161841,
+      "benchmark_net": 0.07072759329452949,
+      "active": -0.01074777037291108
+    },
+    {
+      "rebalance_date": "2010-10-29",
+      "basket_net": 0.032224143864014065,
+      "benchmark_net": 0.021740604678958997,
+      "active": 0.010483539185055069
+    },
+    {
+      "rebalance_date": "2010-11-30",
+      "basket_net": -0.04059895766656996,
+      "benchmark_net": -0.06361640253914269,
+      "active": 0.023017444872572734
+    },
+    {
+      "rebalance_date": "2010-12-31",
+      "basket_net": 0.012469090116708603,
+      "benchmark_net": 0.01728689013170137,
+      "active": -0.004817800014992768
+    },
+    {
+      "rebalance_date": "2011-01-31",
+      "basket_net": -0.0862458696346472,
+      "benchmark_net": -0.10701567315678184,
+      "active": 0.020769803522134644
+    },
+    {
+      "rebalance_date": "2011-02-28",
+      "basket_net": -0.06719011635182104,
+      "benchmark_net": -0.06593560441662516,
+      "active": -0.0012545119351958789
+    },
+    {
+      "rebalance_date": "2011-03-31",
+      "basket_net": 0.0653981768984031,
+      "benchmark_net": 0.07944698438812048,
+      "active": -0.014048807489717374
+    },
+    {
+      "rebalance_date": "2011-04-29",
+      "basket_net": 0.03790195682595332,
+      "benchmark_net": 0.03053663455577338,
+      "active": 0.0073653222701799415
+    },
+    {
+      "rebalance_date": "2011-05-31",
+      "basket_net": -0.0018707899904634173,
+      "benchmark_net": -0.02476726193544987,
+      "active": 0.022896471944986452
+    },
+    {
+      "rebalance_date": "2011-06-30",
+      "basket_net": 0.015542743927170699,
+      "benchmark_net": -0.0005511550570491686,
+      "active": 0.016093898984219868
+    },
+    {
+      "rebalance_date": "2011-07-29",
+      "basket_net": 0.03678280051638061,
+      "benchmark_net": 0.013769991881562138,
+      "active": 0.02301280863481847
+    },
+    {
+      "rebalance_date": "2011-08-30",
+      "basket_net": -0.062216120578753586,
+      "benchmark_net": -0.09528565707072689,
+      "active": 0.033069536491973306
+    },
+    {
+      "rebalance_date": "2011-09-30",
+      "basket_net": -0.045050836177689235,
+      "benchmark_net": -0.03281935313791384,
+      "active": -0.012231483039775393
+    },
+    {
+      "rebalance_date": "2011-10-31",
+      "basket_net": 0.026842332227450694,
+      "benchmark_net": 0.038125253893586564,
+      "active": -0.01128292166613587
+    },
+    {
+      "rebalance_date": "2011-11-30",
+      "basket_net": -0.04106172371029004,
+      "benchmark_net": -0.07020169399642728,
+      "active": 0.02913997028613724
+    },
+    {
+      "rebalance_date": "2011-12-30",
+      "basket_net": -0.08988060095938,
+      "benchmark_net": -0.10545756767152092,
+      "active": 0.015576966712140927
+    },
+    {
+      "rebalance_date": "2012-01-31",
+      "basket_net": 0.1178264957873345,
+      "benchmark_net": 0.190282833556503,
+      "active": -0.07245633776916849
+    },
+    {
+      "rebalance_date": "2012-02-29",
+      "basket_net": 0.09164559736338185,
+      "benchmark_net": 0.08266519574213693,
+      "active": 0.008980401621244916
+    },
+    {
+      "rebalance_date": "2012-03-30",
+      "basket_net": 0.029451710804273556,
+      "benchmark_net": -0.000908813297450406,
+      "active": 0.030360524101723962
+    },
+    {
+      "rebalance_date": "2012-04-30",
+      "basket_net": 0.025120550989884194,
+      "benchmark_net": -0.010413461441076244,
+      "active": 0.03553401243096044
+    },
+    {
+      "rebalance_date": "2012-05-31",
+      "basket_net": -0.028306013310698486,
+      "benchmark_net": -0.07522251219642995,
+      "active": 0.04691649888573146
+    },
+    {
+      "rebalance_date": "2012-06-29",
+      "basket_net": 0.02094098323585669,
+      "benchmark_net": 0.0667582356744858,
+      "active": -0.04581725243862911
+    },
+    {
+      "rebalance_date": "2012-07-31",
+      "basket_net": 0.003866803987061296,
+      "benchmark_net": -0.01702476974690592,
+      "active": 0.020891573733967217
+    },
+    {
+      "rebalance_date": "2012-08-31",
+      "basket_net": 0.023398496823178405,
+      "benchmark_net": 0.0033439352009914103,
+      "active": 0.020054561622186995
+    },
+    {
+      "rebalance_date": "2012-09-28",
+      "basket_net": 0.06603093497648604,
+      "benchmark_net": 0.10598546985989121,
+      "active": -0.03995453488340517
+    },
+    {
+      "rebalance_date": "2012-10-31",
+      "basket_net": 0.0084572515056347,
+      "benchmark_net": -0.015498657034218044,
+      "active": 0.023955908539852744
+    },
+    {
+      "rebalance_date": "2012-11-30",
+      "basket_net": 0.06533049734158913,
+      "benchmark_net": 0.04517292404752005,
+      "active": 0.020157573294069087
+    },
+    {
+      "rebalance_date": "2012-12-31",
+      "basket_net": 0.02379611901694445,
+      "benchmark_net": 0.043654670995211475,
+      "active": -0.019858551978267025
+    },
+    {
+      "rebalance_date": "2013-01-31",
+      "basket_net": -0.025176593221889254,
+      "benchmark_net": -0.021072156848296997,
+      "active": -0.004104436373592257
+    },
+    {
+      "rebalance_date": "2013-02-28",
+      "basket_net": -0.08666256286184926,
+      "benchmark_net": -0.09773047381592581,
+      "active": 0.011067910954076554
+    },
+    {
+      "rebalance_date": "2013-03-28",
+      "basket_net": -0.015510710377099612,
+      "benchmark_net": -0.04162489280134041,
+      "active": 0.026114182424240795
+    },
+    {
+      "rebalance_date": "2013-04-30",
+      "basket_net": 0.03926553627989815,
+      "benchmark_net": 0.03724022008273775,
+      "active": 0.0020253161971603983
+    },
+    {
+      "rebalance_date": "2013-05-31",
+      "basket_net": 0.03284373411604369,
+      "benchmark_net": -0.005945432742701207,
+      "active": 0.038789166858744895
+    },
+    {
+      "rebalance_date": "2013-06-28",
+      "basket_net": -0.029705704957392776,
+      "benchmark_net": -0.07267546413541814,
+      "active": 0.04296975917802537
+    },
+    {
+      "rebalance_date": "2013-07-31",
+      "basket_net": -0.03081030415269237,
+      "benchmark_net": -0.06383764067992825,
+      "active": 0.033027336527235884
+    },
+    {
+      "rebalance_date": "2013-08-30",
+      "basket_net": -0.06167798868383989,
+      "benchmark_net": -0.03843659198252214,
+      "active": -0.02324139670131775
+    },
+    {
+      "rebalance_date": "2013-09-30",
+      "basket_net": 0.10973218647657856,
+      "benchmark_net": 0.08219039079938462,
+      "active": 0.027541795677193948
+    },
+    {
+      "rebalance_date": "2013-10-31",
+      "basket_net": 0.08877759608678137,
+      "benchmark_net": 0.10394072689814027,
+      "active": -0.015163130811358894
+    },
+    {
+      "rebalance_date": "2013-11-29",
+      "basket_net": 0.05596857239304098,
+      "benchmark_net": 0.04227124063637255,
+      "active": 0.01369733175666843
+    },
+    {
+      "rebalance_date": "2013-12-31",
+      "basket_net": 0.049135525203461095,
+      "benchmark_net": 0.07100957000062813,
+      "active": -0.021874044797167036
+    },
+    {
+      "rebalance_date": "2014-01-31",
+      "basket_net": -0.02235325298578683,
+      "benchmark_net": -0.06626617991578598,
+      "active": 0.04391292692999915
+    },
+    {
+      "rebalance_date": "2014-02-28",
+      "basket_net": 0.06412518440071979,
+      "benchmark_net": 0.03847591751363688,
+      "active": 0.02564926688708291
+    },
+    {
+      "rebalance_date": "2014-03-31",
+      "basket_net": 0.018657001294976716,
+      "benchmark_net": 0.12187016847539223,
+      "active": -0.10321316718041551
+    },
+    {
+      "rebalance_date": "2014-04-30",
+      "basket_net": 0.06491733359139173,
+      "benchmark_net": 0.0417288963313347,
+      "active": 0.023188437260057038
+    },
+    {
+      "rebalance_date": "2014-05-30",
+      "basket_net": 0.11683280526145556,
+      "benchmark_net": 0.18024138056614047,
+      "active": -0.06340857530468491
+    },
+    {
+      "rebalance_date": "2014-06-30",
+      "basket_net": 0.191062433433977,
+      "benchmark_net": 0.12243952084655474,
+      "active": 0.06862291258742226
+    },
+    {
+      "rebalance_date": "2014-07-31",
+      "basket_net": -0.017251828243391887,
+      "benchmark_net": -0.03023933630351927,
+      "active": 0.012987508060127384
+    },
+    {
+      "rebalance_date": "2014-08-28",
+      "basket_net": 0.060013963588800845,
+      "benchmark_net": 0.03278445291222143,
+      "active": 0.027229510676579416
+    },
+    {
+      "rebalance_date": "2014-09-30",
+      "basket_net": 0.09806356335932365,
+      "benchmark_net": 0.03820676282117841,
+      "active": 0.05985680053814524
+    },
+    {
+      "rebalance_date": "2014-10-31",
+      "basket_net": 0.057677397473569814,
+      "benchmark_net": 0.04386351382328124,
+      "active": 0.013813883650288572
+    },
+    {
+      "rebalance_date": "2014-11-28",
+      "basket_net": 0.05864087838724985,
+      "benchmark_net": 0.03585895146834073,
+      "active": 0.022781926918909123
+    },
+    {
+      "rebalance_date": "2014-12-31",
+      "basket_net": -0.005837057161669823,
+      "benchmark_net": 0.007520844190616938,
+      "active": -0.01335790135228676
+    },
+    {
+      "rebalance_date": "2015-01-30",
+      "basket_net": 0.0712991595292225,
+      "benchmark_net": 0.037976667377760176,
+      "active": 0.033322492151462324
+    },
+    {
+      "rebalance_date": "2015-02-27",
+      "basket_net": 0.02548018402863228,
+      "benchmark_net": 0.021737799378968692,
+      "active": 0.003742384649663588
+    },
+    {
+      "rebalance_date": "2015-03-31",
+      "basket_net": 0.030515174103141307,
+      "benchmark_net": -0.0074678507915859615,
+      "active": 0.03798302489472727
+    },
+    {
+      "rebalance_date": "2015-04-30",
+      "basket_net": 0.002768072712132641,
+      "benchmark_net": -0.013391866256593166,
+      "active": 0.016159938968725807
+    },
+    {
+      "rebalance_date": "2015-05-29",
+      "basket_net": 0.03283136991630853,
+      "benchmark_net": 0.0172256921931484,
+      "active": 0.015605677723160127
+    },
+    {
+      "rebalance_date": "2015-06-30",
+      "basket_net": 0.0022083145165285867,
+      "benchmark_net": -0.012301246497276153,
+      "active": 0.01450956101380474
+    },
+    {
+      "rebalance_date": "2015-07-31",
+      "basket_net": 0.12273705171951121,
+      "benchmark_net": 0.06810418053422085,
+      "active": 0.054632871185290366
+    },
+    {
+      "rebalance_date": "2015-08-31",
+      "basket_net": -0.036226833517133517,
+      "benchmark_net": -0.06538666184862396,
+      "active": 0.029159828331490445
+    },
+    {
+      "rebalance_date": "2015-09-30",
+      "basket_net": 0.036955573460146995,
+      "benchmark_net": 0.0322114360107002,
+      "active": 0.004744137449446795
+    },
+    {
+      "rebalance_date": "2015-10-30",
+      "basket_net": -0.00045449240582984274,
+      "benchmark_net": 0.0247971133102316,
+      "active": -0.025251605716061443
+    },
+    {
+      "rebalance_date": "2015-11-30",
+      "basket_net": 0.010478472641809233,
+      "benchmark_net": 0.02266524940073844,
+      "active": -0.012186776758929208
+    },
+    {
+      "rebalance_date": "2015-12-31",
+      "basket_net": 0.025752446823981145,
+      "benchmark_net": 0.01027397032521371,
+      "active": 0.015478476498767435
+    },
+    {
+      "rebalance_date": "2016-01-29",
+      "basket_net": -0.09408459094455934,
+      "benchmark_net": -0.08898012227168084,
+      "active": -0.005104468672878504
+    },
+    {
+      "rebalance_date": "2016-02-29",
+      "basket_net": -0.15882140211954276,
+      "benchmark_net": -0.10608718974242004,
+      "active": -0.052734212377122724
+    },
+    {
+      "rebalance_date": "2016-03-31",
+      "basket_net": 0.16345363916450628,
+      "benchmark_net": 0.13234395336119587,
+      "active": 0.031109685803310416
+    },
+    {
+      "rebalance_date": "2016-04-29",
+      "basket_net": 0.04051728343598793,
+      "benchmark_net": 0.03976146143606818,
+      "active": 0.000755821999919748
+    },
+    {
+      "rebalance_date": "2016-05-31",
+      "basket_net": 0.0010708541140433958,
+      "benchmark_net": 0.014724079189387673,
+      "active": -0.013653225075344277
+    },
+    {
+      "rebalance_date": "2016-06-30",
+      "basket_net": 0.0451815842143195,
+      "benchmark_net": 0.06672940231722069,
+      "active": -0.021547818102901184
+    },
+    {
+      "rebalance_date": "2016-07-29",
+      "basket_net": 0.049272893193544,
+      "benchmark_net": 0.06190311261163117,
+      "active": -0.012630219418087174
+    },
+    {
+      "rebalance_date": "2016-08-31",
+      "basket_net": 0.02629658442829408,
+      "benchmark_net": 0.02402883221227925,
+      "active": 0.002267752216014829
+    },
+    {
+      "rebalance_date": "2016-09-30",
+      "basket_net": 0.016120070084699734,
+      "benchmark_net": 0.004474875255603861,
+      "active": 0.011645194829095873
+    },
+    {
+      "rebalance_date": "2016-10-28",
+      "basket_net": 0.08101241061601616,
+      "benchmark_net": 0.057280118505491195,
+      "active": 0.023732292110524966
+    },
+    {
+      "rebalance_date": "2016-11-30",
+      "basket_net": -0.09104951121978311,
+      "benchmark_net": -0.06225365687058326,
+      "active": -0.028795854349199845
+    },
+    {
+      "rebalance_date": "2016-12-30",
+      "basket_net": -0.04372682698331676,
+      "benchmark_net": -0.019656249110068358,
+      "active": -0.0240705778732484
+    },
+    {
+      "rebalance_date": "2017-01-31",
+      "basket_net": 0.09023544724563326,
+      "benchmark_net": 0.07629960245638934,
+      "active": 0.013935844789243923
+    },
+    {
+      "rebalance_date": "2017-02-28",
+      "basket_net": 0.07210784499316114,
+      "benchmark_net": 0.06330362659904276,
+      "active": 0.00880421839411838
+    },
+    {
+      "rebalance_date": "2017-03-31",
+      "basket_net": 0.05413625771119124,
+      "benchmark_net": 0.0485858952995355,
+      "active": 0.00555036241165574
+    },
+    {
+      "rebalance_date": "2017-04-28",
+      "basket_net": 0.0945644337928846,
+      "benchmark_net": 0.06203144068599675,
+      "active": 0.03253299310688784
+    },
+    {
+      "rebalance_date": "2017-05-31",
+      "basket_net": 0.00027779976402708684,
+      "benchmark_net": -0.019891796562423902,
+      "active": 0.02016959632645099
+    },
+    {
+      "rebalance_date": "2017-06-30",
+      "basket_net": 0.029008453640942733,
+      "benchmark_net": 0.018153695464915742,
+      "active": 0.01085475817602699
+    },
+    {
+      "rebalance_date": "2017-07-31",
+      "basket_net": 0.07426357833413033,
+      "benchmark_net": 0.05882246384579837,
+      "active": 0.015441114488331964
+    },
+    {
+      "rebalance_date": "2017-08-31",
+      "basket_net": 0.04400571457385882,
+      "benchmark_net": -0.0022575728636691217,
+      "active": 0.046263287437527945
+    },
+    {
+      "rebalance_date": "2017-09-29",
+      "basket_net": 0.07696873817158001,
+      "benchmark_net": 0.023749644362226263,
+      "active": 0.053219093809353746
+    },
+    {
+      "rebalance_date": "2017-10-31",
+      "basket_net": 0.12066506536036936,
+      "benchmark_net": 0.09516403478113711,
+      "active": 0.025501030579232253
+    },
+    {
+      "rebalance_date": "2017-11-30",
+      "basket_net": 0.002478410447650292,
+      "benchmark_net": 0.02047789946034917,
+      "active": -0.017999489012698877
+    },
+    {
+      "rebalance_date": "2017-12-29",
+      "basket_net": 0.06318913408667548,
+      "benchmark_net": 0.053068232624179146,
+      "active": 0.010120901462496334
+    },
+    {
+      "rebalance_date": "2018-01-31",
+      "basket_net": 0.028470257079435957,
+      "benchmark_net": -0.014982830739021402,
+      "active": 0.04345308781845736
+    },
+    {
+      "rebalance_date": "2018-02-28",
+      "basket_net": -0.030937683350368506,
+      "benchmark_net": -0.03568313276353918,
+      "active": 0.004745449413170677
+    },
+    {
+      "rebalance_date": "2018-03-28",
+      "basket_net": -0.05956895531607598,
+      "benchmark_net": -0.0571207984687101,
+      "active": -0.002448156847365879
+    },
+    {
+      "rebalance_date": "2018-04-30",
+      "basket_net": 0.08834012829991367,
+      "benchmark_net": 0.07073358642952887,
+      "active": 0.017606541870384795
+    },
+    {
+      "rebalance_date": "2018-05-31",
+      "basket_net": -0.05141890439217134,
+      "benchmark_net": -0.06176837732936724,
+      "active": 0.010349472937195903
+    },
+    {
+      "rebalance_date": "2018-06-29",
+      "basket_net": -0.04303289716764325,
+      "benchmark_net": -0.05274361905134051,
+      "active": 0.00971072188369726
+    },
+    {
+      "rebalance_date": "2018-07-31",
+      "basket_net": 0.04002035413861904,
+      "benchmark_net": 0.0449860114777727,
+      "active": -0.004965657339153662
+    },
+    {
+      "rebalance_date": "2018-08-31",
+      "basket_net": 0.0645463179560668,
+      "benchmark_net": 0.03955854359979294,
+      "active": 0.024987774356273862
+    },
+    {
+      "rebalance_date": "2018-09-28",
+      "basket_net": -0.14249342530183962,
+      "benchmark_net": -0.14520693506198257,
+      "active": 0.0027135097601429514
+    },
+    {
+      "rebalance_date": "2018-10-31",
+      "basket_net": 0.007639302821652594,
+      "benchmark_net": 0.009196110784728706,
+      "active": -0.0015568079630761122
+    },
+    {
+      "rebalance_date": "2018-11-30",
+      "basket_net": 0.00335096404711277,
+      "benchmark_net": 0.02040057804704909,
+      "active": -0.01704961399993632
+    },
+    {
+      "rebalance_date": "2018-12-31",
+      "basket_net": -0.00019178197272551323,
+      "benchmark_net": 0.02412151629330528,
+      "active": -0.02431329826603079
+    },
+    {
+      "rebalance_date": "2019-01-31",
+      "basket_net": -0.036599401716594815,
+      "benchmark_net": -0.05157354714366569,
+      "active": 0.014974145427070873
+    },
+    {
+      "rebalance_date": "2019-02-28",
+      "basket_net": -0.015465415036704289,
+      "benchmark_net": -0.009127225327401733,
+      "active": -0.006338189709302555
+    },
+    {
+      "rebalance_date": "2019-03-28",
+      "basket_net": 0.07236181367303596,
+      "benchmark_net": 0.09664830511766964,
+      "active": -0.024286491444633684
+    },
+    {
+      "rebalance_date": "2019-04-30",
+      "basket_net": -0.013786821526061477,
+      "benchmark_net": -0.03914224775898589,
+      "active": 0.025355426232924416
+    },
+    {
+      "rebalance_date": "2019-05-31",
+      "basket_net": 0.020945514774876273,
+      "benchmark_net": 0.016425087670541183,
+      "active": 0.00452042710433509
+    },
+    {
+      "rebalance_date": "2019-06-28",
+      "basket_net": -0.019827508811183225,
+      "benchmark_net": -0.03415038579117313,
+      "active": 0.014322876979989907
+    },
+    {
+      "rebalance_date": "2019-07-31",
+      "basket_net": -0.08916930949025437,
+      "benchmark_net": -0.09801410556892909,
+      "active": 0.008844796078674722
+    },
+    {
+      "rebalance_date": "2019-08-30",
+      "basket_net": 0.0010069134581207617,
+      "benchmark_net": -0.01162630718518376,
+      "active": 0.012633220643304521
+    },
+    {
+      "rebalance_date": "2019-09-30",
+      "basket_net": 0.08051154970083574,
+      "benchmark_net": 0.058702582283246985,
+      "active": 0.021808967417588754
+    },
+    {
+      "rebalance_date": "2019-10-31",
+      "basket_net": 0.05439405036710787,
+      "benchmark_net": 0.05520633320770241,
+      "active": -0.0008122828405945359
+    },
+    {
+      "rebalance_date": "2019-11-29",
+      "basket_net": 0.011241935956311622,
+      "benchmark_net": 0.01573436877770762,
+      "active": -0.004492432821395997
+    },
+    {
+      "rebalance_date": "2019-12-31",
+      "basket_net": 0.0263391180306356,
+      "benchmark_net": -0.002408454643767488,
+      "active": 0.028747572674403088
+    },
+    {
+      "rebalance_date": "2020-01-31",
+      "basket_net": 0.01666420498031851,
+      "benchmark_net": 0.006705261183971523,
+      "active": 0.009958943796346986
+    },
+    {
+      "rebalance_date": "2020-02-28",
+      "basket_net": 0.0031753645092580385,
+      "benchmark_net": -0.04270952725488886,
+      "active": 0.045884891764146896
+    },
+    {
+      "rebalance_date": "2020-03-31",
+      "basket_net": -0.27730738782266606,
+      "benchmark_net": -0.2927683233515239,
+      "active": 0.015460935528857855
+    },
+    {
+      "rebalance_date": "2020-04-30",
+      "basket_net": 0.1165117551208712,
+      "benchmark_net": 0.13120473309774705,
+      "active": -0.014692977976875854
+    },
+    {
+      "rebalance_date": "2020-05-29",
+      "basket_net": 0.03703983633013719,
+      "benchmark_net": 0.023622336047761427,
+      "active": 0.01341750028237576
+    },
+    {
+      "rebalance_date": "2020-06-30",
+      "basket_net": 0.07477536444123545,
+      "benchmark_net": 0.1556466058516328,
+      "active": -0.08087124141039737
+    },
+    {
+      "rebalance_date": "2020-07-31",
+      "basket_net": 0.07513478515833794,
+      "benchmark_net": 0.043214105320257046,
+      "active": 0.03192067983808089
+    },
+    {
+      "rebalance_date": "2020-08-31",
+      "basket_net": 0.050127549119833414,
+      "benchmark_net": 0.10326614321414906,
+      "active": -0.05313859409431565
+    },
+    {
+      "rebalance_date": "2020-09-30",
+      "basket_net": 0.09365959499482246,
+      "benchmark_net": 0.01306956329813791,
+      "active": 0.08059003169668455
+    },
+    {
+      "rebalance_date": "2020-10-30",
+      "basket_net": 0.0015102758602325572,
+      "benchmark_net": -0.0023011227017775138,
+      "active": 0.003811398562010071
+    },
+    {
+      "rebalance_date": "2020-11-27",
+      "basket_net": 0.10269122703360223,
+      "benchmark_net": 0.149289490241876,
+      "active": -0.04659826320827376
+    },
+    {
+      "rebalance_date": "2020-12-31",
+      "basket_net": 0.0822621988979928,
+      "benchmark_net": 0.08729327975980206,
+      "active": -0.005031080861809256
+    },
+    {
+      "rebalance_date": "2021-01-29",
+      "basket_net": 0.0217379289522166,
+      "benchmark_net": 0.02162472551924166,
+      "active": 0.00011320343297493984
+    },
+    {
+      "rebalance_date": "2021-02-26",
+      "basket_net": 0.1288647819374662,
+      "benchmark_net": 0.14304866021176355,
+      "active": -0.014183878274297346
+    },
+    {
+      "rebalance_date": "2021-03-31",
+      "basket_net": 0.029431196085679012,
+      "benchmark_net": 0.010145327001380489,
+      "active": 0.019285869084298524
+    },
+    {
+      "rebalance_date": "2021-04-30",
+      "basket_net": 0.06321371398301201,
+      "benchmark_net": 0.016726199759072857,
+      "active": 0.04648751422393915
+    },
+    {
+      "rebalance_date": "2021-05-31",
+      "basket_net": 0.08840105003804188,
+      "benchmark_net": 0.11356573060943798,
+      "active": -0.025164680571396092
+    },
+    {
+      "rebalance_date": "2021-06-30",
+      "basket_net": 0.09735623694580187,
+      "benchmark_net": 0.0680802912632188,
+      "active": 0.02927594568258307
+    },
+    {
+      "rebalance_date": "2021-07-30",
+      "basket_net": 0.08619261862190553,
+      "benchmark_net": 0.056156864385397354,
+      "active": 0.030035754236508172
+    },
+    {
+      "rebalance_date": "2021-08-31",
+      "basket_net": 0.004842307512276101,
+      "benchmark_net": -0.007436346444978814,
+      "active": 0.012278653957254915
+    },
+    {
+      "rebalance_date": "2021-09-30",
+      "basket_net": 0.05920404248300315,
+      "benchmark_net": 0.06428836725612341,
+      "active": -0.005084324773120263
+    },
+    {
+      "rebalance_date": "2021-10-29",
+      "basket_net": 0.03974100349174381,
+      "benchmark_net": 0.018612802228215042,
+      "active": 0.021128201263528767
+    },
+    {
+      "rebalance_date": "2021-11-30",
+      "basket_net": 0.030861927600816852,
+      "benchmark_net": -0.007716798864987329,
+      "active": 0.03857872646580418
+    },
+    {
+      "rebalance_date": "2021-12-31",
+      "basket_net": 0.08641825001930781,
+      "benchmark_net": 0.040335608625178265,
+      "active": 0.04608264139412954
+    },
+    {
+      "rebalance_date": "2022-01-31",
+      "basket_net": 0.03791983717092395,
+      "benchmark_net": 0.02058220714162351,
+      "active": 0.017337630029300444
+    },
+    {
+      "rebalance_date": "2022-02-28",
+      "basket_net": -0.08852834058799097,
+      "benchmark_net": -0.08987762994754256,
+      "active": 0.0013492893595515865
+    },
+    {
+      "rebalance_date": "2022-03-31",
+      "basket_net": 0.10720230722944346,
+      "benchmark_net": 0.05793528807294046,
+      "active": 0.049267019156503
+    },
+    {
+      "rebalance_date": "2022-04-29",
+      "basket_net": 0.012125307953326114,
+      "benchmark_net": 0.03617503367594943,
+      "active": -0.024049725722623316
+    },
+    {
+      "rebalance_date": "2022-05-31",
+      "basket_net": -0.07489576608254334,
+      "benchmark_net": -0.05301329624328499,
+      "active": -0.021882469839258345
+    },
+    {
+      "rebalance_date": "2022-06-30",
+      "basket_net": -0.0656129655134099,
+      "benchmark_net": -0.058616928659866674,
+      "active": -0.006996036853543219
+    },
+    {
+      "rebalance_date": "2022-07-29",
+      "basket_net": 0.11267354128458185,
+      "benchmark_net": 0.11630327906206506,
+      "active": -0.0036297377774832107
+    },
+    {
+      "rebalance_date": "2022-08-30",
+      "basket_net": 0.07453238688221431,
+      "benchmark_net": 0.06263465367786702,
+      "active": 0.011897733204347283
+    },
+    {
+      "rebalance_date": "2022-09-30",
+      "basket_net": -0.0008435478269303021,
+      "benchmark_net": -0.0028118241709009784,
+      "active": 0.0019682763439706763
+    },
+    {
+      "rebalance_date": "2022-10-31",
+      "basket_net": 0.03881949729990586,
+      "benchmark_net": 0.033233869960108686,
+      "active": 0.005585627339797172
+    },
+    {
+      "rebalance_date": "2022-11-30",
+      "basket_net": 0.02410025589288245,
+      "benchmark_net": 0.05213634252445121,
+      "active": -0.028036086631568757
+    },
+    {
+      "rebalance_date": "2022-12-30",
+      "basket_net": -0.007731090710361932,
+      "benchmark_net": -0.006296218713999102,
+      "active": -0.0014348719963628298
+    },
+    {
+      "rebalance_date": "2023-01-31",
+      "basket_net": -0.015078626970825404,
+      "benchmark_net": -0.015387116666736977,
+      "active": 0.0003084896959115735
+    },
+    {
+      "rebalance_date": "2023-02-28",
+      "basket_net": -0.07210485832237079,
+      "benchmark_net": -0.03851776166101428,
+      "active": -0.03358709666135651
+    },
+    {
+      "rebalance_date": "2023-03-31",
+      "basket_net": 0.031943497214464545,
+      "benchmark_net": 0.010296943872603936,
+      "active": 0.021646553341860608
+    },
+    {
+      "rebalance_date": "2023-04-28",
+      "basket_net": 0.10125121844239748,
+      "benchmark_net": 0.07469029754483825,
+      "active": 0.026560920897559237
+    },
+    {
+      "rebalance_date": "2023-05-31",
+      "basket_net": 0.07021909204257293,
+      "benchmark_net": 0.06083641387258165,
+      "active": 0.009382678169991276
+    },
+    {
+      "rebalance_date": "2023-06-30",
+      "basket_net": 0.1116245508215703,
+      "benchmark_net": 0.07846853003434817,
+      "active": 0.03315602078722213
+    },
+    {
+      "rebalance_date": "2023-07-31",
+      "basket_net": 0.13621952102838653,
+      "benchmark_net": 0.08658317307972951,
+      "active": 0.04963634794865701
+    },
+    {
+      "rebalance_date": "2023-08-31",
+      "basket_net": 0.10378980489559098,
+      "benchmark_net": 0.06259593848191503,
+      "active": 0.04119386641367595
+    },
+    {
+      "rebalance_date": "2023-09-29",
+      "basket_net": 0.05206386280125708,
+      "benchmark_net": 0.03934042861836251,
+      "active": 0.012723434182894566
+    },
+    {
+      "rebalance_date": "2023-10-31",
+      "basket_net": -0.016033257984950033,
+      "benchmark_net": -0.01563937869589449,
+      "active": -0.00039387928905554315
+    },
+    {
+      "rebalance_date": "2023-11-30",
+      "basket_net": 0.12864159227855,
+      "benchmark_net": 0.10946981957167412,
+      "active": 0.019171772706875867
+    },
+    {
+      "rebalance_date": "2023-12-29",
+      "basket_net": 0.06841566549775013,
+      "benchmark_net": 0.0743576176590457,
+      "active": -0.005941952161295561
+    },
+    {
+      "rebalance_date": "2024-01-31",
+      "basket_net": 0.14288348993238054,
+      "benchmark_net": 0.08019361180003015,
+      "active": 0.06268987813235039
+    },
+    {
+      "rebalance_date": "2024-02-29",
+      "basket_net": 0.01689815553755225,
+      "benchmark_net": 0.017489441432062547,
+      "active": -0.0005912858945102961
+    },
+    {
+      "rebalance_date": "2024-03-28",
+      "basket_net": -0.03146309119009649,
+      "benchmark_net": -0.015798926848608508,
+      "active": -0.015664164341487985
+    },
+    {
+      "rebalance_date": "2024-04-30",
+      "basket_net": 0.12062143912014633,
+      "benchmark_net": 0.09249869754386086,
+      "active": 0.02812274157628547
+    },
+    {
+      "rebalance_date": "2024-05-31",
+      "basket_net": 0.08897318356375372,
+      "benchmark_net": 0.0518479284391169,
+      "active": 0.037125255124636825
+    },
+    {
+      "rebalance_date": "2024-06-28",
+      "basket_net": 0.024483473968796465,
+      "benchmark_net": 0.0576154042935475,
+      "active": -0.033131930324751035
+    },
+    {
+      "rebalance_date": "2024-07-31",
+      "basket_net": 0.06458270705564684,
+      "benchmark_net": 0.06498807874330725,
+      "active": -0.0004053716876604163
+    },
+    {
+      "rebalance_date": "2024-08-30",
+      "basket_net": 0.003216092444153995,
+      "benchmark_net": 0.013421987859471907,
+      "active": -0.010205895415317912
+    },
+    {
+      "rebalance_date": "2024-09-30",
+      "basket_net": -0.0062087695455042,
+      "benchmark_net": 0.01484776770279761,
+      "active": -0.02105653724830181
+    },
+    {
+      "rebalance_date": "2024-10-31",
+      "basket_net": -0.032206786786667,
+      "benchmark_net": -0.04422610408032657,
+      "active": 0.01201931729365957
+    },
+    {
+      "rebalance_date": "2024-11-29",
+      "basket_net": 0.01229566405208704,
+      "benchmark_net": 0.0008787877132199196,
+      "active": 0.011416876338867121
+    },
+    {
+      "rebalance_date": "2024-12-31",
+      "basket_net": 0.022398740787600735,
+      "benchmark_net": 0.0005544534552537339,
+      "active": 0.021844287332347
+    },
+    {
+      "rebalance_date": "2025-01-31",
+      "basket_net": -0.12402654086681697,
+      "benchmark_net": -0.07892450708003085,
+      "active": -0.04510203378678612
+    },
+    {
+      "rebalance_date": "2025-02-28",
+      "basket_net": -0.11579061905344845,
+      "benchmark_net": -0.10749175881618422,
+      "active": -0.008298860237264227
+    },
+    {
+      "rebalance_date": "2025-03-28",
+      "basket_net": 0.13144811177272842,
+      "benchmark_net": 0.0939062310797163,
+      "active": 0.03754188069301212
+    },
+    {
+      "rebalance_date": "2025-04-30",
+      "basket_net": 0.02197602694048917,
+      "benchmark_net": 0.027145520956122438,
+      "active": -0.005169494015633269
+    },
+    {
+      "rebalance_date": "2025-05-30",
+      "basket_net": 0.09472173875093581,
+      "benchmark_net": 0.09728834669800834,
+      "active": -0.00256660794707253
+    },
+    {
+      "rebalance_date": "2025-06-30",
+      "basket_net": 0.06748920146928405,
+      "benchmark_net": 0.04596629969171517,
+      "active": 0.02152290177756888
+    },
+    {
+      "rebalance_date": "2025-07-31",
+      "basket_net": -0.006172559271839018,
+      "benchmark_net": -0.021047258426651227,
+      "active": 0.01487469915481221
+    },
+    {
+      "rebalance_date": "2025-08-29",
+      "basket_net": -0.027716534911757185,
+      "benchmark_net": -0.024326479369098486,
+      "active": -0.0033900555426586987
+    },
+    {
+      "rebalance_date": "2025-09-30",
+      "basket_net": 0.003762360258676045,
+      "benchmark_net": 0.025182484038496433,
+      "active": -0.021420123779820388
+    },
+    {
+      "rebalance_date": "2025-10-31",
+      "basket_net": 0.04484295899524393,
+      "benchmark_net": 0.03839171446219258,
+      "active": 0.006451244533051348
+    },
+    {
+      "rebalance_date": "2025-11-28",
+      "basket_net": 0.008143988811355696,
+      "benchmark_net": -0.012709367516756553,
+      "active": 0.02085335632811225
+    },
+    {
+      "rebalance_date": "2025-12-31",
+      "basket_net": 0.018703914536255528,
+      "benchmark_net": -0.0037543709557157356,
+      "active": 0.022458285491971264
+    },
+    {
+      "rebalance_date": "2026-01-30",
+      "basket_net": -0.053021964900315854,
+      "benchmark_net": -0.0655857834866378,
+      "active": 0.01256381858632194
+    },
+    {
+      "rebalance_date": "2026-02-27",
+      "basket_net": 0.019886393006274927,
+      "benchmark_net": -0.001669490510516125,
+      "active": 0.021555883516791052
+    },
+    {
+      "rebalance_date": "2026-03-30",
+      "basket_net": -0.03685529258535658,
+      "benchmark_net": -0.04667705334033312,
+      "active": 0.009821760754976538
+    },
+    {
+      "rebalance_date": "2026-04-30",
+      "basket_net": 0.13754203045784963,
+      "benchmark_net": 0.14888424442046633,
+      "active": -0.011342213962616698
+    },
+    {
+      "rebalance_date": "2026-05-29",
+      "basket_net": 0.03943074619162701,
+      "benchmark_net": 0.013343151624279015,
+      "active": 0.026087594567347994
+    },
+    {
+      "rebalance_date": "2026-06-30",
+      "basket_net": 0.036070478947579865,
+      "benchmark_net": 0.027851135113110992,
+      "active": 0.008219343834468873
+    },
+    {
+      "rebalance_date": "2026-07-31",
+      "basket_net": -0.005528296114828191,
+      "benchmark_net": 0.018125264907601135,
+      "active": -0.023653561022429326
+    },
+    {
+      "rebalance_date": "2026-08-31",
+      "basket_net": 0.04850929364041057,
+      "benchmark_net": 0.009940025451391055,
+      "active": 0.03856926818901951
+    },
+    {
+      "rebalance_date": "2026-09-30",
+      "basket_net": -0.034762835370725886,
+      "benchmark_net": -0.04976313470750282,
+      "active": 0.015000299336776934
+    }
+  ],
+  "ir": 1.0085322482017618,
+  "ci_lower": 0.5325154945657432,
+  "ci_upper": 1.584546179715467,
+  "outcome": "Candidate",
+  "basket": {
+    "standalone_ir": 1.3915809274846755,
+    "total_costs": 40320195.89572701,
+    "avg_turnover_after_entry": 0.4840886098143285,
+    "invested_min": 0.9949918371673233,
+    "invested_mean": 0.9949951011055221,
+    "invested_max": 0.9949974138575788,
+    "carried_names": 2,
+    "skipped_buys": 0,
+    "final_equity": 1023597486.5755199,
+    "amendment_3": {
+      "held_adv_fallback": {
+        "count": 8,
+        "uses": [
+          {
+            "rebalance": "2024-02-29",
+            "symbol": "FORCEMOT",
+            "source_date": "2023-12-06",
+            "adv": 73511029.46305726
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "CRAFTSMAN",
+            "source_date": "2026-01-14",
+            "adv": 451564598.76584977
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "GALLANTT",
+            "source_date": "2026-01-14",
+            "adv": 279564552.4350363
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "NAVINFLUOR",
+            "source_date": "2026-01-14",
+            "adv": 1593624098.131371
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "PFOCUS",
+            "source_date": "2026-01-14",
+            "adv": 1134342000.8325443
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "PRIVISCL",
+            "source_date": "2026-01-14",
+            "adv": 627297659.4414217
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "PTCIL",
+            "source_date": "2026-01-14",
+            "adv": 301194401.984127
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "SOLARINDS",
+            "source_date": "2026-01-14",
+            "adv": 1572852085.6453218
+          }
+        ]
+      },
+      "unheld_target_no_open": {
+        "count": 0,
+        "uses": []
+      },
+      "held_no_open": {
+        "count": 2,
+        "uses": [
+          {
+            "rebalance": "2023-12-29",
+            "exec_day": "2024-01-01",
+            "symbol": "FORCEMOT",
+            "source_date": "2023-12-06",
+            "price": 3327.515625,
+            "value": 6800067.972108335
+          },
+          {
+            "rebalance": "2024-01-31",
+            "exec_day": "2024-02-01",
+            "symbol": "FORCEMOT",
+            "source_date": "2023-12-06",
+            "price": 3327.515625,
+            "value": 6800067.972108335
+          }
+        ]
+      },
+      "resumed_held_trades": {
+        "count": 1,
+        "uses": [
+          {
+            "rebalance": "2024-02-29",
+            "symbol": "FORCEMOT",
+            "action": "sold"
+          }
+        ]
+      },
+      "carried_invested": {
+        "count": 2,
+        "uses": [
+          {
+            "rebalance": "2023-12-29",
+            "symbol": "FORCEMOT",
+            "value": 6800067.972108335
+          },
+          {
+            "rebalance": "2024-01-31",
+            "symbol": "FORCEMOT",
+            "value": 6800067.972108335
+          }
+        ]
+      }
+    }
+  },
+  "benchmark": {
+    "standalone_ir": 0.978864878389071,
+    "total_costs": 2323755.7524694144,
+    "avg_turnover_after_entry": 0.10948257981218487,
+    "invested_min": 0.994992502624145,
+    "invested_mean": 0.9949988679773268,
+    "invested_max": 0.9949994095099521,
+    "carried_names": 2,
+    "skipped_buys": 0,
+    "final_equity": 228663766.2568128,
+    "amendment_3": {
+      "held_adv_fallback": {
+        "count": 43,
+        "uses": [
+          {
+            "rebalance": "2024-02-29",
+            "symbol": "FORCEMOT",
+            "source_date": "2023-12-06",
+            "adv": 73511029.46305726
+          },
+          {
+            "rebalance": "2024-03-28",
+            "symbol": "BIRET",
+            "source_date": "2024-03-14",
+            "adv": 70090718.17163473
+          },
+          {
+            "rebalance": "2024-03-28",
+            "symbol": "EMBASSY",
+            "source_date": "2024-03-14",
+            "adv": 433051658.8917241
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "360ONE",
+            "source_date": "2026-01-14",
+            "adv": 901265031.48391
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "AEGISLOG",
+            "source_date": "2026-01-14",
+            "adv": 264061859.22343615
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "AIAENG",
+            "source_date": "2026-01-14",
+            "adv": 301190766.21850973
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "AJANTPHARM",
+            "source_date": "2026-01-14",
+            "adv": 323758097.7546154
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "ALKEM",
+            "source_date": "2026-01-14",
+            "adv": 673109822.8880984
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "AUROPHARMA",
+            "source_date": "2026-01-14",
+            "adv": 1203324024.2082946
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "AVANTIFEED",
+            "source_date": "2026-01-14",
+            "adv": 700793122.674545
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "BHARATFORG",
+            "source_date": "2026-01-14",
+            "adv": 1329001725.0998516
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "CARBORUNIV",
+            "source_date": "2026-01-14",
+            "adv": 204437166.13181946
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "CIEINDIA",
+            "source_date": "2026-01-14",
+            "adv": 82671182.22384353
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "CRAFTSMAN",
+            "source_date": "2026-01-14",
+            "adv": 451564598.76584977
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "GALLANTT",
+            "source_date": "2026-01-14",
+            "adv": 279564552.4350363
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "GLAND",
+            "source_date": "2026-01-14",
+            "adv": 259142522.5387079
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "GRANULES",
+            "source_date": "2026-01-14",
+            "adv": 592217372.2678882
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "HONASA",
+            "source_date": "2026-01-14",
+            "adv": 356311829.24548846
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "HONAUT",
+            "source_date": "2026-01-14",
+            "adv": 290993401.7043031
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "IKS",
+            "source_date": "2026-01-14",
+            "adv": 418092283.7361053
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "INOXINDIA",
+            "source_date": "2026-01-14",
+            "adv": 86628694.33705357
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "IPCALAB",
+            "source_date": "2026-01-14",
+            "adv": 414765297.72436523
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "KIRLOSENG",
+            "source_date": "2026-01-14",
+            "adv": 918462317.7165344
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "KPIL",
+            "source_date": "2026-01-14",
+            "adv": 212643175.90515912
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "LINDEINDIA",
+            "source_date": "2026-01-14",
+            "adv": 236427228.85808066
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "MRF",
+            "source_date": "2026-01-14",
+            "adv": 725333817.1044147
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "NAVINFLUOR",
+            "source_date": "2026-01-14",
+            "adv": 1593624098.131371
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "PAGEIND",
+            "source_date": "2026-01-14",
+            "adv": 969825643.5628101
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "PFOCUS",
+            "source_date": "2026-01-14",
+            "adv": 1134342000.8325443
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "PHOENIXLTD",
+            "source_date": "2026-01-14",
+            "adv": 840254855.866831
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "POLICYBZR",
+            "source_date": "2026-01-14",
+            "adv": 2699571260.5472546
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "PRIVISCL",
+            "source_date": "2026-01-14",
+            "adv": 627297659.4414217
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "PTCIL",
+            "source_date": "2026-01-14",
+            "adv": 301194401.984127
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "RADICO",
+            "source_date": "2026-01-14",
+            "adv": 1427735526.8219981
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "RAINBOW",
+            "source_date": "2026-01-14",
+            "adv": 194686224.18531048
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "RAMCOCEM",
+            "source_date": "2026-01-14",
+            "adv": 295505305.0383824
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "SIEMENS",
+            "source_date": "2026-01-14",
+            "adv": 1129569081.413702
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "SIGNATURE",
+            "source_date": "2026-01-14",
+            "adv": 437441101.97150916
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "SOBHA",
+            "source_date": "2026-01-14",
+            "adv": 314052736.4376744
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "SOLARINDS",
+            "source_date": "2026-01-14",
+            "adv": 1572852085.6453218
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "THERMAX",
+            "source_date": "2026-01-14",
+            "adv": 299527187.04305786
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "TIMKEN",
+            "source_date": "2026-01-14",
+            "adv": 143802954.25600275
+          },
+          {
+            "rebalance": "2026-01-30",
+            "symbol": "VIJAYA",
+            "source_date": "2026-01-14",
+            "adv": 251106894.21301368
+          }
+        ]
+      },
+      "unheld_target_no_open": {
+        "count": 0,
+        "uses": []
+      },
+      "held_no_open": {
+        "count": 2,
+        "uses": [
+          {
+            "rebalance": "2023-12-29",
+            "exec_day": "2024-01-01",
+            "symbol": "FORCEMOT",
+            "source_date": "2023-12-06",
+            "price": 3327.515625,
+            "value": 370688.7501233891
+          },
+          {
+            "rebalance": "2024-01-31",
+            "exec_day": "2024-02-01",
+            "symbol": "FORCEMOT",
+            "source_date": "2023-12-06",
+            "price": 3327.515625,
+            "value": 370688.7501233891
+          }
+        ]
+      },
+      "resumed_held_trades": {
+        "count": 1,
+        "uses": [
+          {
+            "rebalance": "2024-02-29",
+            "symbol": "FORCEMOT",
+            "action": "sold"
+          }
+        ]
+      },
+      "carried_invested": {
+        "count": 2,
+        "uses": [
+          {
+            "rebalance": "2023-12-29",
+            "symbol": "FORCEMOT",
+            "value": 370688.7501233891
+          },
+          {
+            "rebalance": "2024-01-31",
+            "symbol": "FORCEMOT",
+            "value": 370688.7501233891
+          }
+        ]
+      }
+    }
+  },
+  "per_date": [
+    {
+      "rebalance_date": "2010-01-29",
+      "eligible_count": 169,
+      "excluded_by_rule": {
+        "closes_complete_253": 232,
+        "adv_63_ge_10m": 277,
+        "no_move_over_40pct": 4
+      },
+      "basket_size": 33,
+      "benchmark_size": 169,
+      "basket": {
+        "invested_fraction": 0.994992465114299,
+        "turnover": 0.9934952904227605,
+        "costs": 15047.095772392826,
+        "n_positions": 33
+      },
+      "benchmark": {
+        "invested_fraction": 0.994992502624145,
+        "turnover": 0.9935027698886599,
+        "costs": 14972.301113384512,
+        "n_positions": 169
+      }
+    },
+    {
+      "rebalance_date": "2010-02-26",
+      "eligible_count": 171,
+      "excluded_by_rule": {
+        "closes_complete_253": 232,
+        "adv_63_ge_10m": 274,
+        "no_move_over_40pct": 4
+      },
+      "basket_size": 34,
+      "benchmark_size": 171,
+      "basket": {
+        "invested_fraction": 0.9949968357666763,
+        "turnover": 0.3139996845419586,
+        "costs": 6412.286646668028,
+        "n_positions": 34
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991073989328,
+        "turnover": 0.0888251536357692,
+        "costs": 1788.3544147884982,
+        "n_positions": 171
+      }
+    },
+    {
+      "rebalance_date": "2010-03-31",
+      "eligible_count": 171,
+      "excluded_by_rule": {
+        "closes_complete_253": 232,
+        "adv_63_ge_10m": 276,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 34,
+      "benchmark_size": 171,
+      "basket": {
+        "invested_fraction": 0.9949948402359527,
+        "turnover": 0.5111022498800285,
+        "costs": 11285.393359100812,
+        "n_positions": 34
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988167193657,
+        "turnover": 0.11752640430955073,
+        "costs": 2513.7652805036014,
+        "n_positions": 171
+      }
+    },
+    {
+      "rebalance_date": "2010-04-30",
+      "eligible_count": 168,
+      "excluded_by_rule": {
+        "closes_complete_253": 232,
+        "adv_63_ge_10m": 274,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 33,
+      "benchmark_size": 168,
+      "basket": {
+        "invested_fraction": 0.9949932571369208,
+        "turnover": 0.6651290366364714,
+        "costs": 15367.13518975851,
+        "n_positions": 33
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949982760473861,
+        "turnover": 0.17117894095773328,
+        "costs": 3819.1284474954723,
+        "n_positions": 168
+      }
+    },
+    {
+      "rebalance_date": "2010-05-31",
+      "eligible_count": 167,
+      "excluded_by_rule": {
+        "closes_complete_253": 233,
+        "adv_63_ge_10m": 272,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 33,
+      "benchmark_size": 167,
+      "basket": {
+        "invested_fraction": 0.9949944944549407,
+        "turnover": 0.5446193560085557,
+        "costs": 11724.720353887806,
+        "n_positions": 33
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998919542383,
+        "turnover": 0.10754046429782528,
+        "costs": 2294.3365685172066,
+        "n_positions": 167
+      }
+    },
+    {
+      "rebalance_date": "2010-06-30",
+      "eligible_count": 170,
+      "excluded_by_rule": {
+        "closes_complete_253": 233,
+        "adv_63_ge_10m": 268,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 34,
+      "benchmark_size": 170,
+      "basket": {
+        "invested_fraction": 0.9949937321928968,
+        "turnover": 0.6209170732752238,
+        "costs": 14148.732084000601,
+        "n_positions": 34
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988129600065,
+        "turnover": 0.118011592121699,
+        "costs": 2644.4772314384386,
+        "n_positions": 170
+      }
+    },
+    {
+      "rebalance_date": "2010-07-30",
+      "eligible_count": 166,
+      "excluded_by_rule": {
+        "closes_complete_253": 233,
+        "adv_63_ge_10m": 271,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 33,
+      "benchmark_size": 166,
+      "basket": {
+        "invested_fraction": 0.9949938673724484,
+        "turnover": 0.602743806365159,
+        "costs": 14442.66798310922,
+        "n_positions": 33
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949983150236723,
+        "turnover": 0.16712286213490657,
+        "costs": 3931.9301787149357,
+        "n_positions": 166
+      }
+    },
+    {
+      "rebalance_date": "2010-08-31",
+      "eligible_count": 174,
+      "excluded_by_rule": {
+        "closes_complete_253": 232,
+        "adv_63_ge_10m": 264,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 34,
+      "benchmark_size": 174,
+      "basket": {
+        "invested_fraction": 0.9949937828670417,
+        "turnover": 0.614945567345448,
+        "costs": 15373.513955961287,
+        "n_positions": 34
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998480581497,
+        "turnover": 0.15109264392874164,
+        "costs": 3675.4894319959603,
+        "n_positions": 174
+      }
+    },
+    {
+      "rebalance_date": "2010-09-30",
+      "eligible_count": 182,
+      "excluded_by_rule": {
+        "closes_complete_253": 231,
+        "adv_63_ge_10m": 256,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 36,
+      "benchmark_size": 182,
+      "basket": {
+        "invested_fraction": 0.9949960413501312,
+        "turnover": 0.3913884880446378,
+        "costs": 10375.945477704881,
+        "n_positions": 36
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988219853794,
+        "turnover": 0.11721751504616539,
+        "costs": 3051.177290275805,
+        "n_positions": 182
+      }
+    },
+    {
+      "rebalance_date": "2010-10-29",
+      "eligible_count": 186,
+      "excluded_by_rule": {
+        "closes_complete_253": 230,
+        "adv_63_ge_10m": 253,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 37,
+      "benchmark_size": 186,
+      "basket": {
+        "invested_fraction": 0.9949959404318317,
+        "turnover": 0.4013324019067858,
+        "costs": 10983.340337498197,
+        "n_positions": 37
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990712142266,
+        "turnover": 0.09243673328746872,
+        "costs": 2457.949579166294,
+        "n_positions": 186
+      }
+    },
+    {
+      "rebalance_date": "2010-11-30",
+      "eligible_count": 188,
+      "excluded_by_rule": {
+        "closes_complete_253": 229,
+        "adv_63_ge_10m": 252,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 37,
+      "benchmark_size": 188,
+      "basket": {
+        "invested_fraction": 0.9949951070136505,
+        "turnover": 0.4838041845530978,
+        "costs": 12700.73319462922,
+        "n_positions": 37
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989438495584,
+        "turnover": 0.10513228453599455,
+        "costs": 2617.200518881233,
+        "n_positions": 188
+      }
+    },
+    {
+      "rebalance_date": "2010-12-31",
+      "eligible_count": 179,
+      "excluded_by_rule": {
+        "closes_complete_253": 228,
+        "adv_63_ge_10m": 263,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 35,
+      "benchmark_size": 179,
+      "basket": {
+        "invested_fraction": 0.9949954060993401,
+        "turnover": 0.4547637406725063,
+        "costs": 12073.082316288192,
+        "n_positions": 35
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949986293757044,
+        "turnover": 0.13615955312677988,
+        "costs": 3455.1991671975256,
+        "n_positions": 179
+      }
+    },
+    {
+      "rebalance_date": "2011-01-31",
+      "eligible_count": 170,
+      "excluded_by_rule": {
+        "closes_complete_253": 223,
+        "adv_63_ge_10m": 275,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 34,
+      "benchmark_size": 170,
+      "basket": {
+        "invested_fraction": 0.9949956026689404,
+        "turnover": 0.4350775094688156,
+        "costs": 10559.785063278134,
+        "n_positions": 34
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949979354283338,
+        "turnover": 0.20529493421747613,
+        "costs": 4647.59696857336,
+        "n_positions": 170
+      }
+    },
+    {
+      "rebalance_date": "2011-02-28",
+      "eligible_count": 158,
+      "excluded_by_rule": {
+        "closes_complete_253": 221,
+        "adv_63_ge_10m": 287,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 31,
+      "benchmark_size": 158,
+      "basket": {
+        "invested_fraction": 0.9949953580183204,
+        "turnover": 0.4592473157545726,
+        "costs": 10398.303191626648,
+        "n_positions": 31
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949981089961459,
+        "turnover": 0.18780338718481931,
+        "costs": 3976.195495716466,
+        "n_positions": 158
+      }
+    },
+    {
+      "rebalance_date": "2011-03-31",
+      "eligible_count": 157,
+      "excluded_by_rule": {
+        "closes_complete_253": 221,
+        "adv_63_ge_10m": 289,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 31,
+      "benchmark_size": 157,
+      "basket": {
+        "invested_fraction": 0.9949963377377948,
+        "turnover": 0.360969184262502,
+        "costs": 8740.181241987635,
+        "n_positions": 31
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998907183262,
+        "turnover": 0.10855248844569004,
+        "costs": 2480.4128378253527,
+        "n_positions": 157
+      }
+    },
+    {
+      "rebalance_date": "2011-04-29",
+      "eligible_count": 163,
+      "excluded_by_rule": {
+        "closes_complete_253": 220,
+        "adv_63_ge_10m": 284,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 32,
+      "benchmark_size": 163,
+      "basket": {
+        "invested_fraction": 0.9949952593320492,
+        "turnover": 0.4696625257587415,
+        "costs": 11742.670411966237,
+        "n_positions": 32
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949985206746483,
+        "turnover": 0.14706169854358334,
+        "costs": 3460.220440856764,
+        "n_positions": 163
+      }
+    },
+    {
+      "rebalance_date": "2011-05-31",
+      "eligible_count": 157,
+      "excluded_by_rule": {
+        "closes_complete_253": 218,
+        "adv_63_ge_10m": 291,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 31,
+      "benchmark_size": 157,
+      "basket": {
+        "invested_fraction": 0.9949921576711628,
+        "turnover": 0.7743441220231659,
+        "costs": 19389.166869306417,
+        "n_positions": 31
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949985930534642,
+        "turnover": 0.13992825876928183,
+        "costs": 3209.4154101395743,
+        "n_positions": 157
+      }
+    },
+    {
+      "rebalance_date": "2011-06-30",
+      "eligible_count": 160,
+      "excluded_by_rule": {
+        "closes_complete_253": 217,
+        "adv_63_ge_10m": 289,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 32,
+      "benchmark_size": 160,
+      "basket": {
+        "invested_fraction": 0.9949947200934323,
+        "turnover": 0.5215606304454525,
+        "costs": 13256.795119316075,
+        "n_positions": 32
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949984047069568,
+        "turnover": 0.1583655930777417,
+        "costs": 3637.050919343282,
+        "n_positions": 160
+      }
+    },
+    {
+      "rebalance_date": "2011-07-29",
+      "eligible_count": 160,
+      "excluded_by_rule": {
+        "closes_complete_253": 217,
+        "adv_63_ge_10m": 289,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 32,
+      "benchmark_size": 160,
+      "basket": {
+        "invested_fraction": 0.9949926609500923,
+        "turnover": 0.7261938595525036,
+        "costs": 19104.687226004145,
+        "n_positions": 32
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949982692559282,
+        "turnover": 0.17197906873785013,
+        "costs": 4000.1952918295656,
+        "n_positions": 160
+      }
+    },
+    {
+      "rebalance_date": "2011-08-30",
+      "eligible_count": 160,
+      "excluded_by_rule": {
+        "closes_complete_253": 217,
+        "adv_63_ge_10m": 288,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 32,
+      "benchmark_size": 160,
+      "basket": {
+        "invested_fraction": 0.9949944363681548,
+        "turnover": 0.5512284984576092,
+        "costs": 13581.922191794181,
+        "n_positions": 32
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988564758432,
+        "turnover": 0.11405642303490451,
+        "costs": 2391.1408602463216,
+        "n_positions": 160
+      }
+    },
+    {
+      "rebalance_date": "2011-09-30",
+      "eligible_count": 155,
+      "excluded_by_rule": {
+        "closes_complete_253": 217,
+        "adv_63_ge_10m": 291,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 31,
+      "benchmark_size": 155,
+      "basket": {
+        "invested_fraction": 0.99499347142805,
+        "turnover": 0.6462845857557038,
+        "costs": 15219.53211694984,
+        "n_positions": 31
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989327724649,
+        "turnover": 0.10581609591089214,
+        "costs": 2158.3627463376706,
+        "n_positions": 155
+      }
+    },
+    {
+      "rebalance_date": "2011-10-31",
+      "eligible_count": 145,
+      "excluded_by_rule": {
+        "closes_complete_253": 214,
+        "adv_63_ge_10m": 302,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 29,
+      "benchmark_size": 145,
+      "basket": {
+        "invested_fraction": 0.9949940889256638,
+        "turnover": 0.58379580355218,
+        "costs": 14149.897439532486,
+        "n_positions": 29
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949982010840225,
+        "turnover": 0.1787297408833165,
+        "costs": 3776.8353296545383,
+        "n_positions": 145
+      }
+    },
+    {
+      "rebalance_date": "2011-11-30",
+      "eligible_count": 138,
+      "excluded_by_rule": {
+        "closes_complete_253": 211,
+        "adv_63_ge_10m": 311,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 27,
+      "benchmark_size": 138,
+      "basket": {
+        "invested_fraction": 0.9949938396327064,
+        "turnover": 0.6063816330951468,
+        "costs": 14141.130545006321,
+        "n_positions": 27
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949983516450239,
+        "turnover": 0.16407125594022617,
+        "costs": 3217.7823480277953,
+        "n_positions": 138
+      }
+    },
+    {
+      "rebalance_date": "2011-12-30",
+      "eligible_count": 135,
+      "excluded_by_rule": {
+        "closes_complete_253": 211,
+        "adv_63_ge_10m": 313,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 27,
+      "benchmark_size": 135,
+      "basket": {
+        "invested_fraction": 0.9949950162330128,
+        "turnover": 0.4941859324304474,
+        "costs": 10411.987197150376,
+        "n_positions": 27
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949985851579867,
+        "turnover": 0.14101796764537275,
+        "costs": 2470.6704161222438,
+        "n_positions": 135
+      }
+    },
+    {
+      "rebalance_date": "2012-01-31",
+      "eligible_count": 140,
+      "excluded_by_rule": {
+        "closes_complete_253": 211,
+        "adv_63_ge_10m": 309,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 28,
+      "benchmark_size": 140,
+      "basket": {
+        "invested_fraction": 0.9949938637431104,
+        "turnover": 0.6061411839883598,
+        "costs": 14330.2520337757,
+        "n_positions": 28
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998469224573,
+        "turnover": 0.15226445719566495,
+        "costs": 3181.7680732431527,
+        "n_positions": 140
+      }
+    },
+    {
+      "rebalance_date": "2012-02-29",
+      "eligible_count": 154,
+      "excluded_by_rule": {
+        "closes_complete_253": 211,
+        "adv_63_ge_10m": 295,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 30,
+      "benchmark_size": 154,
+      "basket": {
+        "invested_fraction": 0.9949939108362176,
+        "turnover": 0.6026628533958585,
+        "costs": 15523.4990393018,
+        "n_positions": 30
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949980549949439,
+        "turnover": 0.19349591533625968,
+        "costs": 4376.953653435548,
+        "n_positions": 154
+      }
+    },
+    {
+      "rebalance_date": "2012-03-30",
+      "eligible_count": 160,
+      "excluded_by_rule": {
+        "closes_complete_253": 211,
+        "adv_63_ge_10m": 289,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 32,
+      "benchmark_size": 160,
+      "basket": {
+        "invested_fraction": 0.9949953962250937,
+        "turnover": 0.45653395424414916,
+        "costs": 12082.367037349828,
+        "n_positions": 32
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998593410892,
+        "turnover": 0.1401238476520323,
+        "costs": 3162.449443674679,
+        "n_positions": 160
+      }
+    },
+    {
+      "rebalance_date": "2012-04-30",
+      "eligible_count": 163,
+      "excluded_by_rule": {
+        "closes_complete_253": 211,
+        "adv_63_ge_10m": 286,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 32,
+      "benchmark_size": 163,
+      "basket": {
+        "invested_fraction": 0.9949942389067503,
+        "turnover": 0.5708650492417776,
+        "costs": 15499.50355502557,
+        "n_positions": 32
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989924774199,
+        "turnover": 0.10044086093707932,
+        "costs": 2241.635048978167,
+        "n_positions": 163
+      }
+    },
+    {
+      "rebalance_date": "2012-05-31",
+      "eligible_count": 157,
+      "excluded_by_rule": {
+        "closes_complete_253": 210,
+        "adv_63_ge_10m": 293,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 31,
+      "benchmark_size": 157,
+      "basket": {
+        "invested_fraction": 0.9949949314130258,
+        "turnover": 0.5031712069610177,
+        "costs": 13250.409537002444,
+        "n_positions": 31
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949984772069207,
+        "turnover": 0.15148315675190804,
+        "costs": 3133.2010520800127,
+        "n_positions": 157
+      }
+    },
+    {
+      "rebalance_date": "2012-06-29",
+      "eligible_count": 153,
+      "excluded_by_rule": {
+        "closes_complete_253": 209,
+        "adv_63_ge_10m": 295,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 30,
+      "benchmark_size": 153,
+      "basket": {
+        "invested_fraction": 0.9949951543964557,
+        "turnover": 0.47960375574764236,
+        "costs": 12932.750958272783,
+        "n_positions": 30
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949986266284645,
+        "turnover": 0.136391915690463,
+        "costs": 3014.4037089009066,
+        "n_positions": 153
+      }
+    },
+    {
+      "rebalance_date": "2012-07-31",
+      "eligible_count": 150,
+      "excluded_by_rule": {
+        "closes_complete_253": 209,
+        "adv_63_ge_10m": 298,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 30,
+      "benchmark_size": 150,
+      "basket": {
+        "invested_fraction": 0.9949956215501271,
+        "turnover": 0.4333440724427361,
+        "costs": 11731.120920761827,
+        "n_positions": 30
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949984101783379,
+        "turnover": 0.15801969166398772,
+        "costs": 3430.0808620688313,
+        "n_positions": 150
+      }
+    },
+    {
+      "rebalance_date": "2012-08-31",
+      "eligible_count": 160,
+      "excluded_by_rule": {
+        "closes_complete_253": 208,
+        "adv_63_ge_10m": 288,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 32,
+      "benchmark_size": 160,
+      "basket": {
+        "invested_fraction": 0.9949930754888058,
+        "turnover": 0.686454326513726,
+        "costs": 18986.854653304326,
+        "n_positions": 32
+      },
+      "benchmark": {
+        "invested_fraction": 0.994997895531804,
+        "turnover": 0.20927115101872557,
+        "costs": 4555.626857193035,
+        "n_positions": 160
+      }
+    },
+    {
+      "rebalance_date": "2012-09-28",
+      "eligible_count": 168,
+      "excluded_by_rule": {
+        "closes_complete_253": 207,
+        "adv_63_ge_10m": 280,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 33,
+      "benchmark_size": 168,
+      "basket": {
+        "invested_fraction": 0.9949961544525903,
+        "turnover": 0.38110690640304845,
+        "costs": 11240.661807868393,
+        "n_positions": 33
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949985318989751,
+        "turnover": 0.14606939272449646,
+        "costs": 3514.8851682378154,
+        "n_positions": 168
+      }
+    },
+    {
+      "rebalance_date": "2012-10-31",
+      "eligible_count": 168,
+      "excluded_by_rule": {
+        "closes_complete_253": 206,
+        "adv_63_ge_10m": 279,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 33,
+      "benchmark_size": 168,
+      "basket": {
+        "invested_fraction": 0.9949959569224293,
+        "turnover": 0.40145373747107654,
+        "costs": 11917.997191912884,
+        "n_positions": 33
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988011670806,
+        "turnover": 0.11922752543593171,
+        "costs": 2825.7268101899404,
+        "n_positions": 168
+      }
+    },
+    {
+      "rebalance_date": "2012-11-30",
+      "eligible_count": 172,
+      "excluded_by_rule": {
+        "closes_complete_253": 205,
+        "adv_63_ge_10m": 275,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 34,
+      "benchmark_size": 172,
+      "basket": {
+        "invested_fraction": 0.9949931924486124,
+        "turnover": 0.6728224745689597,
+        "costs": 21377.971466446586,
+        "n_positions": 34
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998571360413,
+        "turnover": 0.14212413753339037,
+        "costs": 3519.5111257153917,
+        "n_positions": 172
+      }
+    },
+    {
+      "rebalance_date": "2012-12-31",
+      "eligible_count": 177,
+      "excluded_by_rule": {
+        "closes_complete_253": 203,
+        "adv_63_ge_10m": 271,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 35,
+      "benchmark_size": 177,
+      "basket": {
+        "invested_fraction": 0.9949950128300318,
+        "turnover": 0.493938441370323,
+        "costs": 16034.049254590884,
+        "n_positions": 35
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990765781824,
+        "turnover": 0.09198630114213377,
+        "costs": 2374.1962525386903,
+        "n_positions": 177
+      }
+    },
+    {
+      "rebalance_date": "2013-01-31",
+      "eligible_count": 172,
+      "excluded_by_rule": {
+        "closes_complete_253": 203,
+        "adv_63_ge_10m": 276,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 34,
+      "benchmark_size": 172,
+      "basket": {
+        "invested_fraction": 0.9949928824590805,
+        "turnover": 0.7015544137649177,
+        "costs": 22307.19506012995,
+        "n_positions": 34
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988394973308,
+        "turnover": 0.11551304788089792,
+        "costs": 2920.8772669963423,
+        "n_positions": 172
+      }
+    },
+    {
+      "rebalance_date": "2013-02-28",
+      "eligible_count": 169,
+      "excluded_by_rule": {
+        "closes_complete_253": 203,
+        "adv_63_ge_10m": 279,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 33,
+      "benchmark_size": 169,
+      "basket": {
+        "invested_fraction": 0.9949949935969079,
+        "turnover": 0.49627766275805163,
+        "costs": 14330.853809925266,
+        "n_positions": 33
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998465189047,
+        "turnover": 0.15253344971396485,
+        "costs": 3485.445884970538,
+        "n_positions": 169
+      }
+    },
+    {
+      "rebalance_date": "2013-03-28",
+      "eligible_count": 161,
+      "excluded_by_rule": {
+        "closes_complete_253": 199,
+        "adv_63_ge_10m": 287,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 32,
+      "benchmark_size": 161,
+      "basket": {
+        "invested_fraction": 0.9949954098001476,
+        "turnover": 0.45496759625562916,
+        "costs": 12935.667448010074,
+        "n_positions": 32
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949985080944389,
+        "turnover": 0.14846787994891947,
+        "costs": 3246.985221607278,
+        "n_positions": 161
+      }
+    },
+    {
+      "rebalance_date": "2013-04-30",
+      "eligible_count": 153,
+      "excluded_by_rule": {
+        "closes_complete_253": 198,
+        "adv_63_ge_10m": 296,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 30,
+      "benchmark_size": 153,
+      "basket": {
+        "invested_fraction": 0.994995273283088,
+        "turnover": 0.46561407385197434,
+        "costs": 13843.419061838753,
+        "n_positions": 30
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998655459239,
+        "turnover": 0.13322930795560994,
+        "costs": 3035.2348538853953,
+        "n_positions": 153
+      }
+    },
+    {
+      "rebalance_date": "2013-05-31",
+      "eligible_count": 154,
+      "excluded_by_rule": {
+        "closes_complete_253": 198,
+        "adv_63_ge_10m": 295,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 30,
+      "benchmark_size": 154,
+      "basket": {
+        "invested_fraction": 0.9949932996302754,
+        "turnover": 0.6605543951465391,
+        "costs": 20268.29234673648,
+        "n_positions": 30
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949979377239286,
+        "turnover": 0.20433003327936725,
+        "costs": 4627.8082456354,
+        "n_positions": 154
+      }
+    },
+    {
+      "rebalance_date": "2013-06-28",
+      "eligible_count": 152,
+      "excluded_by_rule": {
+        "closes_complete_253": 197,
+        "adv_63_ge_10m": 298,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 30,
+      "benchmark_size": 152,
+      "basket": {
+        "invested_fraction": 0.9949936330377821,
+        "turnover": 0.6304725920301816,
+        "costs": 18687.62638746485,
+        "n_positions": 30
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949985218562998,
+        "turnover": 0.14693091045254433,
+        "costs": 3075.9336309036967,
+        "n_positions": 152
+      }
+    },
+    {
+      "rebalance_date": "2013-07-31",
+      "eligible_count": 150,
+      "excluded_by_rule": {
+        "closes_complete_253": 197,
+        "adv_63_ge_10m": 300,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 30,
+      "benchmark_size": 150,
+      "basket": {
+        "invested_fraction": 0.9949965051357034,
+        "turnover": 0.3465550699927089,
+        "costs": 9941.707361465646,
+        "n_positions": 30
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949984529386419,
+        "turnover": 0.15399332236805777,
+        "costs": 3013.8318461046833,
+        "n_positions": 150
+      }
+    },
+    {
+      "rebalance_date": "2013-08-30",
+      "eligible_count": 143,
+      "excluded_by_rule": {
+        "closes_complete_253": 197,
+        "adv_63_ge_10m": 307,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 28,
+      "benchmark_size": 143,
+      "basket": {
+        "invested_fraction": 0.9949923770918292,
+        "turnover": 0.7542678757630277,
+        "costs": 20347.134252874934,
+        "n_positions": 28
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949979197947576,
+        "turnover": 0.2066955448202642,
+        "costs": 3896.687636006233,
+        "n_positions": 143
+      }
+    },
+    {
+      "rebalance_date": "2013-09-30",
+      "eligible_count": 144,
+      "excluded_by_rule": {
+        "closes_complete_253": 197,
+        "adv_63_ge_10m": 306,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 28,
+      "benchmark_size": 144,
+      "basket": {
+        "invested_fraction": 0.9949950645205087,
+        "turnover": 0.48943048955121804,
+        "costs": 14619.418433307805,
+        "n_positions": 28
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949984857976241,
+        "turnover": 0.15029122179277676,
+        "costs": 3069.566197714505,
+        "n_positions": 144
+      }
+    },
+    {
+      "rebalance_date": "2013-10-31",
+      "eligible_count": 154,
+      "excluded_by_rule": {
+        "closes_complete_253": 197,
+        "adv_63_ge_10m": 295,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 30,
+      "benchmark_size": 154,
+      "basket": {
+        "invested_fraction": 0.994993924534827,
+        "turnover": 0.6023959551204312,
+        "costs": 19593.83544384681,
+        "n_positions": 30
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998159386188,
+        "turnover": 0.18281215255327973,
+        "costs": 4119.092197260136,
+        "n_positions": 154
+      }
+    },
+    {
+      "rebalance_date": "2013-11-29",
+      "eligible_count": 156,
+      "excluded_by_rule": {
+        "closes_complete_253": 197,
+        "adv_63_ge_10m": 293,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 31,
+      "benchmark_size": 156,
+      "basket": {
+        "invested_fraction": 0.9949940288214311,
+        "turnover": 0.5920458325551539,
+        "costs": 20335.31821199169,
+        "n_positions": 31
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989386369396,
+        "turnover": 0.10568786404944562,
+        "costs": 2475.6175856823993,
+        "n_positions": 156
+      }
+    },
+    {
+      "rebalance_date": "2013-12-31",
+      "eligible_count": 165,
+      "excluded_by_rule": {
+        "closes_complete_253": 197,
+        "adv_63_ge_10m": 284,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 33,
+      "benchmark_size": 165,
+      "basket": {
+        "invested_fraction": 0.9949937856231701,
+        "turnover": 0.6163920030939816,
+        "costs": 22203.431108929428,
+        "n_positions": 33
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949985903862619,
+        "turnover": 0.14011260911458787,
+        "costs": 3521.3813996470053,
+        "n_positions": 165
+      }
+    },
+    {
+      "rebalance_date": "2014-01-31",
+      "eligible_count": 172,
+      "excluded_by_rule": {
+        "closes_complete_253": 196,
+        "adv_63_ge_10m": 278,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 34,
+      "benchmark_size": 172,
+      "basket": {
+        "invested_fraction": 0.9949953807360357,
+        "turnover": 0.457761702987597,
+        "costs": 16135.307511379084,
+        "n_positions": 34
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949984189513046,
+        "turnover": 0.15723238843219017,
+        "costs": 3687.9181832537874,
+        "n_positions": 172
+      }
+    },
+    {
+      "rebalance_date": "2014-02-28",
+      "eligible_count": 173,
+      "excluded_by_rule": {
+        "closes_complete_253": 196,
+        "adv_63_ge_10m": 277,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 34,
+      "benchmark_size": 173,
+      "basket": {
+        "invested_fraction": 0.9949971436796278,
+        "turnover": 0.2830603059028631,
+        "costs": 10617.055935912682,
+        "n_positions": 34
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988439640245,
+        "turnover": 0.11492763950909371,
+        "costs": 2800.295165191512,
+        "n_positions": 173
+      }
+    },
+    {
+      "rebalance_date": "2014-03-31",
+      "eligible_count": 180,
+      "excluded_by_rule": {
+        "closes_complete_253": 196,
+        "adv_63_ge_10m": 270,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 36,
+      "benchmark_size": 180,
+      "basket": {
+        "invested_fraction": 0.9949968290493569,
+        "turnover": 0.31376124795990296,
+        "costs": 12006.450773848677,
+        "n_positions": 36
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949984927660951,
+        "turnover": 0.14982024872434851,
+        "costs": 4095.960086287554,
+        "n_positions": 180
+      }
+    },
+    {
+      "rebalance_date": "2014-04-30",
+      "eligible_count": 186,
+      "excluded_by_rule": {
+        "closes_complete_253": 196,
+        "adv_63_ge_10m": 264,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 37,
+      "benchmark_size": 186,
+      "basket": {
+        "invested_fraction": 0.9949950489649554,
+        "turnover": 0.48967062034176767,
+        "costs": 19963.51722553742,
+        "n_positions": 37
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949986744376599,
+        "turnover": 0.13176630554116986,
+        "costs": 3752.5797363590486,
+        "n_positions": 186
+      }
+    },
+    {
+      "rebalance_date": "2014-05-30",
+      "eligible_count": 202,
+      "excluded_by_rule": {
+        "closes_complete_253": 196,
+        "adv_63_ge_10m": 248,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 40,
+      "benchmark_size": 202,
+      "basket": {
+        "invested_fraction": 0.9949946781180075,
+        "turnover": 0.5258326901050028,
+        "costs": 23965.939633080274,
+        "n_positions": 40
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949976392498092,
+        "turnover": 0.23466885990488975,
+        "costs": 7887.704697833471,
+        "n_positions": 202
+      }
+    },
+    {
+      "rebalance_date": "2014-06-30",
+      "eligible_count": 216,
+      "excluded_by_rule": {
+        "closes_complete_253": 196,
+        "adv_63_ge_10m": 234,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 43,
+      "benchmark_size": 216,
+      "basket": {
+        "invested_fraction": 0.9949923266180304,
+        "turnover": 0.7583099890845617,
+        "costs": 41157.649565964486,
+        "n_positions": 43
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949984672425963,
+        "turnover": 0.15242378401531312,
+        "costs": 5748.267656944427,
+        "n_positions": 216
+      }
+    },
+    {
+      "rebalance_date": "2014-07-31",
+      "eligible_count": 222,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 229,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 44,
+      "benchmark_size": 222,
+      "basket": {
+        "invested_fraction": 0.9949955268653006,
+        "turnover": 0.44307241699028965,
+        "costs": 23578.59748552023,
+        "n_positions": 44
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949987408949084,
+        "turnover": 0.1254450760729607,
+        "costs": 4579.205180888192,
+        "n_positions": 222
+      }
+    },
+    {
+      "rebalance_date": "2014-08-28",
+      "eligible_count": 220,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 231,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 44,
+      "benchmark_size": 220,
+      "basket": {
+        "invested_fraction": 0.9949952082001565,
+        "turnover": 0.4714419969423586,
+        "costs": 26774.18424361786,
+        "n_positions": 44
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998803272243,
+        "turnover": 0.11894526895139883,
+        "costs": 4495.03605086921,
+        "n_positions": 220
+      }
+    },
+    {
+      "rebalance_date": "2014-09-30",
+      "eligible_count": 222,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 229,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 44,
+      "benchmark_size": 222,
+      "basket": {
+        "invested_fraction": 0.9949947646785648,
+        "turnover": 0.5166849479607252,
+        "costs": 32120.952173122143,
+        "n_positions": 44
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949983315187546,
+        "turnover": 0.1657515584284532,
+        "costs": 6506.433532118027,
+        "n_positions": 222
+      }
+    },
+    {
+      "rebalance_date": "2014-10-31",
+      "eligible_count": 219,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 232,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 43,
+      "benchmark_size": 219,
+      "basket": {
+        "invested_fraction": 0.9949956601361736,
+        "turnover": 0.42749085747972004,
+        "costs": 28162.706274290296,
+        "n_positions": 43
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989291162468,
+        "turnover": 0.10627891274290088,
+        "costs": 4359.209245368024,
+        "n_positions": 219
+      }
+    },
+    {
+      "rebalance_date": "2014-11-28",
+      "eligible_count": 226,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 225,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 45,
+      "benchmark_size": 226,
+      "basket": {
+        "invested_fraction": 0.994996307811124,
+        "turnover": 0.36413655763929326,
+        "costs": 25364.76554533895,
+        "n_positions": 45
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988402336327,
+        "turnover": 0.11551546600268087,
+        "costs": 4890.3114568985175,
+        "n_positions": 226
+      }
+    },
+    {
+      "rebalance_date": "2014-12-31",
+      "eligible_count": 218,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 233,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 43,
+      "benchmark_size": 218,
+      "basket": {
+        "invested_fraction": 0.9949966447734536,
+        "turnover": 0.3316073270581813,
+        "costs": 22915.34303940825,
+        "n_positions": 43
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949986492980204,
+        "turnover": 0.13108757797971646,
+        "costs": 5738.251592324037,
+        "n_positions": 218
+      }
+    },
+    {
+      "rebalance_date": "2015-01-30",
+      "eligible_count": 221,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 230,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 44,
+      "benchmark_size": 221,
+      "basket": {
+        "invested_fraction": 0.9949962962386845,
+        "turnover": 0.3665472082131081,
+        "costs": 27099.312255852128,
+        "n_positions": 44
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988529507875,
+        "turnover": 0.11390170783090879,
+        "costs": 5058.126561939439,
+        "n_positions": 221
+      }
+    },
+    {
+      "rebalance_date": "2015-02-27",
+      "eligible_count": 215,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 235,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 43,
+      "benchmark_size": 215,
+      "basket": {
+        "invested_fraction": 0.9949957116740684,
+        "turnover": 0.42387382626817577,
+        "costs": 32175.872830703513,
+        "n_positions": 43
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949987472117232,
+        "turnover": 0.12457148220965113,
+        "costs": 5644.490959723164,
+        "n_positions": 215
+      }
+    },
+    {
+      "rebalance_date": "2015-03-31",
+      "eligible_count": 220,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 229,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 44,
+      "benchmark_size": 220,
+      "basket": {
+        "invested_fraction": 0.9949957379558402,
+        "turnover": 0.42150422432372886,
+        "costs": 32954.51214700663,
+        "n_positions": 44
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949986650862342,
+        "turnover": 0.13283575542895307,
+        "costs": 5969.595382462951,
+        "n_positions": 220
+      }
+    },
+    {
+      "rebalance_date": "2015-04-30",
+      "eligible_count": 215,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 234,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 43,
+      "benchmark_size": 215,
+      "basket": {
+        "invested_fraction": 0.9949948183584035,
+        "turnover": 0.5130358981244431,
+        "costs": 40175.825586879546,
+        "n_positions": 43
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989189322842,
+        "turnover": 0.10765562164953045,
+        "costs": 4769.680336138615,
+        "n_positions": 215
+      }
+    },
+    {
+      "rebalance_date": "2015-05-29",
+      "eligible_count": 210,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 239,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 42,
+      "benchmark_size": 210,
+      "basket": {
+        "invested_fraction": 0.9949958725046829,
+        "turnover": 0.4090439782366136,
+        "costs": 33053.195239747554,
+        "n_positions": 42
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991358365526,
+        "turnover": 0.08603312847702918,
+        "costs": 3878.373122011075,
+        "n_positions": 210
+      }
+    },
+    {
+      "rebalance_date": "2015-06-30",
+      "eligible_count": 203,
+      "excluded_by_rule": {
+        "closes_complete_253": 195,
+        "adv_63_ge_10m": 245,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 40,
+      "benchmark_size": 203,
+      "basket": {
+        "invested_fraction": 0.9949939575355244,
+        "turnover": 0.5988158359949931,
+        "costs": 48495.223697806985,
+        "n_positions": 40
+      },
+      "benchmark": {
+        "invested_fraction": 0.99499892516769,
+        "turnover": 0.10697825349107083,
+        "costs": 4764.517371451944,
+        "n_positions": 203
+      }
+    },
+    {
+      "rebalance_date": "2015-07-31",
+      "eligible_count": 206,
+      "excluded_by_rule": {
+        "closes_complete_253": 194,
+        "adv_63_ge_10m": 242,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 41,
+      "benchmark_size": 206,
+      "basket": {
+        "invested_fraction": 0.9949935126094996,
+        "turnover": 0.6423812067687118,
+        "costs": 58456.519888054034,
+        "n_positions": 41
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998533840016,
+        "turnover": 0.1456630889250385,
+        "costs": 6941.8172880322845,
+        "n_positions": 206
+      }
+    },
+    {
+      "rebalance_date": "2015-08-31",
+      "eligible_count": 212,
+      "excluded_by_rule": {
+        "closes_complete_253": 194,
+        "adv_63_ge_10m": 236,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 42,
+      "benchmark_size": 212,
+      "basket": {
+        "invested_fraction": 0.994995113699455,
+        "turnover": 0.48345661148065344,
+        "costs": 42434.38600181577,
+        "n_positions": 42
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989032628009,
+        "turnover": 0.10926777461612977,
+        "costs": 4853.179626912178,
+        "n_positions": 212
+      }
+    },
+    {
+      "rebalance_date": "2015-09-30",
+      "eligible_count": 214,
+      "excluded_by_rule": {
+        "closes_complete_253": 194,
+        "adv_63_ge_10m": 234,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 42,
+      "benchmark_size": 214,
+      "basket": {
+        "invested_fraction": 0.9949952480183664,
+        "turnover": 0.4705442273419897,
+        "costs": 42792.9917810542,
+        "n_positions": 42
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989851564656,
+        "turnover": 0.10090977594027377,
+        "costs": 4635.446220985161,
+        "n_positions": 214
+      }
+    },
+    {
+      "rebalance_date": "2015-10-30",
+      "eligible_count": 214,
+      "excluded_by_rule": {
+        "closes_complete_253": 194,
+        "adv_63_ge_10m": 235,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 42,
+      "benchmark_size": 214,
+      "basket": {
+        "invested_fraction": 0.9949959836941085,
+        "turnover": 0.3985053362259285,
+        "costs": 36151.5773332238,
+        "n_positions": 42
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990019686072,
+        "turnover": 0.09936299785592509,
+        "costs": 4671.695773569127,
+        "n_positions": 214
+      }
+    },
+    {
+      "rebalance_date": "2015-11-30",
+      "eligible_count": 210,
+      "excluded_by_rule": {
+        "closes_complete_253": 194,
+        "adv_63_ge_10m": 236,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 42,
+      "benchmark_size": 210,
+      "basket": {
+        "invested_fraction": 0.9949965064300069,
+        "turnover": 0.34658833854607063,
+        "costs": 31775.83581939873,
+        "n_positions": 42
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989729752152,
+        "turnover": 0.10212907695883323,
+        "costs": 4916.372424652617,
+        "n_positions": 210
+      }
+    },
+    {
+      "rebalance_date": "2015-12-31",
+      "eligible_count": 218,
+      "excluded_by_rule": {
+        "closes_complete_253": 193,
+        "adv_63_ge_10m": 228,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 43,
+      "benchmark_size": 218,
+      "basket": {
+        "invested_fraction": 0.9949945578856237,
+        "turnover": 0.5382795930620531,
+        "costs": 50773.577033077556,
+        "n_positions": 43
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989547482521,
+        "turnover": 0.10396932183728431,
+        "costs": 5055.0320842842875,
+        "n_positions": 218
+      }
+    },
+    {
+      "rebalance_date": "2016-01-29",
+      "eligible_count": 212,
+      "excluded_by_rule": {
+        "closes_complete_253": 193,
+        "adv_63_ge_10m": 234,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 42,
+      "benchmark_size": 212,
+      "basket": {
+        "invested_fraction": 0.9949973956711234,
+        "turnover": 0.25739451601029856,
+        "costs": 22011.699179620377,
+        "n_positions": 42
+      },
+      "benchmark": {
+        "invested_fraction": 0.99499890119831,
+        "turnover": 0.10939859620723522,
+        "costs": 4841.1683448892045,
+        "n_positions": 212
+      }
+    },
+    {
+      "rebalance_date": "2016-02-29",
+      "eligible_count": 209,
+      "excluded_by_rule": {
+        "closes_complete_253": 193,
+        "adv_63_ge_10m": 236,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 41,
+      "benchmark_size": 209,
+      "basket": {
+        "invested_fraction": 0.9949961911956343,
+        "turnover": 0.37675432740555165,
+        "costs": 27079.12476464963,
+        "n_positions": 41
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989581916663,
+        "turnover": 0.10378500492825847,
+        "costs": 4103.1165630145415,
+        "n_positions": 209
+      }
+    },
+    {
+      "rebalance_date": "2016-03-31",
+      "eligible_count": 206,
+      "excluded_by_rule": {
+        "closes_complete_253": 193,
+        "adv_63_ge_10m": 237,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 41,
+      "benchmark_size": 206,
+      "basket": {
+        "invested_fraction": 0.994996085678422,
+        "turnover": 0.3868722573302764,
+        "costs": 32378.11351079694,
+        "n_positions": 41
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990753678205,
+        "turnover": 0.09177705266223897,
+        "costs": 4123.570241461177,
+        "n_positions": 206
+      }
+    },
+    {
+      "rebalance_date": "2016-04-29",
+      "eligible_count": 208,
+      "excluded_by_rule": {
+        "closes_complete_253": 191,
+        "adv_63_ge_10m": 236,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 41,
+      "benchmark_size": 208,
+      "basket": {
+        "invested_fraction": 0.9949960742728408,
+        "turnover": 0.38813672327448673,
+        "costs": 33788.152860883754,
+        "n_positions": 41
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988431580252,
+        "turnover": 0.1147869561243321,
+        "costs": 5364.28875538964,
+        "n_positions": 208
+      }
+    },
+    {
+      "rebalance_date": "2016-05-31",
+      "eligible_count": 212,
+      "excluded_by_rule": {
+        "closes_complete_253": 190,
+        "adv_63_ge_10m": 232,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 42,
+      "benchmark_size": 212,
+      "basket": {
+        "invested_fraction": 0.9949954246899744,
+        "turnover": 0.45372700153652934,
+        "costs": 39421.1856712913,
+        "n_positions": 42
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988496705133,
+        "turnover": 0.11440013435096734,
+        "costs": 5412.629847777742,
+        "n_positions": 212
+      }
+    },
+    {
+      "rebalance_date": "2016-06-30",
+      "eligible_count": 217,
+      "excluded_by_rule": {
+        "closes_complete_253": 190,
+        "adv_63_ge_10m": 227,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 43,
+      "benchmark_size": 217,
+      "basket": {
+        "invested_fraction": 0.9949945677385366,
+        "turnover": 0.5375894294524965,
+        "costs": 48919.45037935636,
+        "n_positions": 43
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949987377148468,
+        "turnover": 0.1254346212695539,
+        "costs": 6335.74683706632,
+        "n_positions": 217
+      }
+    },
+    {
+      "rebalance_date": "2016-07-29",
+      "eligible_count": 225,
+      "excluded_by_rule": {
+        "closes_complete_253": 190,
+        "adv_63_ge_10m": 219,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 45,
+      "benchmark_size": 225,
+      "basket": {
+        "invested_fraction": 0.994993940289894,
+        "turnover": 0.5971624981214041,
+        "costs": 57258.663355428354,
+        "n_positions": 45
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989858137255,
+        "turnover": 0.10077972950069572,
+        "costs": 5405.588273024349,
+        "n_positions": 225
+      }
+    },
+    {
+      "rebalance_date": "2016-08-31",
+      "eligible_count": 234,
+      "excluded_by_rule": {
+        "closes_complete_253": 188,
+        "adv_63_ge_10m": 210,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 46,
+      "benchmark_size": 234,
+      "basket": {
+        "invested_fraction": 0.9949928548641541,
+        "turnover": 0.7059874790852431,
+        "costs": 69290.34618902813,
+        "n_positions": 46
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949987592630801,
+        "turnover": 0.12338193108245805,
+        "costs": 6772.00273814752,
+        "n_positions": 234
+      }
+    },
+    {
+      "rebalance_date": "2016-09-30",
+      "eligible_count": 237,
+      "excluded_by_rule": {
+        "closes_complete_253": 188,
+        "adv_63_ge_10m": 207,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 47,
+      "benchmark_size": 237,
+      "basket": {
+        "invested_fraction": 0.9949962919712309,
+        "turnover": 0.3663229908140237,
+        "costs": 36538.47064332953,
+        "n_positions": 47
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991685892061,
+        "turnover": 0.08284895068636954,
+        "costs": 4558.187190780169,
+        "n_positions": 237
+      }
+    },
+    {
+      "rebalance_date": "2016-10-28",
+      "eligible_count": 234,
+      "excluded_by_rule": {
+        "closes_complete_253": 188,
+        "adv_63_ge_10m": 208,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 46,
+      "benchmark_size": 234,
+      "basket": {
+        "invested_fraction": 0.9949960870339277,
+        "turnover": 0.38603017957219354,
+        "costs": 41681.5665235606,
+        "n_positions": 46
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989683898081,
+        "turnover": 0.10249616896219449,
+        "costs": 5979.738435983491,
+        "n_positions": 234
+      }
+    },
+    {
+      "rebalance_date": "2016-11-30",
+      "eligible_count": 235,
+      "excluded_by_rule": {
+        "closes_complete_253": 186,
+        "adv_63_ge_10m": 210,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 47,
+      "benchmark_size": 235,
+      "basket": {
+        "invested_fraction": 0.9949947332776002,
+        "turnover": 0.5210766094873209,
+        "costs": 50993.94437806584,
+        "n_positions": 47
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998733966395,
+        "turnover": 0.12593871415729802,
+        "costs": 6881.722823717814,
+        "n_positions": 235
+      }
+    },
+    {
+      "rebalance_date": "2016-12-30",
+      "eligible_count": 231,
+      "excluded_by_rule": {
+        "closes_complete_253": 186,
+        "adv_63_ge_10m": 209,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 46,
+      "benchmark_size": 231,
+      "basket": {
+        "invested_fraction": 0.9949932812362146,
+        "turnover": 0.6622910596005005,
+        "costs": 62208.47041217842,
+        "n_positions": 46
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990364324595,
+        "turnover": 0.09271979787766754,
+        "costs": 5134.669433640169,
+        "n_positions": 231
+      }
+    },
+    {
+      "rebalance_date": "2017-01-31",
+      "eligible_count": 241,
+      "excluded_by_rule": {
+        "closes_complete_253": 183,
+        "adv_63_ge_10m": 201,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 48,
+      "benchmark_size": 241,
+      "basket": {
+        "invested_fraction": 0.9949939725850071,
+        "turnover": 0.596073327372805,
+        "costs": 60843.12930111649,
+        "n_positions": 48
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998735386825,
+        "turnover": 0.12560588756578583,
+        "costs": 7253.058988937338,
+        "n_positions": 241
+      }
+    },
+    {
+      "rebalance_date": "2017-02-28",
+      "eligible_count": 243,
+      "excluded_by_rule": {
+        "closes_complete_253": 183,
+        "adv_63_ge_10m": 197,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 48,
+      "benchmark_size": 243,
+      "basket": {
+        "invested_fraction": 0.9949948450053846,
+        "turnover": 0.5099753989031609,
+        "costs": 55788.815225247585,
+        "n_positions": 48
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999029018703,
+        "turnover": 0.0965557062063764,
+        "costs": 5921.499092903055,
+        "n_positions": 243
+      }
+    },
+    {
+      "rebalance_date": "2017-03-31",
+      "eligible_count": 252,
+      "excluded_by_rule": {
+        "closes_complete_253": 183,
+        "adv_63_ge_10m": 186,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 50,
+      "benchmark_size": 252,
+      "basket": {
+        "invested_fraction": 0.9949941303518723,
+        "turnover": 0.5807271969027487,
+        "costs": 66961.89585528294,
+        "n_positions": 50
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949986918672284,
+        "turnover": 0.13006568549429662,
+        "costs": 8365.205995838194,
+        "n_positions": 252
+      }
+    },
+    {
+      "rebalance_date": "2017-04-28",
+      "eligible_count": 257,
+      "excluded_by_rule": {
+        "closes_complete_253": 183,
+        "adv_63_ge_10m": 181,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 51,
+      "benchmark_size": 257,
+      "basket": {
+        "invested_fraction": 0.9949962930806558,
+        "turnover": 0.3673827251758656,
+        "costs": 46288.1840261429,
+        "n_positions": 51
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991350747053,
+        "turnover": 0.08614750727535976,
+        "costs": 5874.092566789936,
+        "n_positions": 257
+      }
+    },
+    {
+      "rebalance_date": "2017-05-31",
+      "eligible_count": 257,
+      "excluded_by_rule": {
+        "closes_complete_253": 182,
+        "adv_63_ge_10m": 181,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 51,
+      "benchmark_size": 257,
+      "basket": {
+        "invested_fraction": 0.9949932042434023,
+        "turnover": 0.6734475649274798,
+        "costs": 84881.97027917895,
+        "n_positions": 51
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999128517896,
+        "turnover": 0.08699266332327298,
+        "costs": 5800.890739562296,
+        "n_positions": 257
+      }
+    },
+    {
+      "rebalance_date": "2017-06-30",
+      "eligible_count": 256,
+      "excluded_by_rule": {
+        "closes_complete_253": 180,
+        "adv_63_ge_10m": 182,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 51,
+      "benchmark_size": 256,
+      "basket": {
+        "invested_fraction": 0.9949946951729711,
+        "turnover": 0.5259017325852506,
+        "costs": 68181.69706459637,
+        "n_positions": 51
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990631373393,
+        "turnover": 0.09327141398815307,
+        "costs": 6349.294690760729,
+        "n_positions": 256
+      }
+    },
+    {
+      "rebalance_date": "2017-07-31",
+      "eligible_count": 258,
+      "excluded_by_rule": {
+        "closes_complete_253": 178,
+        "adv_63_ge_10m": 182,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 51,
+      "benchmark_size": 258,
+      "basket": {
+        "invested_fraction": 0.9949953790145918,
+        "turnover": 0.45765853374990495,
+        "costs": 63803.13637752746,
+        "n_positions": 51
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991299222356,
+        "turnover": 0.08663713332210714,
+        "costs": 6243.538166014745,
+        "n_positions": 258
+      }
+    },
+    {
+      "rebalance_date": "2017-08-31",
+      "eligible_count": 255,
+      "excluded_by_rule": {
+        "closes_complete_253": 178,
+        "adv_63_ge_10m": 185,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 51,
+      "benchmark_size": 255,
+      "basket": {
+        "invested_fraction": 0.9949953578975437,
+        "turnover": 0.4576165423314107,
+        "costs": 66915.2381936603,
+        "n_positions": 51
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990716755159,
+        "turnover": 0.09235988312849305,
+        "costs": 6646.468424651451,
+        "n_positions": 255
+      }
+    },
+    {
+      "rebalance_date": "2017-09-29",
+      "eligible_count": 262,
+      "excluded_by_rule": {
+        "closes_complete_253": 175,
+        "adv_63_ge_10m": 178,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 52,
+      "benchmark_size": 262,
+      "basket": {
+        "invested_fraction": 0.9949959025082139,
+        "turnover": 0.4067495713371214,
+        "costs": 63610.89341276963,
+        "n_positions": 52
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990739051411,
+        "turnover": 0.09229490100890894,
+        "costs": 6787.9772523625,
+        "n_positions": 262
+      }
+    },
+    {
+      "rebalance_date": "2017-10-31",
+      "eligible_count": 263,
+      "excluded_by_rule": {
+        "closes_complete_253": 173,
+        "adv_63_ge_10m": 177,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 52,
+      "benchmark_size": 263,
+      "basket": {
+        "invested_fraction": 0.994995853764761,
+        "turnover": 0.41119403604975124,
+        "costs": 72134.52491820985,
+        "n_positions": 52
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989337027554,
+        "turnover": 0.10614532752037506,
+        "costs": 8559.38113538782,
+        "n_positions": 263
+      }
+    },
+    {
+      "rebalance_date": "2017-11-30",
+      "eligible_count": 265,
+      "excluded_by_rule": {
+        "closes_complete_253": 171,
+        "adv_63_ge_10m": 175,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 53,
+      "benchmark_size": 265,
+      "basket": {
+        "invested_fraction": 0.9949964828925787,
+        "turnover": 0.34753805089586265,
+        "costs": 61340.865413241176,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990013572446,
+        "turnover": 0.0994984003354764,
+        "costs": 8180.462113103314,
+        "n_positions": 265
+      }
+    },
+    {
+      "rebalance_date": "2017-12-29",
+      "eligible_count": 270,
+      "excluded_by_rule": {
+        "closes_complete_253": 170,
+        "adv_63_ge_10m": 169,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 54,
+      "benchmark_size": 270,
+      "basket": {
+        "invested_fraction": 0.9949958377383619,
+        "turnover": 0.4116070391073765,
+        "costs": 77179.89289921934,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992048301094,
+        "turnover": 0.07900241215859469,
+        "costs": 6859.368277939003,
+        "n_positions": 270
+      }
+    },
+    {
+      "rebalance_date": "2018-01-31",
+      "eligible_count": 272,
+      "excluded_by_rule": {
+        "closes_complete_253": 170,
+        "adv_63_ge_10m": 163,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 54,
+      "benchmark_size": 272,
+      "basket": {
+        "invested_fraction": 0.9949968561392329,
+        "turnover": 0.311668907129697,
+        "costs": 59955.61137247746,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992041309718,
+        "turnover": 0.07942982271857105,
+        "costs": 6762.536128674183,
+        "n_positions": 272
+      }
+    },
+    {
+      "rebalance_date": "2018-02-28",
+      "eligible_count": 272,
+      "excluded_by_rule": {
+        "closes_complete_253": 169,
+        "adv_63_ge_10m": 161,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 54,
+      "benchmark_size": 272,
+      "basket": {
+        "invested_fraction": 0.9949968807565294,
+        "turnover": 0.3091064662893327,
+        "costs": 57645.77898053546,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992196375812,
+        "turnover": 0.07772777863832249,
+        "costs": 6394.168892167392,
+        "n_positions": 272
+      }
+    },
+    {
+      "rebalance_date": "2018-03-28",
+      "eligible_count": 273,
+      "excluded_by_rule": {
+        "closes_complete_253": 168,
+        "adv_63_ge_10m": 162,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 54,
+      "benchmark_size": 273,
+      "basket": {
+        "invested_fraction": 0.9949950652632131,
+        "turnover": 0.4884886672612551,
+        "costs": 85764.82140298188,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949993083430144,
+        "turnover": 0.06909252631140027,
+        "costs": 5343.607872711883,
+        "n_positions": 273
+      }
+    },
+    {
+      "rebalance_date": "2018-04-30",
+      "eligible_count": 269,
+      "excluded_by_rule": {
+        "closes_complete_253": 168,
+        "adv_63_ge_10m": 166,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 53,
+      "benchmark_size": 269,
+      "basket": {
+        "invested_fraction": 0.9949951352160816,
+        "turnover": 0.48083388264760046,
+        "costs": 92018.12760412319,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992224785239,
+        "turnover": 0.0772856346640269,
+        "costs": 6431.875554880169,
+        "n_positions": 269
+      }
+    },
+    {
+      "rebalance_date": "2018-05-31",
+      "eligible_count": 269,
+      "excluded_by_rule": {
+        "closes_complete_253": 167,
+        "adv_63_ge_10m": 165,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 53,
+      "benchmark_size": 269,
+      "basket": {
+        "invested_fraction": 0.9949955152238115,
+        "turnover": 0.4455676573669032,
+        "costs": 80468.34645139248,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992075654447,
+        "turnover": 0.07913313896054087,
+        "costs": 6150.334141382799,
+        "n_positions": 269
+      }
+    },
+    {
+      "rebalance_date": "2018-06-29",
+      "eligible_count": 265,
+      "excluded_by_rule": {
+        "closes_complete_253": 166,
+        "adv_63_ge_10m": 167,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 53,
+      "benchmark_size": 265,
+      "basket": {
+        "invested_fraction": 0.9949954233743111,
+        "turnover": 0.4531529536338251,
+        "costs": 78582.65629208482,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991464651324,
+        "turnover": 0.08491927392231863,
+        "costs": 6275.150012222944,
+        "n_positions": 265
+      }
+    },
+    {
+      "rebalance_date": "2018-07-31",
+      "eligible_count": 264,
+      "excluded_by_rule": {
+        "closes_complete_253": 164,
+        "adv_63_ge_10m": 169,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 52,
+      "benchmark_size": 264,
+      "basket": {
+        "invested_fraction": 0.9949954503904835,
+        "turnover": 0.4505191928233947,
+        "costs": 81245.11795481628,
+        "n_positions": 52
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990242883673,
+        "turnover": 0.09697623852150335,
+        "costs": 7496.090215294971,
+        "n_positions": 264
+      }
+    },
+    {
+      "rebalance_date": "2018-08-31",
+      "eligible_count": 265,
+      "excluded_by_rule": {
+        "closes_complete_253": 163,
+        "adv_63_ge_10m": 170,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 53,
+      "benchmark_size": 265,
+      "basket": {
+        "invested_fraction": 0.994995760958558,
+        "turnover": 0.4207525623318864,
+        "costs": 80585.21601555755,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990353158101,
+        "turnover": 0.09583757631730071,
+        "costs": 7704.5527872495795,
+        "n_positions": 265
+      }
+    },
+    {
+      "rebalance_date": "2018-09-28",
+      "eligible_count": 268,
+      "excluded_by_rule": {
+        "closes_complete_253": 161,
+        "adv_63_ge_10m": 168,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 53,
+      "benchmark_size": 268,
+      "basket": {
+        "invested_fraction": 0.9949957554762363,
+        "turnover": 0.4202431481396201,
+        "costs": 69191.7221302791,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988333154809,
+        "turnover": 0.11653910442021564,
+        "costs": 7964.83345853362,
+        "n_positions": 268
+      }
+    },
+    {
+      "rebalance_date": "2018-10-31",
+      "eligible_count": 274,
+      "excluded_by_rule": {
+        "closes_complete_253": 157,
+        "adv_63_ge_10m": 166,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 54,
+      "benchmark_size": 274,
+      "basket": {
+        "invested_fraction": 0.9949956550891479,
+        "turnover": 0.43149634957792177,
+        "costs": 71369.2510803618,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998893626298,
+        "turnover": 0.11028586017873099,
+        "costs": 7622.556925851461,
+        "n_positions": 274
+      }
+    },
+    {
+      "rebalance_date": "2018-11-30",
+      "eligible_count": 271,
+      "excluded_by_rule": {
+        "closes_complete_253": 153,
+        "adv_63_ge_10m": 172,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 54,
+      "benchmark_size": 271,
+      "basket": {
+        "invested_fraction": 0.9949957134157837,
+        "turnover": 0.42554792890621257,
+        "costs": 70647.12651793053,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989090843347,
+        "turnover": 0.10824559526645822,
+        "costs": 7669.387947206992,
+        "n_positions": 271
+      }
+    },
+    {
+      "rebalance_date": "2018-12-31",
+      "eligible_count": 270,
+      "excluded_by_rule": {
+        "closes_complete_253": 153,
+        "adv_63_ge_10m": 173,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 54,
+      "benchmark_size": 270,
+      "basket": {
+        "invested_fraction": 0.9949961592160103,
+        "turnover": 0.38130913239218633,
+        "costs": 63287.76027076288,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990378293053,
+        "turnover": 0.09523247312910758,
+        "costs": 6927.445922431633,
+        "n_positions": 270
+      }
+    },
+    {
+      "rebalance_date": "2019-01-31",
+      "eligible_count": 265,
+      "excluded_by_rule": {
+        "closes_complete_253": 153,
+        "adv_63_ge_10m": 176,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 53,
+      "benchmark_size": 265,
+      "basket": {
+        "invested_fraction": 0.9949951419461669,
+        "turnover": 0.482068910205183,
+        "costs": 77120.36538188001,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989939152621,
+        "turnover": 0.10025332407841968,
+        "costs": 6870.039559687422,
+        "n_positions": 265
+      }
+    },
+    {
+      "rebalance_date": "2019-02-28",
+      "eligible_count": 264,
+      "excluded_by_rule": {
+        "closes_complete_253": 152,
+        "adv_63_ge_10m": 175,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 52,
+      "benchmark_size": 264,
+      "basket": {
+        "invested_fraction": 0.9949960107838037,
+        "turnover": 0.39612777730936777,
+        "costs": 62348.39897246754,
+        "n_positions": 52
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989794894036,
+        "turnover": 0.10173800963400483,
+        "costs": 6904.942899531211,
+        "n_positions": 264
+      }
+    },
+    {
+      "rebalance_date": "2019-03-28",
+      "eligible_count": 266,
+      "excluded_by_rule": {
+        "closes_complete_253": 151,
+        "adv_63_ge_10m": 173,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 53,
+      "benchmark_size": 266,
+      "basket": {
+        "invested_fraction": 0.9949974138575788,
+        "turnover": 0.2570053919482973,
+        "costs": 43344.251831011585,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990266674807,
+        "turnover": 0.09682206626515633,
+        "costs": 7222.227720855531,
+        "n_positions": 266
+      }
+    },
+    {
+      "rebalance_date": "2019-04-30",
+      "eligible_count": 274,
+      "excluded_by_rule": {
+        "closes_complete_253": 147,
+        "adv_63_ge_10m": 169,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 54,
+      "benchmark_size": 274,
+      "basket": {
+        "invested_fraction": 0.9949956824497684,
+        "turnover": 0.427981864555585,
+        "costs": 71365.32918088826,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990425118588,
+        "turnover": 0.0953945551585501,
+        "costs": 6826.568414879794,
+        "n_positions": 274
+      }
+    },
+    {
+      "rebalance_date": "2019-05-31",
+      "eligible_count": 275,
+      "excluded_by_rule": {
+        "closes_complete_253": 147,
+        "adv_63_ge_10m": 167,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 55,
+      "benchmark_size": 275,
+      "basket": {
+        "invested_fraction": 0.9949933707205695,
+        "turnover": 0.6565314510559287,
+        "costs": 111871.32070366156,
+        "n_positions": 55
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999043144638,
+        "turnover": 0.09519399104591862,
+        "costs": 6934.109793685692,
+        "n_positions": 275
+      }
+    },
+    {
+      "rebalance_date": "2019-06-28",
+      "eligible_count": 271,
+      "excluded_by_rule": {
+        "closes_complete_253": 147,
+        "adv_63_ge_10m": 171,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 54,
+      "benchmark_size": 271,
+      "basket": {
+        "invested_fraction": 0.9949936371994758,
+        "turnover": 0.6318768628068695,
+        "costs": 105245.43266487581,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991243610324,
+        "turnover": 0.08699427194762652,
+        "costs": 6128.850245146318,
+        "n_positions": 271
+      }
+    },
+    {
+      "rebalance_date": "2019-07-31",
+      "eligible_count": 269,
+      "excluded_by_rule": {
+        "closes_complete_253": 145,
+        "adv_63_ge_10m": 171,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 53,
+      "benchmark_size": 269,
+      "basket": {
+        "invested_fraction": 0.9949948439320023,
+        "turnover": 0.51064412513231,
+        "costs": 77680.3621392426,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989377974846,
+        "turnover": 0.10584945090328186,
+        "costs": 6705.9606553019275,
+        "n_positions": 269
+      }
+    },
+    {
+      "rebalance_date": "2019-08-30",
+      "eligible_count": 257,
+      "excluded_by_rule": {
+        "closes_complete_253": 144,
+        "adv_63_ge_10m": 185,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 51,
+      "benchmark_size": 257,
+      "basket": {
+        "invested_fraction": 0.9949934169098092,
+        "turnover": 0.6515095504859881,
+        "costs": 99279.47857443354,
+        "n_positions": 51
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949986686977381,
+        "turnover": 0.13236619698047064,
+        "costs": 8307.13987195324,
+        "n_positions": 257
+      }
+    },
+    {
+      "rebalance_date": "2019-09-30",
+      "eligible_count": 266,
+      "excluded_by_rule": {
+        "closes_complete_253": 143,
+        "adv_63_ge_10m": 176,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 53,
+      "benchmark_size": 266,
+      "basket": {
+        "invested_fraction": 0.994994664506277,
+        "turnover": 0.5304104313187527,
+        "costs": 86942.81733091518,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949985540757312,
+        "turnover": 0.14385205684954713,
+        "costs": 9552.001293455984,
+        "n_positions": 266
+      }
+    },
+    {
+      "rebalance_date": "2019-10-31",
+      "eligible_count": 267,
+      "excluded_by_rule": {
+        "closes_complete_253": 141,
+        "adv_63_ge_10m": 175,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 53,
+      "benchmark_size": 267,
+      "basket": {
+        "invested_fraction": 0.9949949558611969,
+        "turnover": 0.5016505171019002,
+        "costs": 86666.06361796489,
+        "n_positions": 53
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949987692816069,
+        "turnover": 0.12237888783985287,
+        "costs": 8579.162734377815,
+        "n_positions": 267
+      }
+    },
+    {
+      "rebalance_date": "2019-11-29",
+      "eligible_count": 275,
+      "excluded_by_rule": {
+        "closes_complete_253": 139,
+        "adv_63_ge_10m": 167,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 55,
+      "benchmark_size": 275,
+      "basket": {
+        "invested_fraction": 0.9949953157432464,
+        "turnover": 0.46588570243888805,
+        "costs": 81387.51820581972,
+        "n_positions": 55
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949987909451579,
+        "turnover": 0.12019560271834225,
+        "costs": 8560.760809598745,
+        "n_positions": 275
+      }
+    },
+    {
+      "rebalance_date": "2019-12-31",
+      "eligible_count": 273,
+      "excluded_by_rule": {
+        "closes_complete_253": 139,
+        "adv_63_ge_10m": 168,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 54,
+      "benchmark_size": 273,
+      "basket": {
+        "invested_fraction": 0.994994960914499,
+        "turnover": 0.49742986840273984,
+        "costs": 89858.61556340492,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991321602933,
+        "turnover": 0.08627914793017921,
+        "costs": 6129.97408308826,
+        "n_positions": 273
+      }
+    },
+    {
+      "rebalance_date": "2020-01-31",
+      "eligible_count": 284,
+      "excluded_by_rule": {
+        "closes_complete_253": 138,
+        "adv_63_ge_10m": 156,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 56,
+      "benchmark_size": 284,
+      "basket": {
+        "invested_fraction": 0.99499650091577,
+        "turnover": 0.348083181503534,
+        "costs": 63436.604066711356,
+        "n_positions": 56
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949986130264274,
+        "turnover": 0.13792610175233722,
+        "costs": 9862.559727404563,
+        "n_positions": 284
+      }
+    },
+    {
+      "rebalance_date": "2020-02-28",
+      "eligible_count": 284,
+      "excluded_by_rule": {
+        "closes_complete_253": 138,
+        "adv_63_ge_10m": 156,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 56,
+      "benchmark_size": 284,
+      "basket": {
+        "invested_fraction": 0.9949951763080668,
+        "turnover": 0.4791989251326211,
+        "costs": 87728.7519337348,
+        "n_positions": 56
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949988547429648,
+        "turnover": 0.11412553207301021,
+        "costs": 7795.934211009177,
+        "n_positions": 284
+      }
+    },
+    {
+      "rebalance_date": "2020-03-31",
+      "eligible_count": 284,
+      "excluded_by_rule": {
+        "closes_complete_253": 138,
+        "adv_63_ge_10m": 156,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 56,
+      "benchmark_size": 284,
+      "basket": {
+        "invested_fraction": 0.9949931469371401,
+        "turnover": 0.6778557770995582,
+        "costs": 90074.26310914962,
+        "n_positions": 56
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949981245310762,
+        "turnover": 0.18738972931277947,
+        "costs": 9028.940142245674,
+        "n_positions": 284
+      }
+    },
+    {
+      "rebalance_date": "2020-04-30",
+      "eligible_count": 277,
+      "excluded_by_rule": {
+        "closes_complete_253": 136,
+        "adv_63_ge_10m": 164,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 55,
+      "benchmark_size": 277,
+      "basket": {
+        "invested_fraction": 0.9949944435577232,
+        "turnover": 0.5486792793569427,
+        "costs": 81541.01429932953,
+        "n_positions": 55
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949984828297286,
+        "turnover": 0.15054868710590916,
+        "costs": 8262.328139946643,
+        "n_positions": 277
+      }
+    },
+    {
+      "rebalance_date": "2020-05-29",
+      "eligible_count": 272,
+      "excluded_by_rule": {
+        "closes_complete_253": 134,
+        "adv_63_ge_10m": 171,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 54,
+      "benchmark_size": 272,
+      "basket": {
+        "invested_fraction": 0.9949948818323937,
+        "turnover": 0.5047121845335063,
+        "costs": 77891.35261125692,
+        "n_positions": 54
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949987577685526,
+        "turnover": 0.12334831778116885,
+        "costs": 6924.850287051723,
+        "n_positions": 272
+      }
+    },
+    {
+      "rebalance_date": "2020-06-30",
+      "eligible_count": 279,
+      "excluded_by_rule": {
+        "closes_complete_253": 134,
+        "adv_63_ge_10m": 161,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 55,
+      "benchmark_size": 279,
+      "basket": {
+        "invested_fraction": 0.9949961244311905,
+        "turnover": 0.3822191414775003,
+        "costs": 63391.042937627746,
+        "n_positions": 55
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949985175195687,
+        "turnover": 0.14704645721980433,
+        "costs": 9550.40714045059,
+        "n_positions": 279
+      }
+    },
+    {
+      "rebalance_date": "2020-07-31",
+      "eligible_count": 288,
+      "excluded_by_rule": {
+        "closes_complete_253": 133,
+        "adv_63_ge_10m": 151,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 57,
+      "benchmark_size": 288,
+      "basket": {
+        "invested_fraction": 0.9949945613039023,
+        "turnover": 0.539153136973955,
+        "costs": 95642.33060419097,
+        "n_positions": 57
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949987976254248,
+        "turnover": 0.11961412081464877,
+        "costs": 8080.647311276521,
+        "n_positions": 288
+      }
+    },
+    {
+      "rebalance_date": "2020-08-31",
+      "eligible_count": 304,
+      "excluded_by_rule": {
+        "closes_complete_253": 131,
+        "adv_63_ge_10m": 137,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 60,
+      "benchmark_size": 304,
+      "basket": {
+        "invested_fraction": 0.9949934531812877,
+        "turnover": 0.6496609810547953,
+        "costs": 120900.3965520753,
+        "n_positions": 60
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949985279888145,
+        "turnover": 0.14644696962073436,
+        "costs": 10914.347282658915,
+        "n_positions": 304
+      }
+    },
+    {
+      "rebalance_date": "2020-09-30",
+      "eligible_count": 304,
+      "excluded_by_rule": {
+        "closes_complete_253": 130,
+        "adv_63_ge_10m": 138,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 60,
+      "benchmark_size": 304,
+      "basket": {
+        "invested_fraction": 0.9949952306692228,
+        "turnover": 0.4710870894536118,
+        "costs": 96324.55730832825,
+        "n_positions": 60
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999064235605,
+        "turnover": 0.09332501541156023,
+        "costs": 7028.982185269715,
+        "n_positions": 304
+      }
+    },
+    {
+      "rebalance_date": "2020-10-30",
+      "eligible_count": 309,
+      "excluded_by_rule": {
+        "closes_complete_253": 128,
+        "adv_63_ge_10m": 136,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 61,
+      "benchmark_size": 309,
+      "basket": {
+        "invested_fraction": 0.9949965546845684,
+        "turnover": 0.3400855968607665,
+        "costs": 69688.95894216804,
+        "n_positions": 61
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991246604182,
+        "turnover": 0.0872416535225076,
+        "costs": 6559.971855349977,
+        "n_positions": 309
+      }
+    },
+    {
+      "rebalance_date": "2020-11-27",
+      "eligible_count": 308,
+      "excluded_by_rule": {
+        "closes_complete_253": 128,
+        "adv_63_ge_10m": 136,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 61,
+      "benchmark_size": 308,
+      "basket": {
+        "invested_fraction": 0.9949959432390834,
+        "turnover": 0.4001579073939564,
+        "costs": 90483.27687027643,
+        "n_positions": 61
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990450731655,
+        "turnover": 0.09486781422215453,
+        "costs": 8224.792363313123,
+        "n_positions": 308
+      }
+    },
+    {
+      "rebalance_date": "2020-12-31",
+      "eligible_count": 312,
+      "excluded_by_rule": {
+        "closes_complete_253": 128,
+        "adv_63_ge_10m": 132,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 62,
+      "benchmark_size": 312,
+      "basket": {
+        "invested_fraction": 0.9949958846934308,
+        "turnover": 0.4064685391528625,
+        "costs": 99339.87063885338,
+        "n_positions": 62
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949989990346461,
+        "turnover": 0.09960683799086206,
+        "costs": 9373.905997495318,
+        "n_positions": 312
+      }
+    },
+    {
+      "rebalance_date": "2021-01-29",
+      "eligible_count": 315,
+      "excluded_by_rule": {
+        "closes_complete_253": 128,
+        "adv_63_ge_10m": 125,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 63,
+      "benchmark_size": 315,
+      "basket": {
+        "invested_fraction": 0.9949944602121497,
+        "turnover": 0.5463453509024708,
+        "costs": 136632.50967223808,
+        "n_positions": 63
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991394640704,
+        "turnover": 0.08576936798759272,
+        "costs": 8233.07272785189,
+        "n_positions": 315
+      }
+    },
+    {
+      "rebalance_date": "2021-02-26",
+      "eligible_count": 317,
+      "excluded_by_rule": {
+        "closes_complete_253": 127,
+        "adv_63_ge_10m": 124,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 63,
+      "benchmark_size": 317,
+      "basket": {
+        "invested_fraction": 0.9949933087891685,
+        "turnover": 0.6624907244690831,
+        "costs": 186297.72456828872,
+        "n_positions": 63
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949986759167132,
+        "turnover": 0.13195668125135884,
+        "costs": 14480.146869232656,
+        "n_positions": 317
+      }
+    },
+    {
+      "rebalance_date": "2021-03-31",
+      "eligible_count": 321,
+      "excluded_by_rule": {
+        "closes_complete_253": 125,
+        "adv_63_ge_10m": 123,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 64,
+      "benchmark_size": 321,
+      "basket": {
+        "invested_fraction": 0.9949918371673233,
+        "turnover": 0.809866761620742,
+        "costs": 233959.69995134196,
+        "n_positions": 64
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990755252701,
+        "turnover": 0.09225554552055505,
+        "costs": 10212.605747349102,
+        "n_positions": 321
+      }
+    },
+    {
+      "rebalance_date": "2021-04-30",
+      "eligible_count": 322,
+      "excluded_by_rule": {
+        "closes_complete_253": 124,
+        "adv_63_ge_10m": 123,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 64,
+      "benchmark_size": 322,
+      "basket": {
+        "invested_fraction": 0.9949952569997885,
+        "turnover": 0.4686229187093385,
+        "costs": 144535.28234302852,
+        "n_positions": 64
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990781136251,
+        "turnover": 0.09194638275739216,
+        "costs": 10354.352196920272,
+        "n_positions": 322
+      }
+    },
+    {
+      "rebalance_date": "2021-05-31",
+      "eligible_count": 324,
+      "excluded_by_rule": {
+        "closes_complete_253": 124,
+        "adv_63_ge_10m": 118,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 64,
+      "benchmark_size": 324,
+      "basket": {
+        "invested_fraction": 0.9949954114128465,
+        "turnover": 0.45367364214423583,
+        "costs": 152190.8939807933,
+        "n_positions": 64
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991114056127,
+        "turnover": 0.08847221198977577,
+        "costs": 11113.860974240451,
+        "n_positions": 324
+      }
+    },
+    {
+      "rebalance_date": "2021-06-30",
+      "eligible_count": 324,
+      "excluded_by_rule": {
+        "closes_complete_253": 124,
+        "adv_63_ge_10m": 112,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 64,
+      "benchmark_size": 324,
+      "basket": {
+        "invested_fraction": 0.9949942891017117,
+        "turnover": 0.5633784374057133,
+        "costs": 207855.60732612145,
+        "n_positions": 64
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991010740137,
+        "turnover": 0.08954711037967003,
+        "costs": 12008.512950249376,
+        "n_positions": 324
+      }
+    },
+    {
+      "rebalance_date": "2021-07-30",
+      "eligible_count": 324,
+      "excluded_by_rule": {
+        "closes_complete_253": 124,
+        "adv_63_ge_10m": 111,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 64,
+      "benchmark_size": 324,
+      "basket": {
+        "invested_fraction": 0.9949955934741568,
+        "turnover": 0.4357034270090328,
+        "costs": 174204.94879639422,
+        "n_positions": 64
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990296554416,
+        "turnover": 0.09675171149618016,
+        "costs": 13690.512181091703,
+        "n_positions": 324
+      }
+    },
+    {
+      "rebalance_date": "2021-08-31",
+      "eligible_count": 325,
+      "excluded_by_rule": {
+        "closes_complete_253": 123,
+        "adv_63_ge_10m": 111,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 65,
+      "benchmark_size": 325,
+      "basket": {
+        "invested_fraction": 0.9949954354133654,
+        "turnover": 0.4523286026296871,
+        "costs": 181327.44124882584,
+        "n_positions": 65
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991077363515,
+        "turnover": 0.08910424517226685,
+        "costs": 12495.25975295859,
+        "n_positions": 325
+      }
+    },
+    {
+      "rebalance_date": "2021-09-30",
+      "eligible_count": 325,
+      "excluded_by_rule": {
+        "closes_complete_253": 123,
+        "adv_63_ge_10m": 108,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 65,
+      "benchmark_size": 325,
+      "basket": {
+        "invested_fraction": 0.9949961293841388,
+        "turnover": 0.3830033568440319,
+        "costs": 162862.75624369248,
+        "n_positions": 65
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991022422008,
+        "turnover": 0.08947844929760661,
+        "costs": 13380.44605379071,
+        "n_positions": 325
+      }
+    },
+    {
+      "rebalance_date": "2021-10-29",
+      "eligible_count": 327,
+      "excluded_by_rule": {
+        "closes_complete_253": 119,
+        "adv_63_ge_10m": 108,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 65,
+      "benchmark_size": 327,
+      "basket": {
+        "invested_fraction": 0.9949958120968121,
+        "turnover": 0.4136063349066083,
+        "costs": 183216.04889734517,
+        "n_positions": 65
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999055037688,
+        "turnover": 0.09419612807172033,
+        "costs": 14346.1386057989,
+        "n_positions": 327
+      }
+    },
+    {
+      "rebalance_date": "2021-11-30",
+      "eligible_count": 327,
+      "excluded_by_rule": {
+        "closes_complete_253": 118,
+        "adv_63_ge_10m": 105,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 65,
+      "benchmark_size": 327,
+      "basket": {
+        "invested_fraction": 0.9949964787273514,
+        "turnover": 0.3494288244231266,
+        "costs": 158806.04625978443,
+        "n_positions": 65
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999154186219,
+        "turnover": 0.08445319100758006,
+        "costs": 12741.804312118578,
+        "n_positions": 327
+      }
+    },
+    {
+      "rebalance_date": "2021-12-31",
+      "eligible_count": 327,
+      "excluded_by_rule": {
+        "closes_complete_253": 118,
+        "adv_63_ge_10m": 102,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 65,
+      "benchmark_size": 327,
+      "basket": {
+        "invested_fraction": 0.9949952444185935,
+        "turnover": 0.4714936902295258,
+        "costs": 233006.50884093365,
+        "n_positions": 65
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991783282408,
+        "turnover": 0.08162385371766198,
+        "costs": 12877.394440334181,
+        "n_positions": 327
+      }
+    },
+    {
+      "rebalance_date": "2022-01-31",
+      "eligible_count": 327,
+      "excluded_by_rule": {
+        "closes_complete_253": 118,
+        "adv_63_ge_10m": 101,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 65,
+      "benchmark_size": 327,
+      "basket": {
+        "invested_fraction": 0.9949950126603084,
+        "turnover": 0.4937867328191325,
+        "costs": 253627.99837961848,
+        "n_positions": 65
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990834224496,
+        "turnover": 0.09145458670105507,
+        "costs": 14660.434634504994,
+        "n_positions": 327
+      }
+    },
+    {
+      "rebalance_date": "2022-02-28",
+      "eligible_count": 331,
+      "excluded_by_rule": {
+        "closes_complete_253": 115,
+        "adv_63_ge_10m": 97,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 66,
+      "benchmark_size": 331,
+      "basket": {
+        "invested_fraction": 0.9949948335274832,
+        "turnover": 0.5111934634112256,
+        "costs": 239477.95344041762,
+        "n_positions": 66
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991379926073,
+        "turnover": 0.08615869222763632,
+        "costs": 12548.401611882928,
+        "n_positions": 331
+      }
+    },
+    {
+      "rebalance_date": "2022-03-31",
+      "eligible_count": 338,
+      "excluded_by_rule": {
+        "closes_complete_253": 111,
+        "adv_63_ge_10m": 90,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 67,
+      "benchmark_size": 338,
+      "basket": {
+        "invested_fraction": 0.9949953656541012,
+        "turnover": 0.460517489511829,
+        "costs": 237841.06572483902,
+        "n_positions": 67
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990094190396,
+        "turnover": 0.09858199010269221,
+        "costs": 15255.501852639665,
+        "n_positions": 338
+      }
+    },
+    {
+      "rebalance_date": "2022-04-29",
+      "eligible_count": 340,
+      "excluded_by_rule": {
+        "closes_complete_253": 108,
+        "adv_63_ge_10m": 91,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 68,
+      "benchmark_size": 340,
+      "basket": {
+        "invested_fraction": 0.9949954430439807,
+        "turnover": 0.4516572943006792,
+        "costs": 236705.04701847356,
+        "n_positions": 68
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990705989943,
+        "turnover": 0.0927124487644745,
+        "costs": 14831.080230114503,
+        "n_positions": 340
+      }
+    },
+    {
+      "rebalance_date": "2022-05-31",
+      "eligible_count": 337,
+      "excluded_by_rule": {
+        "closes_complete_253": 108,
+        "adv_63_ge_10m": 93,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 67,
+      "benchmark_size": 337,
+      "basket": {
+        "invested_fraction": 0.9949959980600357,
+        "turnover": 0.3979790656697821,
+        "costs": 192306.48019133747,
+        "n_positions": 67
+      },
+      "benchmark": {
+        "invested_fraction": 0.99499918110651,
+        "turnover": 0.08172641073595299,
+        "costs": 12374.87856283251,
+        "n_positions": 337
+      }
+    },
+    {
+      "rebalance_date": "2022-06-30",
+      "eligible_count": 340,
+      "excluded_by_rule": {
+        "closes_complete_253": 106,
+        "adv_63_ge_10m": 91,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 68,
+      "benchmark_size": 340,
+      "basket": {
+        "invested_fraction": 0.99499497524361,
+        "turnover": 0.49824012713105414,
+        "costs": 225613.5423196212,
+        "n_positions": 68
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991953401225,
+        "turnover": 0.08035639921367305,
+        "costs": 11447.015173475018,
+        "n_positions": 340
+      }
+    },
+    {
+      "rebalance_date": "2022-07-29",
+      "eligible_count": 341,
+      "excluded_by_rule": {
+        "closes_complete_253": 103,
+        "adv_63_ge_10m": 92,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 68,
+      "benchmark_size": 341,
+      "basket": {
+        "invested_fraction": 0.9949952186792241,
+        "turnover": 0.47522945530349114,
+        "costs": 238872.30227283662,
+        "n_positions": 68
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992437634632,
+        "turnover": 0.07533994591471123,
+        "costs": 12009.357372023995,
+        "n_positions": 341
+      }
+    },
+    {
+      "rebalance_date": "2022-08-30",
+      "eligible_count": 345,
+      "excluded_by_rule": {
+        "closes_complete_253": 99,
+        "adv_63_ge_10m": 88,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 69,
+      "benchmark_size": 345,
+      "basket": {
+        "invested_fraction": 0.9949959817162591,
+        "turnover": 0.3985136108593883,
+        "costs": 215713.84703067047,
+        "n_positions": 69
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991294172805,
+        "turnover": 0.08649786319596121,
+        "costs": 14691.161376344371,
+        "n_positions": 345
+      }
+    },
+    {
+      "rebalance_date": "2022-09-30",
+      "eligible_count": 349,
+      "excluded_by_rule": {
+        "closes_complete_253": 96,
+        "adv_63_ge_10m": 86,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 69,
+      "benchmark_size": 349,
+      "basket": {
+        "invested_fraction": 0.9949966392654491,
+        "turnover": 0.3340698870246243,
+        "costs": 180262.39301491537,
+        "n_positions": 69
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991853658932,
+        "turnover": 0.08131745278380613,
+        "costs": 13708.369324209549,
+        "n_positions": 349
+      }
+    },
+    {
+      "rebalance_date": "2022-10-31",
+      "eligible_count": 351,
+      "excluded_by_rule": {
+        "closes_complete_253": 95,
+        "adv_63_ge_10m": 85,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 70,
+      "benchmark_size": 351,
+      "basket": {
+        "invested_fraction": 0.9949960411722579,
+        "turnover": 0.3930739364043788,
+        "costs": 220585.8338472069,
+        "n_positions": 70
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949993120162361,
+        "turnover": 0.06865799738873077,
+        "costs": 11961.896236312767,
+        "n_positions": 351
+      }
+    },
+    {
+      "rebalance_date": "2022-11-30",
+      "eligible_count": 355,
+      "excluded_by_rule": {
+        "closes_complete_253": 92,
+        "adv_63_ge_10m": 83,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 71,
+      "benchmark_size": 355,
+      "basket": {
+        "invested_fraction": 0.9949947415277015,
+        "turnover": 0.5225934589021625,
+        "costs": 300063.43629060435,
+        "n_positions": 71
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990449061759,
+        "turnover": 0.09507127238661334,
+        "costs": 17471.890549355663,
+        "n_positions": 355
+      }
+    },
+    {
+      "rebalance_date": "2022-12-30",
+      "eligible_count": 360,
+      "excluded_by_rule": {
+        "closes_complete_253": 88,
+        "adv_63_ge_10m": 83,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 72,
+      "benchmark_size": 360,
+      "basket": {
+        "invested_fraction": 0.994994951481342,
+        "turnover": 0.5010149835770058,
+        "costs": 285855.68747206556,
+        "n_positions": 72
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991737100546,
+        "turnover": 0.08247347096717592,
+        "costs": 15020.46140181669,
+        "n_positions": 360
+      }
+    },
+    {
+      "rebalance_date": "2023-01-31",
+      "eligible_count": 358,
+      "excluded_by_rule": {
+        "closes_complete_253": 88,
+        "adv_63_ge_10m": 84,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 71,
+      "benchmark_size": 358,
+      "basket": {
+        "invested_fraction": 0.9949961754776318,
+        "turnover": 0.3801004018600014,
+        "costs": 213285.65106679988,
+        "n_positions": 71
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949993021677909,
+        "turnover": 0.06967138794382155,
+        "costs": 12490.14071693844,
+        "n_positions": 358
+      }
+    },
+    {
+      "rebalance_date": "2023-02-28",
+      "eligible_count": 358,
+      "excluded_by_rule": {
+        "closes_complete_253": 87,
+        "adv_63_ge_10m": 81,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 71,
+      "benchmark_size": 358,
+      "basket": {
+        "invested_fraction": 0.9949950019116857,
+        "turnover": 0.4963946968133136,
+        "costs": 258634.97882140728,
+        "n_positions": 71
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991340557484,
+        "turnover": 0.08648731643709268,
+        "costs": 14902.10159677739,
+        "n_positions": 358
+      }
+    },
+    {
+      "rebalance_date": "2023-03-31",
+      "eligible_count": 359,
+      "excluded_by_rule": {
+        "closes_complete_253": 86,
+        "adv_63_ge_10m": 80,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 71,
+      "benchmark_size": 359,
+      "basket": {
+        "invested_fraction": 0.9949951731088088,
+        "turnover": 0.4790666891746854,
+        "costs": 257754.80035036476,
+        "n_positions": 71
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999318960702,
+        "turnover": 0.06799939728529472,
+        "costs": 11840.738739695136,
+        "n_positions": 359
+      }
+    },
+    {
+      "rebalance_date": "2023-04-28",
+      "eligible_count": 362,
+      "excluded_by_rule": {
+        "closes_complete_253": 85,
+        "adv_63_ge_10m": 78,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 72,
+      "benchmark_size": 362,
+      "basket": {
+        "invested_fraction": 0.9949947705138877,
+        "turnover": 0.5192904956109027,
+        "costs": 307528.0037986119,
+        "n_positions": 72
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949993212933654,
+        "turnover": 0.06765711714173495,
+        "costs": 12681.541519842074,
+        "n_positions": 362
+      }
+    },
+    {
+      "rebalance_date": "2023-05-31",
+      "eligible_count": 366,
+      "excluded_by_rule": {
+        "closes_complete_253": 82,
+        "adv_63_ge_10m": 76,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 73,
+      "benchmark_size": 366,
+      "basket": {
+        "invested_fraction": 0.9949944950562256,
+        "turnover": 0.5466458333330896,
+        "costs": 346458.51299839927,
+        "n_positions": 73
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999148643271,
+        "turnover": 0.08475342106299195,
+        "costs": 16875.2394887955,
+        "n_positions": 366
+      }
+    },
+    {
+      "rebalance_date": "2023-06-30",
+      "eligible_count": 370,
+      "excluded_by_rule": {
+        "closes_complete_253": 80,
+        "adv_63_ge_10m": 74,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 74,
+      "benchmark_size": 370,
+      "basket": {
+        "invested_fraction": 0.9949966225235157,
+        "turnover": 0.3357741800464617,
+        "costs": 236291.88841311715,
+        "n_positions": 74
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992145516068,
+        "turnover": 0.07814915442119784,
+        "costs": 16790.495167006986,
+        "n_positions": 370
+      }
+    },
+    {
+      "rebalance_date": "2023-07-31",
+      "eligible_count": 371,
+      "excluded_by_rule": {
+        "closes_complete_253": 80,
+        "adv_63_ge_10m": 73,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 74,
+      "benchmark_size": 371,
+      "basket": {
+        "invested_fraction": 0.994995802518244,
+        "turnover": 0.41720952076807394,
+        "costs": 333662.61023838766,
+        "n_positions": 74
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991900345788,
+        "turnover": 0.08077834493611027,
+        "costs": 18813.747128476152,
+        "n_positions": 371
+      }
+    },
+    {
+      "rebalance_date": "2023-08-31",
+      "eligible_count": 371,
+      "excluded_by_rule": {
+        "closes_complete_253": 80,
+        "adv_63_ge_10m": 72,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 74,
+      "benchmark_size": 371,
+      "basket": {
+        "invested_fraction": 0.9949949959826663,
+        "turnover": 0.49733981328198296,
+        "costs": 439060.0368067954,
+        "n_positions": 74
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991534000846,
+        "turnover": 0.08447917148325114,
+        "costs": 20895.616861946113,
+        "n_positions": 371
+      }
+    },
+    {
+      "rebalance_date": "2023-09-29",
+      "eligible_count": 372,
+      "excluded_by_rule": {
+        "closes_complete_253": 79,
+        "adv_63_ge_10m": 71,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 74,
+      "benchmark_size": 372,
+      "basket": {
+        "invested_fraction": 0.9949961385531232,
+        "turnover": 0.3836747859200995,
+        "costs": 356448.89428294555,
+        "n_positions": 74
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992240029758,
+        "turnover": 0.07746226474155811,
+        "costs": 19906.497443391225,
+        "n_positions": 372
+      }
+    },
+    {
+      "rebalance_date": "2023-10-31",
+      "eligible_count": 373,
+      "excluded_by_rule": {
+        "closes_complete_253": 78,
+        "adv_63_ge_10m": 69,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 74,
+      "benchmark_size": 373,
+      "basket": {
+        "invested_fraction": 0.9949962837285611,
+        "turnover": 0.36966706709668695,
+        "costs": 337547.6235075885,
+        "n_positions": 74
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992830963577,
+        "turnover": 0.07162200611027464,
+        "costs": 18102.969337695853,
+        "n_positions": 373
+      }
+    },
+    {
+      "rebalance_date": "2023-11-30",
+      "eligible_count": 376,
+      "excluded_by_rule": {
+        "closes_complete_253": 75,
+        "adv_63_ge_10m": 67,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 75,
+      "benchmark_size": 376,
+      "basket": {
+        "invested_fraction": 0.9949948552332901,
+        "turnover": 0.5108086618862326,
+        "costs": 527411.219403734,
+        "n_positions": 75
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991860880909,
+        "turnover": 0.08117862831156646,
+        "costs": 22802.47165328,
+        "n_positions": 376
+      }
+    },
+    {
+      "rebalance_date": "2023-12-29",
+      "eligible_count": 375,
+      "excluded_by_rule": {
+        "closes_complete_253": 76,
+        "adv_63_ge_10m": 65,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 75,
+      "benchmark_size": 375,
+      "basket": {
+        "invested_fraction": 0.994995529254589,
+        "turnover": 0.4446536291688825,
+        "costs": 489670.4136632021,
+        "n_positions": 76
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991781808909,
+        "turnover": 0.08199266431795686,
+        "costs": 24736.008624097653,
+        "n_positions": 376
+      }
+    },
+    {
+      "rebalance_date": "2024-01-31",
+      "eligible_count": 373,
+      "excluded_by_rule": {
+        "closes_complete_253": 75,
+        "adv_63_ge_10m": 64,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 74,
+      "benchmark_size": 373,
+      "basket": {
+        "invested_fraction": 0.9949957136134417,
+        "turnover": 0.42572833904939283,
+        "costs": 536558.671744088,
+        "n_positions": 75
+      },
+      "benchmark": {
+        "invested_fraction": 0.994998856215291,
+        "turnover": 0.11413750071172203,
+        "costs": 37187.6966365669,
+        "n_positions": 374
+      }
+    },
+    {
+      "rebalance_date": "2024-02-29",
+      "eligible_count": 374,
+      "excluded_by_rule": {
+        "closes_complete_253": 74,
+        "adv_63_ge_10m": 61,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 74,
+      "benchmark_size": 374,
+      "basket": {
+        "invested_fraction": 0.9949948637670514,
+        "turnover": 0.5108219721627308,
+        "costs": 653804.726628818,
+        "n_positions": 74
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991037212352,
+        "turnover": 0.08950319448407909,
+        "costs": 29650.2262498856,
+        "n_positions": 374
+      }
+    },
+    {
+      "rebalance_date": "2024-03-28",
+      "eligible_count": 372,
+      "excluded_by_rule": {
+        "closes_complete_253": 76,
+        "adv_63_ge_10m": 62,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 74,
+      "benchmark_size": 372,
+      "basket": {
+        "invested_fraction": 0.9949965260016823,
+        "turnover": 0.34579064432706597,
+        "costs": 428301.03382952727,
+        "n_positions": 74
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992826414376,
+        "turnover": 0.07167366118260235,
+        "costs": 23356.35271108147,
+        "n_positions": 372
+      }
+    },
+    {
+      "rebalance_date": "2024-04-30",
+      "eligible_count": 372,
+      "excluded_by_rule": {
+        "closes_complete_253": 76,
+        "adv_63_ge_10m": 60,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 74,
+      "benchmark_size": 372,
+      "basket": {
+        "invested_fraction": 0.9949957559154006,
+        "turnover": 0.4217257203453686,
+        "costs": 586357.4913259989,
+        "n_positions": 74
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999221739903,
+        "turnover": 0.07764143215024792,
+        "costs": 27683.08143440046,
+        "n_positions": 372
+      }
+    },
+    {
+      "rebalance_date": "2024-05-31",
+      "eligible_count": 373,
+      "excluded_by_rule": {
+        "closes_complete_253": 75,
+        "adv_63_ge_10m": 59,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 74,
+      "benchmark_size": 373,
+      "basket": {
+        "invested_fraction": 0.9949954700696553,
+        "turnover": 0.45053244455741703,
+        "costs": 681533.4169039449,
+        "n_positions": 74
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990391606044,
+        "turnover": 0.0959244415418019,
+        "costs": 35949.54716582247,
+        "n_positions": 373
+      }
+    },
+    {
+      "rebalance_date": "2024-06-28",
+      "eligible_count": 374,
+      "excluded_by_rule": {
+        "closes_complete_253": 74,
+        "adv_63_ge_10m": 56,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 74,
+      "benchmark_size": 374,
+      "basket": {
+        "invested_fraction": 0.9949954533854684,
+        "turnover": 0.4527206351214835,
+        "costs": 700791.3356470662,
+        "n_positions": 74
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991818164746,
+        "turnover": 0.08166723139260477,
+        "costs": 32375.84567467361,
+        "n_positions": 374
+      }
+    },
+    {
+      "rebalance_date": "2024-07-31",
+      "eligible_count": 375,
+      "excluded_by_rule": {
+        "closes_complete_253": 73,
+        "adv_63_ge_10m": 54,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 75,
+      "benchmark_size": 375,
+      "basket": {
+        "invested_fraction": 0.994996180618754,
+        "turnover": 0.38025642448658986,
+        "costs": 626719.2099144729,
+        "n_positions": 75
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992200683885,
+        "turnover": 0.07784119637954602,
+        "costs": 32867.87752012046,
+        "n_positions": 375
+      }
+    },
+    {
+      "rebalance_date": "2024-08-30",
+      "eligible_count": 377,
+      "excluded_by_rule": {
+        "closes_complete_253": 71,
+        "adv_63_ge_10m": 52,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 75,
+      "benchmark_size": 377,
+      "basket": {
+        "invested_fraction": 0.9949962243310008,
+        "turnover": 0.3759236132786885,
+        "costs": 621539.0212144324,
+        "n_positions": 75
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991680702444,
+        "turnover": 0.08309477845007597,
+        "costs": 35529.74719901601,
+        "n_positions": 377
+      }
+    },
+    {
+      "rebalance_date": "2024-09-30",
+      "eligible_count": 378,
+      "excluded_by_rule": {
+        "closes_complete_253": 70,
+        "adv_63_ge_10m": 51,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 75,
+      "benchmark_size": 378,
+      "basket": {
+        "invested_fraction": 0.9949955585754937,
+        "turnover": 0.4420148241851417,
+        "costs": 726594.2052601668,
+        "n_positions": 75
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992756778303,
+        "turnover": 0.07234524658762233,
+        "costs": 31393.384398444672,
+        "n_positions": 378
+      }
+    },
+    {
+      "rebalance_date": "2024-10-31",
+      "eligible_count": 381,
+      "excluded_by_rule": {
+        "closes_complete_253": 67,
+        "adv_63_ge_10m": 50,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 76,
+      "benchmark_size": 381,
+      "basket": {
+        "invested_fraction": 0.9949957114503352,
+        "turnover": 0.42698456813490143,
+        "costs": 678988.8796977419,
+        "n_positions": 76
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999166887227,
+        "turnover": 0.08328564899486912,
+        "costs": 34511.617820203894,
+        "n_positions": 381
+      }
+    },
+    {
+      "rebalance_date": "2024-11-29",
+      "eligible_count": 381,
+      "excluded_by_rule": {
+        "closes_complete_253": 66,
+        "adv_63_ge_10m": 49,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 76,
+      "benchmark_size": 381,
+      "basket": {
+        "invested_fraction": 0.9949954520652349,
+        "turnover": 0.4514653588385399,
+        "costs": 728909.8531693374,
+        "n_positions": 76
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949993552731059,
+        "turnover": 0.06437101488594416,
+        "costs": 26731.221036633353,
+        "n_positions": 381
+      }
+    },
+    {
+      "rebalance_date": "2024-12-31",
+      "eligible_count": 383,
+      "excluded_by_rule": {
+        "closes_complete_253": 63,
+        "adv_63_ge_10m": 48,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 76,
+      "benchmark_size": 383,
+      "basket": {
+        "invested_fraction": 0.9949946157123629,
+        "turnover": 0.534137748116898,
+        "costs": 882283.4907231776,
+        "n_positions": 76
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992331251019,
+        "turnover": 0.07658770227080687,
+        "costs": 31813.266367115088,
+        "n_positions": 383
+      }
+    },
+    {
+      "rebalance_date": "2025-01-31",
+      "eligible_count": 389,
+      "excluded_by_rule": {
+        "closes_complete_253": 60,
+        "adv_63_ge_10m": 46,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 77,
+      "benchmark_size": 389,
+      "basket": {
+        "invested_fraction": 0.994994434739123,
+        "turnover": 0.5526607042545593,
+        "costs": 798833.6948878148,
+        "n_positions": 77
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999024675123,
+        "turnover": 0.09752864766096257,
+        "costs": 37267.329112992644,
+        "n_positions": 389
+      }
+    },
+    {
+      "rebalance_date": "2025-02-28",
+      "eligible_count": 391,
+      "excluded_by_rule": {
+        "closes_complete_253": 59,
+        "adv_63_ge_10m": 40,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 78,
+      "benchmark_size": 391,
+      "basket": {
+        "invested_fraction": 0.9949938565086958,
+        "turnover": 0.6117808246561995,
+        "costs": 779724.5603308857,
+        "n_positions": 78
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991941870079,
+        "turnover": 0.08063188807371605,
+        "costs": 27480.55293241346,
+        "n_positions": 391
+      }
+    },
+    {
+      "rebalance_date": "2025-03-28",
+      "eligible_count": 394,
+      "excluded_by_rule": {
+        "closes_complete_253": 56,
+        "adv_63_ge_10m": 36,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 78,
+      "benchmark_size": 394,
+      "basket": {
+        "invested_fraction": 0.9949950416685612,
+        "turnover": 0.49331504546920507,
+        "costs": 712026.5074939771,
+        "n_positions": 78
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992853676275,
+        "turnover": 0.07127166405437586,
+        "costs": 26659.62181613454,
+        "n_positions": 394
+      }
+    },
+    {
+      "rebalance_date": "2025-04-30",
+      "eligible_count": 395,
+      "excluded_by_rule": {
+        "closes_complete_253": 55,
+        "adv_63_ge_10m": 35,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 79,
+      "benchmark_size": 395,
+      "basket": {
+        "invested_fraction": 0.9949950280782758,
+        "turnover": 0.4950469213645431,
+        "costs": 729668.5022291271,
+        "n_positions": 79
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949993067389737,
+        "turnover": 0.06922354803546167,
+        "costs": 26564.40297990965,
+        "n_positions": 395
+      }
+    },
+    {
+      "rebalance_date": "2025-05-30",
+      "eligible_count": 399,
+      "excluded_by_rule": {
+        "closes_complete_253": 52,
+        "adv_63_ge_10m": 32,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 79,
+      "benchmark_size": 399,
+      "basket": {
+        "invested_fraction": 0.9949942930751327,
+        "turnover": 0.5681552208928775,
+        "costs": 916868.8413065106,
+        "n_positions": 79
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949990761683132,
+        "turnover": 0.09213712034733623,
+        "costs": 38843.36944133774,
+        "n_positions": 399
+      }
+    },
+    {
+      "rebalance_date": "2025-06-30",
+      "eligible_count": 399,
+      "excluded_by_rule": {
+        "closes_complete_253": 52,
+        "adv_63_ge_10m": 32,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 79,
+      "benchmark_size": 399,
+      "basket": {
+        "invested_fraction": 0.9949944144091422,
+        "turnover": 0.5563043650480723,
+        "costs": 957938.5925721752,
+        "n_positions": 79
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949994095099521,
+        "turnover": 0.05894043682447294,
+        "costs": 25968.94550117846,
+        "n_positions": 399
+      }
+    },
+    {
+      "rebalance_date": "2025-07-31",
+      "eligible_count": 401,
+      "excluded_by_rule": {
+        "closes_complete_253": 50,
+        "adv_63_ge_10m": 31,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 80,
+      "benchmark_size": 401,
+      "basket": {
+        "invested_fraction": 0.9949950758545106,
+        "turnover": 0.4900804266751587,
+        "costs": 839286.832456653,
+        "n_positions": 80
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991895980819,
+        "turnover": 0.08098368374333118,
+        "costs": 34890.23712285317,
+        "n_positions": 401
+      }
+    },
+    {
+      "rebalance_date": "2025-08-29",
+      "eligible_count": 403,
+      "excluded_by_rule": {
+        "closes_complete_253": 48,
+        "adv_63_ge_10m": 29,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 80,
+      "benchmark_size": 403,
+      "basket": {
+        "invested_fraction": 0.9949951120252817,
+        "turnover": 0.48647844645705685,
+        "costs": 810030.5238603995,
+        "n_positions": 80
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949993993821445,
+        "turnover": 0.06003696979601502,
+        "costs": 25229.359100299105,
+        "n_positions": 403
+      }
+    },
+    {
+      "rebalance_date": "2025-09-30",
+      "eligible_count": 405,
+      "excluded_by_rule": {
+        "closes_complete_253": 46,
+        "adv_63_ge_10m": 27,
+        "no_move_over_40pct": 0
+      },
+      "basket_size": 81,
+      "benchmark_size": 405,
+      "basket": {
+        "invested_fraction": 0.9949959023694637,
+        "turnover": 0.4077975312647344,
+        "costs": 681610.2886116933,
+        "n_positions": 81
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999340051263,
+        "turnover": 0.06589702195901026,
+        "costs": 28419.69145801257,
+        "n_positions": 405
+      }
+    },
+    {
+      "rebalance_date": "2025-10-31",
+      "eligible_count": 405,
+      "excluded_by_rule": {
+        "closes_complete_253": 45,
+        "adv_63_ge_10m": 26,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 81,
+      "benchmark_size": 405,
+      "basket": {
+        "invested_fraction": 0.994994755230907,
+        "turnover": 0.5220607681301874,
+        "costs": 911550.4980773733,
+        "n_positions": 81
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949993957685568,
+        "turnover": 0.060323682301211524,
+        "costs": 27019.275055555467,
+        "n_positions": 405
+      }
+    },
+    {
+      "rebalance_date": "2025-11-28",
+      "eligible_count": 410,
+      "excluded_by_rule": {
+        "closes_complete_253": 40,
+        "adv_63_ge_10m": 24,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 82,
+      "benchmark_size": 410,
+      "basket": {
+        "invested_fraction": 0.9949939837901376,
+        "turnover": 0.5984439085403718,
+        "costs": 1054143.905677804,
+        "n_positions": 82
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992729198672,
+        "turnover": 0.07264499480100348,
+        "costs": 32099.455474362672,
+        "n_positions": 410
+      }
+    },
+    {
+      "rebalance_date": "2025-12-31",
+      "eligible_count": 414,
+      "excluded_by_rule": {
+        "closes_complete_253": 36,
+        "adv_63_ge_10m": 23,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 82,
+      "benchmark_size": 414,
+      "basket": {
+        "invested_fraction": 0.9949940410661204,
+        "turnover": 0.5931244822304954,
+        "costs": 1063637.073831333,
+        "n_positions": 82
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949993669150118,
+        "turnover": 0.06324414194006317,
+        "costs": 27844.782652390866,
+        "n_positions": 414
+      }
+    },
+    {
+      "rebalance_date": "2026-01-30",
+      "eligible_count": 375,
+      "excluded_by_rule": {
+        "closes_complete_253": 75,
+        "adv_63_ge_10m": 60,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 75,
+      "benchmark_size": 375,
+      "basket": {
+        "invested_fraction": 0.9949947737471518,
+        "turnover": 0.5202837247487987,
+        "costs": 883395.5822937962,
+        "n_positions": 75
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949979517915153,
+        "turnover": 0.20460288939828,
+        "costs": 84177.38193214161,
+        "n_positions": 375
+      }
+    },
+    {
+      "rebalance_date": "2026-02-27",
+      "eligible_count": 377,
+      "excluded_by_rule": {
+        "closes_complete_253": 73,
+        "adv_63_ge_10m": 52,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 75,
+      "benchmark_size": 377,
+      "basket": {
+        "invested_fraction": 0.9949951521768768,
+        "turnover": 0.4825706208837,
+        "costs": 835724.9525635062,
+        "n_positions": 75
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949991103471046,
+        "turnover": 0.0888710012387681,
+        "costs": 36501.96070430409,
+        "n_positions": 377
+      }
+    },
+    {
+      "rebalance_date": "2026-03-30",
+      "eligible_count": 377,
+      "excluded_by_rule": {
+        "closes_complete_253": 73,
+        "adv_63_ge_10m": 50,
+        "no_move_over_40pct": 1
+      },
+      "basket_size": 75,
+      "benchmark_size": 377,
+      "basket": {
+        "invested_fraction": 0.9949953737246047,
+        "turnover": 0.46035390545295096,
+        "costs": 768138.6679999675,
+        "n_positions": 75
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992978498433,
+        "turnover": 0.07020534171976915,
+        "costs": 27464.11702840963,
+        "n_positions": 377
+      }
+    },
+    {
+      "rebalance_date": "2026-04-30",
+      "eligible_count": 376,
+      "excluded_by_rule": {
+        "closes_complete_253": 73,
+        "adv_63_ge_10m": 7,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 75,
+      "benchmark_size": 376,
+      "basket": {
+        "invested_fraction": 0.9949964177726635,
+        "turnover": 0.35657529308209884,
+        "costs": 676594.9340904077,
+        "n_positions": 75
+      },
+      "benchmark": {
+        "invested_fraction": 0.994999142937353,
+        "turnover": 0.0854592947507928,
+        "costs": 38514.519593381985,
+        "n_positions": 376
+      }
+    },
+    {
+      "rebalance_date": "2026-05-29",
+      "eligible_count": 377,
+      "excluded_by_rule": {
+        "closes_complete_253": 72,
+        "adv_63_ge_10m": 6,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 75,
+      "benchmark_size": 377,
+      "basket": {
+        "invested_fraction": 0.9949956931532213,
+        "turnover": 0.42863606650164876,
+        "costs": 845533.0318498682,
+        "n_positions": 75
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992270839786,
+        "turnover": 0.07720048192022305,
+        "costs": 35196.60417161902,
+        "n_positions": 377
+      }
+    },
+    {
+      "rebalance_date": "2026-06-30",
+      "eligible_count": 380,
+      "excluded_by_rule": {
+        "closes_complete_253": 69,
+        "adv_63_ge_10m": 5,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 76,
+      "benchmark_size": 380,
+      "basket": {
+        "invested_fraction": 0.9949959070173443,
+        "turnover": 0.4076620592758462,
+        "costs": 832530.8983549557,
+        "n_positions": 76
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992246789635,
+        "turnover": 0.07741754293654327,
+        "costs": 36289.437888258115,
+        "n_positions": 380
+      }
+    },
+    {
+      "rebalance_date": "2026-07-31",
+      "eligible_count": 382,
+      "excluded_by_rule": {
+        "closes_complete_253": 67,
+        "adv_63_ge_10m": 4,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 76,
+      "benchmark_size": 382,
+      "basket": {
+        "invested_fraction": 0.9949964502528907,
+        "turnover": 0.35349498292959336,
+        "costs": 718042.7494044389,
+        "n_positions": 76
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992345339698,
+        "turnover": 0.07644964500022007,
+        "costs": 36477.5625311499,
+        "n_positions": 382
+      }
+    },
+    {
+      "rebalance_date": "2026-08-31",
+      "eligible_count": 384,
+      "excluded_by_rule": {
+        "closes_complete_253": 65,
+        "adv_63_ge_10m": 4,
+        "no_move_over_40pct": 2
+      },
+      "basket_size": 76,
+      "benchmark_size": 384,
+      "basket": {
+        "invested_fraction": 0.9949951686508045,
+        "turnover": 0.4808825266808783,
+        "costs": 1024692.5986912699,
+        "n_positions": 76
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949992814313777,
+        "turnover": 0.07176971295801002,
+        "costs": 34583.08416198275,
+        "n_positions": 384
+      }
+    },
+    {
+      "rebalance_date": "2026-09-30",
+      "eligible_count": 384,
+      "excluded_by_rule": {
+        "closes_complete_253": 64,
+        "adv_63_ge_10m": 0,
+        "no_move_over_40pct": 3
+      },
+      "basket_size": 76,
+      "benchmark_size": 384,
+      "basket": {
+        "invested_fraction": 0.9949958069506598,
+        "turnover": 0.4173766052115014,
+        "costs": 858398.9529648877,
+        "n_positions": 76
+      },
+      "benchmark": {
+        "invested_fraction": 0.9949993993172803,
+        "turnover": 0.06007669204569612,
+        "costs": 27470.87462238653,
+        "n_positions": 384
+      }
+    }
+  ],
+  "eligible_count_min": 135,
+  "eligible_count_max": 414,
+  "eligible_count_median": 265.0,
+  "prediction": {
+    "ir_between": [
+      0.0,
+      0.6
+    ],
+    "chances": {
+      "Candidate": 0.25,
+      "No evidence of an edge": 0.7,
+      "Not supported": 0.05
+    }
+  }
+}
