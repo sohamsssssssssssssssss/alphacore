@@ -579,6 +579,20 @@ def macros(a) -> str:
     m("OosRegInvestedMean", a.val(e["mean"], erel, "basket.stats.mean", pctm))
     m("OosRegInvestedEnd", a.val(e["last"], erel, "basket.stats.last", pctm))
 
+    mrel = "research/momentum/result.json"
+    mo = a.json(mrel)
+    for part, f in (("MomIR", "ir"), ("MomCILow", "ci_lower"), ("MomCIHigh", "ci_upper")):
+        m(part, a.val(mo[f], mrel, f, shm, latex=False))
+    m("MomMonths", a.val(mo["n_months"], mrel, "n_months"))
+    m("MomSymbols", a.val(mo["symbols_loaded"], mrel, "symbols_loaded"))
+    m("MomEligibleMin", a.val(mo["eligible_count_min"], mrel, "eligible_count_min"))
+    m("MomEligibleMedian", a.val(int(mo["eligible_count_median"]), mrel, "eligible_count_median"))
+    m("MomBasketIR", a.val(mo["basket"]["standalone_ir"], mrel, "basket.standalone_ir", shm, latex=False))
+    m("MomBenchmarkIR", a.val(mo["benchmark"]["standalone_ir"], mrel, "benchmark.standalone_ir", shm, latex=False))
+    m("MomSpreadBps", a.val(int(mo["params"]["spread_bps"]), mrel, "params.spread_bps"))
+    m("MomPredHigh", a.val(mo["prediction"]["ir_between"][1], mrel, "prediction.ir_between[1]"))
+    m("MomPredChance", a.val(int(round(100 * mo["prediction"]["chances"]["Candidate"])), mrel, "prediction.chances.Candidate"))
+
     tla = tla_rows(a)
     for r in tla:
         m(f'Tla{r["key"].replace("_", "")}Generated', a.val(r["gen"], r["src"], f'{r["spec"]}: states generated', count))

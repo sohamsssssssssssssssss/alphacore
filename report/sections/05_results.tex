@@ -31,4 +31,13 @@ An amendment, written before any corrected number existed, fixed the simulator f
 
 By the rule set in the protocol, the basket is retired as a candidate.
 
-\textbf{Reading.} No configuration has an interval above zero, and the basket does not beat its benchmark. That is a negative result for these signals, on this market, period and cost model. It is not evidence that momentum fails in general.
+\subsection{Twelve-month momentum on a broad universe}
+Every signal above looks back about one month and uses at most a hundred large stocks. The momentum effect described in the literature uses roughly the past twelve months and skips the most recent one. A second protocol tested that version once: top fifth by this signal, long only, equal weight, rebalanced monthly, on current Nifty index constituents outside the project's original universe (\MomSymbols{} with data), with an assumed spread of \MomSpreadBps{} basis points and the corrected simulator. The benchmark holds every eligible stock in equal weight under the same costs.
+
+The protocol had three gaps that surfaced before any number was produced: it did not define the trading calendar, the conditions for aborting, or the cost input for selling a stock with incomplete recent data. Each was fixed by a dated amendment before the run.
+
+The result is an information ratio of \MomIR{} with interval $[\MomCILow, \MomCIHigh]$ on \MomMonths{} months, with between \MomEligibleMin{} and several hundred eligible stocks at each rebalance (median \MomEligibleMedian{}). Basket and benchmark were both fully invested throughout. My registered prediction was an information ratio of at most \MomPredHigh{} and a \MomPredChance\% chance of this outcome, so the prediction was wrong.
+
+The protocol's word for this outcome is \emph{candidate}, not pass, for a reason fixed in advance. The universe is today's index membership applied to the past. Companies that fell out of the index are missing, and a strategy that buys recent winners is the kind most helped by removing later failures. The benchmark's own return in this data is well above what the market delivered, which shows the bias is large. How much of the measured edge it explains cannot be settled with this data.
+
+\textbf{Reading.} The one-month signals show no edge on this market, period and cost model. Twelve-month momentum on a broader universe is a candidate that needs data free of survivorship, or a forward test, before any claim.

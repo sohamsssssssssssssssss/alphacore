@@ -90,8 +90,8 @@ pairs and the already-consistent exceptions. No strategy, cost model, seed or
 locked configuration was tuned or reselected.
 
 <!-- BEGIN generated:headline (scripts/report/build_assets.py --update-readme; do not edit) -->
-**Result: no tested configuration establishes a statistically significant,
-cost-surviving edge in the frozen-data reruns.** Of 8 distinct re-run
+**Result: the original signals show no cost-surviving edge in the frozen-data reruns; one later
+pre-registered test, twelve-month momentum on a broad NSE universe, is a candidate with a known survivorship caveat.** Of 8 distinct re-run
 configurations, 7 have primary-convention 95% CIs entirely below zero.
 Long/short K=1 on the expanded universe has zero-rf Sharpe **-1.94**,
 CI **[-3.32, -0.34]**; with rf=0.065 it is -3.78,
@@ -106,6 +106,12 @@ out-of-sample test on 101 US stocks was registered as **Fail** (IR -0.84, CI [-1
 -0.38]) and, after the same correction, shows no evidence of an edge (IR 0.16,
 CI [-0.33, 0.62]; post hoc) ([protocol](research/OOS_BASKET_PROTOCOL.md),
 [amendment](research/OOS_BASKET_AMENDMENT_1.md)). The basket is retired as a candidate.
+A second pre-registered test, twelve-month momentum on 451 broad-index NSE stocks outside the original
+universe, came out as **Candidate**: IR **1.01**, CI **[0.53, 1.58]** against an
+equal-weight benchmark on 200 months ([result](research/momentum/RESULT.md),
+[protocol](research/MOMENTUM_12_1_PROTOCOL.md)). The universe is today's index membership applied to
+the past, which can flatter momentum; the protocol allows no stronger word than candidate, and a
+forward paper test is the next step.
 Values are rounded to two decimals; full precision is in the linked JSON.
 <!-- END generated:headline -->
 The basket Sharpe is not comparable to the
